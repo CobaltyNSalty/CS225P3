@@ -7,5 +7,10 @@ name in a comment on the same line to not interfere with other important documen
 
 
  */
+
+/**
+ *
+ */
 public class Track {
+    // Tile array maximum size: width: 14, height: 10
 }

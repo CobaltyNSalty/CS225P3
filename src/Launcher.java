@@ -4,11 +4,13 @@ that using this process: Log your work up here, and if you make a revision to ex
 name in a comment on the same line to not interfere with other important documentation requirements.
 
 3/11    [chris]     - Created class, added work log comment.
+                    - added game object and called play()
 
 
  */
 public class Launcher {
     public static void main(String[] args) {
-
+        Game game = new Game();
+        game.play();
     }
 }

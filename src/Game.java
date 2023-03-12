@@ -4,6 +4,8 @@ that using this process. Log your work up here, and if you make a revision to ex
 name in a comment on the same line to not interfere with other important documentation requirements.
 
 3/11    [chris]     - Created class, added work log comment.
+                    - wrote play() method and added field variable declarations
+                    - added default constructor
 
 
  */
@@ -11,4 +13,15 @@ public class Game {
     private Track raceTrack;
     private Car[] racers;
     private GUI gui;
+
+    public Game() {
+        this.raceTrack = null;
+        this.racers = null;
+        this.gui = null;
+    }
+    public void play() {
+        Object[] gameAssets = new Object[] {this.raceTrack, this.racers};
+        GUI gui = new GUI(gameAssets);
+
+    }
 }
