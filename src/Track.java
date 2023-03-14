@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- *  Tile array maximum size: width: 14, height: 10
+ *  Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
+ *  maximum allowable grid dimensions.
  */
 public class Track {
     /* ___ FIELD VARIABLES ___ */

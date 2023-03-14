@@ -96,6 +96,7 @@ public class GUI {
         centerPanel.setBorder(new LineBorder(Color.BLACK));
         centerPanel.setPreferredSize(new Dimension(800, 600));
 
+        // decorative backdrop, cannot set a JLayeredPane background color
         JPanel blackBackgroundPanel = new JPanel();
         blackBackgroundPanel.setBackground(Color.BLACK);
         blackBackgroundPanel.setBounds(0, 0, 800, 600);
@@ -103,6 +104,7 @@ public class GUI {
         // TODO: should gameAssets be unpackaged into field variables?
         Track raceTrack = ((Track)this.gameAssets[0]);
 
+        // Panel to house the racetrack Tile sprites
         JPanel gameTilePanel = new JPanel(new GridBagLayout());
         gameTilePanel.setBackground(new Color(67, 174, 32));
         gameTilePanel.setBounds(50, 25, 700, 500);
@@ -117,13 +119,15 @@ public class GUI {
         }
 
         Car[] raceCars = ((Car[])this.gameAssets[1]);
-        // TODO: Remove
+        // TODO: Remove, initializing car starting position
         raceCars[0].setPosX(75);
         raceCars[0].setPosY(100);
         raceCars[1].setPosX(75);
         raceCars[1].setPosY(200);
         // TODO: end Remove
 
+        // transparent panel for cars to move across using (x,y) coordinate values, cars are drawn over
+        // the racetrack sprites.
         JPanel carPanel = new JPanel();
         carPanel.setOpaque(false);
         carPanel.setBounds(50, 25, 700, 500);
@@ -135,11 +139,12 @@ public class GUI {
         carPanel.add(carLabel1);
         carPanel.add(carLabel2);
 
+        // Compose gameplay area
         centerPanel.add(blackBackgroundPanel, new Integer(0));
         centerPanel.add(gameTilePanel, new Integer(1));
         centerPanel.add(carPanel, new Integer(2));
 
-
+        // Compose overall game window
         this.gameWindowPanel.add(leftRootPanel, BorderLayout.WEST);
         this.gameWindowPanel.add(centerPanel, BorderLayout.CENTER);
         this.gameWindowPanel.add(rightRootPanel, BorderLayout.EAST);
@@ -149,7 +154,6 @@ public class GUI {
 
         this.rootFrame.pack();
         this.rootFrame.setVisible(true);
-
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */

@@ -27,6 +27,7 @@ public class Tile {
     private int indexPosCol;
 
     /* ___ CONSTRUCTORS ___ */
+    // TODO: update all constructors with new field variables
     public Tile(Image image) {
         this.sprite = image;
     }
