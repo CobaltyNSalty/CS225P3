@@ -7,6 +7,7 @@ name in a comment on the same line to not interfere with other important documen
 3/13    [chris]     - implemented minimum field variables to create gui, used UML
                     - wrote basic constructors and a test method with hardcoded Tiles variable
                     - wrote loadTrackTiles() method
+3/14    [chris]     - testing a total track path implementation with createPath() method
 
 
  */
@@ -15,6 +16,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  *
@@ -23,6 +25,8 @@ public class Track {
     // Tile array maximum size: width: 14, height: 10
     private Tile[][] raceTrack;
     private Image[] trackTileSprites;
+    private Point[] path;
+    private Map<Point, Boolean> checkpoints;
 
     public Track() {
         this.raceTrack = null;
@@ -52,56 +56,56 @@ public class Track {
         }
         /*     0   1   2   3   4   5   6   7   8   9   10  11  12  13
             0
-            1      6   2   4           6   2   2   2   2   2   4
+            1      6   2   4           6   2   2   8   2   2   4
             2      1       1           1                       1
             3      1       5   2   2   3                       1
-            4      1                                           1
+            4      7                                           1
             5      1                                   6   2   3
             6      5   2   4                           1
             7              1                           1
-            8              5   2   2   2   2   2   2   3
+            8              5   2   2   2   8   2   2   3
             9
          */
-        this.raceTrack[1][1] = new Tile(trackTileSprites[6]);
-        this.raceTrack[2][1] = new Tile(trackTileSprites[1]);
-        this.raceTrack[3][1] = new Tile(trackTileSprites[1]);
-        this.raceTrack[4][1] = new Tile(trackTileSprites[1]);
-        this.raceTrack[5][1] = new Tile(trackTileSprites[1]);
-        this.raceTrack[6][1] = new Tile(trackTileSprites[5]);
-        this.raceTrack[6][2] = new Tile(trackTileSprites[2]);
-        this.raceTrack[6][3] = new Tile(trackTileSprites[4]);
-        this.raceTrack[7][3] = new Tile(trackTileSprites[1]);
-        this.raceTrack[8][3] = new Tile(trackTileSprites[5]);
-        this.raceTrack[8][4] = new Tile(trackTileSprites[2]);
-        this.raceTrack[8][5] = new Tile(trackTileSprites[2]);
-        this.raceTrack[8][6] = new Tile(trackTileSprites[2]);
-        this.raceTrack[8][7] = new Tile(trackTileSprites[2]);
-        this.raceTrack[8][8] = new Tile(trackTileSprites[2]);
-        this.raceTrack[8][9] = new Tile(trackTileSprites[2]);
-        this.raceTrack[8][10] = new Tile(trackTileSprites[3]);
-        this.raceTrack[7][10] = new Tile(trackTileSprites[1]);
-        this.raceTrack[6][10] = new Tile(trackTileSprites[1]);
-        this.raceTrack[5][10] = new Tile(trackTileSprites[6]);
-        this.raceTrack[5][11] = new Tile(trackTileSprites[2]);
-        this.raceTrack[5][12] = new Tile(trackTileSprites[3]);
-        this.raceTrack[4][12] = new Tile(trackTileSprites[1]);
-        this.raceTrack[3][12] = new Tile(trackTileSprites[1]);
-        this.raceTrack[2][12] = new Tile(trackTileSprites[1]);
-        this.raceTrack[1][12] = new Tile(trackTileSprites[4]);
-        this.raceTrack[1][11] = new Tile(trackTileSprites[2]);
-        this.raceTrack[1][10] = new Tile(trackTileSprites[2]);
-        this.raceTrack[1][9] = new Tile(trackTileSprites[2]);
-        this.raceTrack[1][8] = new Tile(trackTileSprites[2]);
-        this.raceTrack[1][7] = new Tile(trackTileSprites[2]);
-        this.raceTrack[1][6] = new Tile(trackTileSprites[6]);
-        this.raceTrack[2][6] = new Tile(trackTileSprites[1]);
-        this.raceTrack[3][6] = new Tile(trackTileSprites[3]);
-        this.raceTrack[3][5] = new Tile(trackTileSprites[2]);
-        this.raceTrack[3][4] = new Tile(trackTileSprites[2]);
-        this.raceTrack[3][3] = new Tile(trackTileSprites[5]);
-        this.raceTrack[2][3] = new Tile(trackTileSprites[1]);
-        this.raceTrack[1][3] = new Tile(trackTileSprites[4]);
-        this.raceTrack[1][2] = new Tile(trackTileSprites[2]);
+        this.raceTrack[1][1] = new Tile(trackTileSprites[6], 6);
+        this.raceTrack[2][1] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[3][1] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[4][1] = new Tile(trackTileSprites[7], 7);
+        this.raceTrack[5][1] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[6][1] = new Tile(trackTileSprites[5], 5);
+        this.raceTrack[6][2] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[6][3] = new Tile(trackTileSprites[4], 4);
+        this.raceTrack[7][3] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[8][3] = new Tile(trackTileSprites[5], 5);
+        this.raceTrack[8][4] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[8][5] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[8][6] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[8][7] = new Tile(trackTileSprites[8], 8);
+        this.raceTrack[8][8] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[8][9] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[8][10] = new Tile(trackTileSprites[3], 3);
+        this.raceTrack[7][10] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[6][10] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[5][10] = new Tile(trackTileSprites[6], 6);
+        this.raceTrack[5][11] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[5][12] = new Tile(trackTileSprites[3], 3);
+        this.raceTrack[4][12] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[3][12] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[2][12] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[1][12] = new Tile(trackTileSprites[4], 4);
+        this.raceTrack[1][11] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[1][10] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[1][9] = new Tile(trackTileSprites[8], 8);
+        this.raceTrack[1][8] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[1][7] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[1][6] = new Tile(trackTileSprites[6], 6);
+        this.raceTrack[2][6] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[3][6] = new Tile(trackTileSprites[3], 3);
+        this.raceTrack[3][5] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[3][4] = new Tile(trackTileSprites[2], 2);
+        this.raceTrack[3][3] = new Tile(trackTileSprites[5], 5);
+        this.raceTrack[2][3] = new Tile(trackTileSprites[1], 1);
+        this.raceTrack[1][3] = new Tile(trackTileSprites[4], 4);
+        this.raceTrack[1][2] = new Tile(trackTileSprites[2], 2);
     }
 
     /**
@@ -131,6 +135,15 @@ public class Track {
         }
 
         return 1;
+    }
+
+    private void createPath() {
+        // navigate 2D array based on Tile type
+        int rowIndex = 0;
+        int colIndex = 0;
+        int pathX = 0;
+        int pathY = 0;
+
     }
 
     public Tile[][] getRaceTrack() {

@@ -15,6 +15,7 @@ name in a comment on the same line to not interfere with other important documen
                     - added field variables, wrote constructors and createGUI method
                     - Worked on the gameWindow in createGUI method
 3/13    [chris]     - worked on getting tiles to display in gameWindowPanel
+3/14    [chris]     - added JLayeredPane and carPanel implementation.
 
 
  */
@@ -76,7 +77,7 @@ public class GUI {
 
         // checkered flag side panels
         JPanel leftRootPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        leftRootPanel.setBackground(Color.GRAY);
+        leftRootPanel.setBackground(Color.BLACK);
 
         JLabel leftImageLabel = new JLabel();
         leftImageLabel.setIcon(new ImageIcon(checkeredTile));
@@ -84,28 +85,28 @@ public class GUI {
 
         JPanel rightRootPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         rightRootPanel.setPreferredSize(new Dimension(100, 600));
-        rightRootPanel.setBackground(Color.GRAY);
+        rightRootPanel.setBackground(Color.BLACK);
 
         JLabel rightImageLabel = new JLabel();
         rightImageLabel.setIcon(new ImageIcon(checkeredTile));
         rightRootPanel.add(rightImageLabel);
 
         // Where the game will be displayed
-        JPanel centerRootPanel = new JPanel(new FlowLayout());
-        centerRootPanel.setBorder(new LineBorder(Color.BLACK));
-        centerRootPanel.setPreferredSize(new Dimension(800, 600));
-        centerRootPanel.setBackground(Color.BLACK);
+        JLayeredPane centerPanel = new JLayeredPane();
+        centerPanel.setBorder(new LineBorder(Color.BLACK));
+        centerPanel.setPreferredSize(new Dimension(800, 600));
+
+        JPanel blackBackgroundPanel = new JPanel();
+        blackBackgroundPanel.setBackground(Color.BLACK);
+        blackBackgroundPanel.setBounds(0, 0, 800, 600);
 
         // TODO: should gameAssets be unpackaged into field variables?
         Track raceTrack = ((Track)this.gameAssets[0]);
 
         JPanel gameTilePanel = new JPanel(new GridBagLayout());
         gameTilePanel.setBackground(new Color(67, 174, 32));
-        gameTilePanel.setPreferredSize(new Dimension(700, 500));
+        gameTilePanel.setBounds(50, 25, 700, 500);
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-
         for (int row = 0; row < raceTrack.getRaceTrack().length; row++) {
             for (int col = 0; col < raceTrack.getRaceTrack()[0].length; col++) {
                 constraints.gridx = col;
@@ -115,15 +116,32 @@ public class GUI {
             }
         }
 
-        JPanel bufferPanel = new JPanel();
-        bufferPanel.setPreferredSize(new Dimension(600, 15));
-        bufferPanel.setBackground(Color.BLACK);
+        Car[] raceCars = ((Car[])this.gameAssets[1]);
+        // TODO: Remove
+        raceCars[0].setPosX(75);
+        raceCars[0].setPosY(100);
+        raceCars[1].setPosX(75);
+        raceCars[1].setPosY(200);
+        // TODO: end Remove
 
-        centerRootPanel.add(bufferPanel);
-        centerRootPanel.add(gameTilePanel);
+        JPanel carPanel = new JPanel();
+        carPanel.setOpaque(false);
+        carPanel.setBounds(50, 25, 700, 500);
+        carPanel.setLayout(null);
+        JLabel carLabel1 = new JLabel(new ImageIcon(raceCars[0].getSprite()));
+        carLabel1.setBounds(raceCars[0].getPosX(), raceCars[0].getPosY(), 50, 50);
+        JLabel carLabel2 = new JLabel(new ImageIcon(raceCars[1].getSprite()));
+        carLabel2.setBounds(raceCars[1].getPosX(), raceCars[1].getPosY(), 50, 50);
+        carPanel.add(carLabel1);
+        carPanel.add(carLabel2);
+
+        centerPanel.add(blackBackgroundPanel, new Integer(0));
+        centerPanel.add(gameTilePanel, new Integer(1));
+        centerPanel.add(carPanel, new Integer(2));
+
 
         this.gameWindowPanel.add(leftRootPanel, BorderLayout.WEST);
-        this.gameWindowPanel.add(centerRootPanel, BorderLayout.CENTER);
+        this.gameWindowPanel.add(centerPanel, BorderLayout.CENTER);
         this.gameWindowPanel.add(rightRootPanel, BorderLayout.EAST);
 
         // TODO: this will initially be the menuWindow not the gameWindowPanel
@@ -135,9 +153,5 @@ public class GUI {
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */
-    public JFrame getApplicationWindowFrame() {
-        return this.rootFrame;
-    }
-
 
 }
