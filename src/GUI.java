@@ -14,6 +14,7 @@ name in a comment on the same line to not interfere with other important documen
 3/11    [chris]     - Created class, added work log comment.
                     - added field variables, wrote constructors and createGUI method
                     - Worked on the gameWindow in createGUI method
+3/13    [chris]     - worked on getting tiles to display in gameWindowPanel
 
 
  */
@@ -65,7 +66,7 @@ public class GUI {
         // TODO: This likely needs to be moved somewhere else, import all images at same time
         BufferedImage checkeredTile;
         try {
-            checkeredTile = ImageIO.read(new File("TileSet\\Checkered.png"));
+            checkeredTile = ImageIO.read(new File("Sprites\\Checkered.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -95,12 +96,29 @@ public class GUI {
         centerRootPanel.setPreferredSize(new Dimension(800, 600));
         centerRootPanel.setBackground(Color.BLACK);
 
-        JPanel gameTilePanel = new JPanel(new GridLayout(10, 14)); //TODO: make dynamic
+        // TODO: should gameAssets be unpackaged into field variables?
+        Track raceTrack = ((Track)this.gameAssets[0]);
+
+        JPanel gameTilePanel = new JPanel(new GridBagLayout());
+        gameTilePanel.setBackground(new Color(67, 174, 32));
         gameTilePanel.setPreferredSize(new Dimension(700, 500));
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+
+        for (int row = 0; row < raceTrack.getRaceTrack().length; row++) {
+            for (int col = 0; col < raceTrack.getRaceTrack()[0].length; col++) {
+                constraints.gridx = col;
+                constraints.gridy = row;
+                JLabel trackTileLabel = new JLabel(new ImageIcon(raceTrack.getTileSpriteAt(row, col)));
+                gameTilePanel.add(trackTileLabel, constraints);
+            }
+        }
 
         JPanel bufferPanel = new JPanel();
         bufferPanel.setPreferredSize(new Dimension(600, 15));
         bufferPanel.setBackground(Color.BLACK);
+
         centerRootPanel.add(bufferPanel);
         centerRootPanel.add(gameTilePanel);
 
