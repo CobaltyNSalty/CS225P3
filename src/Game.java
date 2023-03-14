@@ -31,7 +31,7 @@ public class Game {
     }
 
     public void play() {
-        // TODO: Remove the following code block
+        // TODO: Replace this code block with inputs from filereader
         this.raceTrack = new Track();
         this.raceTrack.createHardCodedTrackTileData();
         this.racers = new Car[] { new Car(), new Car() };
@@ -52,10 +52,10 @@ public class Game {
     }
 
     private void gameLoop() {
-        gameClock.start();
         gameClock = new Timer(100, e -> {
             updateCarPositions();
         });
+        gameClock.start();
     }
 
     private void updateCarPositions() {

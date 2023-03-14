@@ -12,10 +12,16 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class Car {
+    /* ___ FIELD VARIABLES ___ */
     private Image sprite;
     private int posX;
     private int posY;
 
+    /* ___ CONSTRUCTORS ___ */
+
+    /* ___ FUNCTIONS ___ */
+
+    /* ___ ACCESSORS / MUTATORS ___ */
     public void setSprite(Image sprite) {
         this.sprite = sprite;
     }
