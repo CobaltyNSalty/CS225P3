@@ -1,6 +1,8 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -18,7 +20,7 @@ name in a comment on the same line to not interfere with other important documen
 
 
  */
-public class Game {
+public class Game implements ActionListener {
     private Track raceTrack;
     private Car[] racers;
     private GUI gui;
@@ -46,12 +48,13 @@ public class Game {
         this.racers[1].setSprite(car2);
         // TODO: end of code block to remove
 
-        Object[] gameAssets = new Object[] {this.raceTrack, this.racers};
+        Object[] gameAssets = new Object[] {this.raceTrack, this.racers, this};
         this.gui = new GUI(gameAssets);
         gameLoop();
     }
 
     private void gameLoop() {
+        // TODO: clock starts prior to game start
         gameClock = new Timer(50, e -> {
             updateCarPositions();
         });
@@ -64,5 +67,10 @@ public class Game {
             car.getNextPosition();
             this.gui.drawNewCarPositions();
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }
