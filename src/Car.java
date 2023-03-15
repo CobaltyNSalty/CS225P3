@@ -47,6 +47,8 @@ public class Car {
     }
 
     public void getNextPosition() {
-
+        // TODO: update positions with next track coordinate
+        this.posX += 1;
+        this.posY += 1;
     }
 }

@@ -16,6 +16,7 @@ name in a comment on the same line to not interfere with other important documen
                     - Worked on the gameWindow in createGUI method
 3/13    [chris]     - worked on getting tiles to display in gameWindowPanel
 3/14    [chris]     - added JLayeredPane and carPanel implementation.
+3/15    [chris]     - tested how to get cars to move, no dedicated path. Got it working
 
 
  */
@@ -31,6 +32,11 @@ public class GUI {
     private JPanel gameWindowPanel;
     /* Objects used by 'Game' that have a graphical component */
     private Object[] gameAssets;
+
+    private Track gameTrack;
+    private Car[] gameCars;
+    /* Testing if Cars should extend JLabel */ // TODO: Remove
+    private JLabel[] carLabels;
 
     /* ___ CONSTRUCTORS ___ */
     public GUI() {
@@ -49,6 +55,8 @@ public class GUI {
     public GUI(Object[] assets) {
         this();
         this.gameAssets = assets;
+        this.gameTrack = ((Track)this.gameAssets[0]);
+        this.gameCars = ((Car[])this.gameAssets[1]);
         createGUI();
     }
 
@@ -101,29 +109,26 @@ public class GUI {
         blackBackgroundPanel.setBackground(Color.BLACK);
         blackBackgroundPanel.setBounds(0, 0, 800, 600);
 
-        // TODO: should gameAssets be unpackaged into field variables?
-        Track raceTrack = ((Track)this.gameAssets[0]);
-
         // Panel to house the racetrack Tile sprites
         JPanel gameTilePanel = new JPanel(new GridBagLayout());
         gameTilePanel.setBackground(new Color(67, 174, 32));
         gameTilePanel.setBounds(50, 25, 700, 500);
         GridBagConstraints constraints = new GridBagConstraints();
-        for (int row = 0; row < raceTrack.getRaceTrack().length; row++) {
-            for (int col = 0; col < raceTrack.getRaceTrack()[0].length; col++) {
+        for (int row = 0; row < this.gameTrack.getRaceTrack().length; row++) {
+            for (int col = 0; col < this.gameTrack.getRaceTrack()[0].length; col++) {
                 constraints.gridx = col;
                 constraints.gridy = row;
-                JLabel trackTileLabel = new JLabel(new ImageIcon(raceTrack.getTileSpriteAt(row, col)));
+                JLabel trackTileLabel = new JLabel(new ImageIcon(this.gameTrack.getTileSpriteAt(row, col)));
                 gameTilePanel.add(trackTileLabel, constraints);
             }
         }
 
-        Car[] raceCars = ((Car[])this.gameAssets[1]);
         // TODO: Remove, initializing car starting position
-        raceCars[0].setPosX(75);
-        raceCars[0].setPosY(100);
-        raceCars[1].setPosX(75);
-        raceCars[1].setPosY(200);
+        this.gameCars[0].setPosX(75);
+        this.gameCars[0].setPosY(100);
+        this.gameCars[1].setPosX(75);
+        this.gameCars[1].setPosY(200);
+        this.carLabels = new JLabel[2];
         // TODO: end Remove
 
         // transparent panel for cars to move across using (x,y) coordinate values, cars are drawn over
@@ -132,10 +137,14 @@ public class GUI {
         carPanel.setOpaque(false);
         carPanel.setBounds(50, 25, 700, 500);
         carPanel.setLayout(null);
-        JLabel carLabel1 = new JLabel(new ImageIcon(raceCars[0].getSprite()));
-        carLabel1.setBounds(raceCars[0].getPosX(), raceCars[0].getPosY(), 50, 50);
-        JLabel carLabel2 = new JLabel(new ImageIcon(raceCars[1].getSprite()));
-        carLabel2.setBounds(raceCars[1].getPosX(), raceCars[1].getPosY(), 50, 50);
+        JLabel carLabel1 = new JLabel(new ImageIcon(this.gameCars[0].getSprite()));
+        carLabel1.setBounds(this.gameCars[0].getPosX(), this.gameCars[0].getPosY(), 50, 50);
+        carLabel1.setDoubleBuffered(true);
+        JLabel carLabel2 = new JLabel(new ImageIcon(this.gameCars[1].getSprite()));
+        carLabel2.setBounds(this.gameCars[1].getPosX(), this.gameCars[1].getPosY(), 50, 50);
+        carLabel2.setDoubleBuffered(true);
+        this.carLabels[0] = carLabel1;
+        this.carLabels[1] = carLabel2;
         carPanel.add(carLabel1);
         carPanel.add(carLabel2);
 
@@ -154,6 +163,12 @@ public class GUI {
 
         this.rootFrame.pack();
         this.rootFrame.setVisible(true);
+    }
+
+    public void drawNewCarPositions() {
+        for(int i = 0; i < 2; i++) {
+            this.carLabels[i].setBounds(this.gameCars[i].getPosX(), this.gameCars[i].getPosY(), 50, 50);
+        }
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */

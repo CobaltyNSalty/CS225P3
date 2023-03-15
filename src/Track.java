@@ -30,8 +30,6 @@ public class Track {
     private Image[] trackTileSprites;
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
     private Point[] path;
-    /* The (x,y) coordinate that equate to a Car object reaching a checkpoint */
-    private Map<Point, Boolean> checkpoints;
 
     /* ___ CONSTRUCTORS ___ */
     public Track() {

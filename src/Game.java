@@ -47,12 +47,12 @@ public class Game {
         // TODO: end of code block to remove
 
         Object[] gameAssets = new Object[] {this.raceTrack, this.racers};
-        GUI gui = new GUI(gameAssets);
+        this.gui = new GUI(gameAssets);
         gameLoop();
     }
 
     private void gameLoop() {
-        gameClock = new Timer(100, e -> {
+        gameClock = new Timer(50, e -> {
             updateCarPositions();
         });
         gameClock.start();
@@ -61,6 +61,7 @@ public class Game {
     private void updateCarPositions() {
         for(Car car: this.racers) {
             car.getNextPosition();
+            this.gui.drawNewCarPositions();
         }
     }
 }
