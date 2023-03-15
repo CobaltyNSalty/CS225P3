@@ -8,6 +8,7 @@ name in a comment on the same line to not interfere with other important documen
 3/11    [chris]     - Created class, added work log comment.
 3/13    [chris]     - added minimum field variables to test gui, used UML
 3/14    [chris]     - added getNextPosition() method, no code
+3/15    [chris]     - added test code to getNextPosition() to test updating position in GUI
 
 
  */

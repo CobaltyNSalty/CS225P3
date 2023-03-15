@@ -17,6 +17,7 @@ name in a comment on the same line to not interfere with other important documen
 3/13    [chris]     - worked on getting tiles to display in gameWindowPanel
 3/14    [chris]     - added JLayeredPane and carPanel implementation.
 3/15    [chris]     - tested how to get cars to move, no dedicated path. Got it working
+                    - added empty bottom panel to display information about racers to user
 
 
  */
@@ -67,7 +68,7 @@ public class GUI {
      */
     private void createGUI() {
         this.rootFrame.setContentPane(this.contentPanel);
-        this.rootFrame.setPreferredSize(new Dimension(1000, 600));
+        this.rootFrame.setPreferredSize(new Dimension(1000, 700));
         this.rootFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.rootFrame.setTitle("Track Star Racer! 9001");
         this.rootFrame.setResizable(false);
@@ -82,6 +83,11 @@ public class GUI {
 
         /* _Game Window_ */
         this.gameWindowPanel.setLayout(new BorderLayout());
+        JPanel topGamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        topGamePanel.setBorder(new LineBorder(Color.BLACK));
+        topGamePanel.setBackground(Color.BLACK);
+        JPanel bottomGamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        bottomGamePanel.setBounds(0, 0, 700, 200);
 
         // checkered flag side panels
         JPanel leftRootPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -92,7 +98,6 @@ public class GUI {
         leftRootPanel.add(leftImageLabel);
 
         JPanel rightRootPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        rightRootPanel.setPreferredSize(new Dimension(100, 600));
         rightRootPanel.setBackground(Color.BLACK);
 
         JLabel rightImageLabel = new JLabel();
@@ -101,18 +106,12 @@ public class GUI {
 
         // Where the game will be displayed
         JLayeredPane centerPanel = new JLayeredPane();
-        centerPanel.setBorder(new LineBorder(Color.BLACK));
-        centerPanel.setPreferredSize(new Dimension(800, 600));
-
-        // decorative backdrop, cannot set a JLayeredPane background color
-        JPanel blackBackgroundPanel = new JPanel();
-        blackBackgroundPanel.setBackground(Color.BLACK);
-        blackBackgroundPanel.setBounds(0, 0, 800, 600);
+        centerPanel.setPreferredSize(new Dimension(800, 500));
 
         // Panel to house the racetrack Tile sprites
         JPanel gameTilePanel = new JPanel(new GridBagLayout());
         gameTilePanel.setBackground(new Color(67, 174, 32));
-        gameTilePanel.setBounds(50, 25, 700, 500);
+        gameTilePanel.setBounds(50, 0, 700, 500);
         GridBagConstraints constraints = new GridBagConstraints();
         for (int row = 0; row < this.gameTrack.getRaceTrack().length; row++) {
             for (int col = 0; col < this.gameTrack.getRaceTrack()[0].length; col++) {
@@ -135,7 +134,7 @@ public class GUI {
         // the racetrack sprites.
         JPanel carPanel = new JPanel();
         carPanel.setOpaque(false);
-        carPanel.setBounds(50, 25, 700, 500);
+        carPanel.setBounds(50, 0, 700, 500);
         carPanel.setLayout(null);
         JLabel carLabel1 = new JLabel(new ImageIcon(this.gameCars[0].getSprite()));
         carLabel1.setBounds(this.gameCars[0].getPosX(), this.gameCars[0].getPosY(), 50, 50);
@@ -149,14 +148,25 @@ public class GUI {
         carPanel.add(carLabel2);
 
         // Compose gameplay area
-        centerPanel.add(blackBackgroundPanel, new Integer(0));
         centerPanel.add(gameTilePanel, new Integer(1));
         centerPanel.add(carPanel, new Integer(2));
 
+        // info panel
+        JPanel infoPanel = new JPanel();
+        infoPanel.setPreferredSize(new Dimension(1000, 200));
+        infoPanel.setBackground(Color.PINK);
+        infoPanel.setBorder(new LineBorder(Color.RED));
+
+
         // Compose overall game window
-        this.gameWindowPanel.add(leftRootPanel, BorderLayout.WEST);
-        this.gameWindowPanel.add(centerPanel, BorderLayout.CENTER);
-        this.gameWindowPanel.add(rightRootPanel, BorderLayout.EAST);
+        topGamePanel.add(leftRootPanel, BorderLayout.WEST);
+        topGamePanel.add(centerPanel, BorderLayout.CENTER);
+        topGamePanel.add(rightRootPanel, BorderLayout.EAST);
+
+        bottomGamePanel.add(infoPanel);
+
+        this.gameWindowPanel.add(topGamePanel, BorderLayout.NORTH);
+        this.gameWindowPanel.add(bottomGamePanel, BorderLayout.SOUTH);
 
         // TODO: this will initially be the menuWindow not the gameWindowPanel
         this.contentPanel.add(this.gameWindowPanel);

@@ -60,6 +60,7 @@ public class Game {
 
     private void updateCarPositions() {
         for(Car car: this.racers) {
+            // TODO: next positions should be the next point in the path array in raceTrack variable
             car.getNextPosition();
             this.gui.drawNewCarPositions();
         }

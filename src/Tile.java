@@ -38,12 +38,12 @@ public class Tile {
         createPath(imageIndexValue);
     }
 
-    public Tile(Image image, int imageIndexValue, int row, int col) {
+    public Tile(Image image, int imageID, int row, int col) {
         this.sprite = image;
-        this.tileIDNum = imageIndexValue; // integer value at start of image file name
+        this.tileIDNum = imageID; // integer value at start of image file name
         this.indexPosRow = row;
         this.indexPosCol = col;
-        createPath(imageIndexValue);
+        createPath(imageID);
     }
 
 
@@ -51,13 +51,13 @@ public class Tile {
     /**
      * Create a sequence of (x,y) coordinates that represent the path of a Car object traversing
      * over this Tile. Path is based on the type of Tile which is indicated by the index value.
-     * @param index - value correlating the TrackTile filename used to create this Tile's sprite.
+     * @param imageID - value correlating the TrackTile filename used to create this Tile's sprite.
      */
-    private void createPath(int index) {
+    private void createPath(int imageID) {
         path = new Point[50]; // TODO: needs testing
-        if(index == 7) { index = 1; } // same tile but with checkpoint
-        if(index == 8) { index = 2; } // same tile but with checkpoint
-        switch(index) { // TODO: needs testing
+        if(imageID == 7) { imageID = 1; } // same tile but with checkpoint
+        if(imageID == 8) { imageID = 2; } // same tile but with checkpoint
+        switch(imageID) { // TODO: needs testing
             case 1: // 1 Straight vertical
                 for(int i = 0; i < 50; i++) {
                     path[i] = new Point(25, i);
