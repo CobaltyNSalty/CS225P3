@@ -2,7 +2,13 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -15,6 +21,7 @@ name in a comment on the same line to not interfere with other important documen
                     - added default constructor
 3/13    [chris]     - added testing code for gui.
 3/14    [chris]     - testing gameLoop method for desired functionality, added updateCarPosition() from the UML
+3/18    [Kat]       - adding code for importing Car and Track data from files
 
 
  */
@@ -32,8 +39,13 @@ public class Game {
 
     public void play() {
         // TODO: Replace this code block with inputs from filereader
-        this.raceTrack = new Track();
-        this.raceTrack.createHardCodedTrackTileData();
+//        this.raceTrack = new Track();
+//        this.raceTrack.createHardCodedTrackTileData();
+        try {
+            raceTrack = importTrackFromFile("Tracks\\Track1.csv");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         this.racers = new Car[] { new Car(), new Car() };
         Image car1, car2;
         try {
@@ -64,5 +76,53 @@ public class Game {
             car.getNextPosition();
             this.gui.drawNewCarPositions();
         }
+    }
+
+    public Car importCarFromFile(String fileName) throws IOException {
+        Car importCar;
+        LinkedList data;
+
+        data = importData(fileName);
+        importCar = new Car(data);
+
+        return importCar;
+    }
+
+    public Track importTrackFromFile(String fileName) throws IOException {
+        Track importTrack;
+        LinkedList<String> data;
+
+        data = importData(fileName);
+        importTrack = new Track(data);
+
+        return importTrack;
+
+    }
+
+
+    public LinkedList importData(String fileName) throws IOException {
+        FileInputStream inFS = null;
+        LinkedList data;
+        try {
+            inFS = new FileInputStream(fileName);
+            data = extractInfoFromFile(inFS);
+        } catch (FileNotFoundException e) {
+            data = new LinkedList<String>();
+        } finally {
+            if (inFS != null) {
+                inFS.close();
+            }
+        }
+        return data;
+    }
+
+
+    public LinkedList extractInfoFromFile(FileInputStream fIS) {
+        LinkedList entryList = new LinkedList<String>();
+        Scanner scnr = new Scanner(fIS);
+        while (scnr.hasNextLine()) {
+            entryList.add(scnr.nextLine());
+        }
+        return entryList;
     }
 }
