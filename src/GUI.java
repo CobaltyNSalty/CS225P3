@@ -18,10 +18,17 @@ name in a comment on the same line to not interfere with other important documen
 3/14    [chris]     - added JLayeredPane and carPanel implementation.
 3/15    [chris]     - tested how to get cars to move, no dedicated path. Got it working
                     - added empty bottom panel to display information about racers to user
+3/19    [tre]       - Add constants for car width and car height.
 
 
  */
 public class GUI {
+    /** The width of the JLabel for each car in pixels. */
+    public static final int CAR_WIDTH = 50;
+
+    /** The height of the JLabel for each car in pixels. */
+    public static final int CAR_HEIGHT = 50;
+
     /* ___ FIELD VARIABLES ___ */
     /* Base frame for the application */
     private JFrame rootFrame;
@@ -137,10 +144,10 @@ public class GUI {
         carPanel.setBounds(50, 0, 700, 500);
         carPanel.setLayout(null);
         JLabel carLabel1 = new JLabel(new ImageIcon(this.gameCars[0].getSprite()));
-        carLabel1.setBounds(this.gameCars[0].getPosX(), this.gameCars[0].getPosY(), 50, 50);
+        carLabel1.setBounds(this.gameCars[0].getPosX(), this.gameCars[0].getPosY(), CAR_WIDTH, CAR_HEIGHT);
         carLabel1.setDoubleBuffered(true);
         JLabel carLabel2 = new JLabel(new ImageIcon(this.gameCars[1].getSprite()));
-        carLabel2.setBounds(this.gameCars[1].getPosX(), this.gameCars[1].getPosY(), 50, 50);
+        carLabel2.setBounds(this.gameCars[1].getPosX(), this.gameCars[1].getPosY(), CAR_WIDTH, CAR_HEIGHT);
         carLabel2.setDoubleBuffered(true);
         this.carLabels[0] = carLabel1;
         this.carLabels[1] = carLabel2;

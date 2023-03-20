@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.Arrays;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
 The assignment details that code you wrote requires a comment with your name above it. We will implement
@@ -47,9 +48,12 @@ public class Car {
         this.posY = posY;
     }
 
+    static int trackPosX, trackPosY, i = 0;
     public void getNextPosition() {
         // TODO: update positions with next track coordinate
         this.posX += 1;
         this.posY += 1;
+        System.out.println("this.posX = " + this.posX);
+        System.out.println("this.posY = " + this.posY);
     }
 }
