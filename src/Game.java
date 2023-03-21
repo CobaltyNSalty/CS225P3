@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -17,7 +19,9 @@ name in a comment on the same line to not interfere with other important documen
                     - added default constructor
 3/13    [chris]     - added testing code for gui.
 3/14    [chris]     - testing gameLoop method for desired functionality, added updateCarPosition() from the UML
-
+3/17    [joey]      - updated gameLoop to incorporate the timer
+3/20    [joey]      - added new Instant attribute "startTime"
+3/21    [joey]      - added getCurrentTime() method
 
  */
 public class Game implements ActionListener {
@@ -25,6 +29,8 @@ public class Game implements ActionListener {
     private Car[] racers;
     private GUI gui;
     private Timer gameClock;
+    //test
+    private Instant startTime = Instant.now();
 
     public Game() {
         this.raceTrack = null;
@@ -57,10 +63,20 @@ public class Game implements ActionListener {
         // TODO: clock starts prior to game start
         gameClock = new Timer(50, e -> {
             updateCarPositions();
+          Instant updatedTime = Instant.now();
+
+         //   System.out.println(timeUpdate.getSeconds());
+            this.gui.updateTimer(getCurrentTime().getSeconds());
         });
         gameClock.start();
+
     }
 
+    public Duration getCurrentTime(){
+        Instant currentTime = Instant.now();
+        Duration totalTime = Duration.between(startTime,currentTime);
+        return totalTime;
+    }
     private void updateCarPositions() {
         for(Car car: this.racers) {
             // TODO: next positions should be the next point in the path array in raceTrack variable
