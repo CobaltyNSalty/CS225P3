@@ -48,9 +48,16 @@ public class Car {
         this.posY = posY;
     }
 
-    static int trackPosX, trackPosY, i = 0;
     public void getNextPosition() {
         // TODO: update positions with next track coordinate
+        Tile[][] trackTiles = Game.getInstance().getTrack().getRaceTrack();
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 12; j++) {
+
+            }
+        }
+
         this.posX += 1;
         this.posY += 1;
         System.out.println("this.posX = " + this.posX);

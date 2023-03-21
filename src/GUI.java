@@ -23,9 +23,9 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class GUI {
+    // TODO: 3/20/2023 Is a car the same width as a tile? If so, then this variable should probably be renamed and moved.
     /** The width of the JLabel for each car in pixels. */
     public static final int CAR_WIDTH = 50;
-
     /** The height of the JLabel for each car in pixels. */
     public static final int CAR_HEIGHT = 50;
 

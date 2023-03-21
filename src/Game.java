@@ -19,6 +19,10 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class Game {
+
+    // TODO: 3/21/2023 Add documentation.
+    public static Game instance;
+
     private Track raceTrack;
     private Car[] racers;
     private GUI gui;
@@ -64,5 +68,13 @@ public class Game {
             car.getNextPosition();
             this.gui.drawNewCarPositions();
         }
+    }
+
+    public Track getTrack() {
+        return raceTrack;
+    }
+
+    public static Game getInstance() {
+        return instance;
     }
 }
