@@ -44,8 +44,6 @@ public class GUI implements ActionListener{
     private Image[] images;
     private Track gameTrack;
     private Car[] gameCars;
-    /* Testing if Cars should extend JLabel */ // TODO: Remove
-    private JLabel[] carLabels;
     private ActionListener listener;
 
     JLabel[][] carPanelSpeedLabels;
@@ -210,36 +208,20 @@ public class GUI implements ActionListener{
             }
         }
 
-        // TODO: Remove, initializing car starting position
-        this.gameCars[0].setPosX(75);
-        this.gameCars[0].setPosY(100);
-        this.gameCars[1].setPosX(75);
-        this.gameCars[1].setPosY(200);
-        this.carLabels = new JLabel[2];
-        // TODO: end Remove
-
         // transparent panel for cars to move across using (x,y) coordinate values, cars are drawn over
         // the racetrack sprites.
         JPanel carPanel = new JPanel();
         carPanel.setOpaque(false);
         carPanel.setBounds(50, 0, 700, 500);
         carPanel.setLayout(null);
-        JLabel carLabel1 = new JLabel(new ImageIcon(this.gameCars[0].getSprite()));
-        carLabel1.setBounds(this.gameCars[0].getPosX(), this.gameCars[0].getPosY(), 50, 50);
-        carLabel1.setDoubleBuffered(true);
-        JLabel carLabel2 = new JLabel(new ImageIcon(this.gameCars[1].getSprite()));
-        carLabel2.setBounds(this.gameCars[1].getPosX(), this.gameCars[1].getPosY(), 50, 50);
-        carLabel2.setDoubleBuffered(true);
-        this.carLabels[0] = carLabel1;
-        this.carLabels[1] = carLabel2;
-        carPanel.add(carLabel1);
-        carPanel.add(carLabel2);
+        // TODO: add cars
 
         // Compose gameplay area
         centerPanel.add(gameTilePanel, new Integer(1));
         centerPanel.add(carPanel, new Integer(2));
 
         // car specific panels in info panel
+        // TODO: make dynamic
         JPanel[] carPanels = new JPanel[2];
         JLabel[] carPanelTitles = new JLabel[2];
         carPanelSpeedLabels = new JLabel[2][2];
@@ -258,7 +240,7 @@ public class GUI implements ActionListener{
             //carPanelTextFields[0][i].setColumns(10);
 
             carPanelSpeedLabels[0][i].setPreferredSize(new Dimension(50, 50));
-            carPanelSpeedLabels[1][i] = new JLabel("" + gameCars[i].getPosY());
+            carPanelSpeedLabels[1][i] = new JLabel("" + gameCars[i].getPosition().y);
 
             layoutConstraints.gridy = 0;
             layoutConstraints.gridx = 0;
@@ -308,9 +290,9 @@ public class GUI implements ActionListener{
 
     public void drawNewCarPositions() {
         for(int i = 0; i < 2; i++) {
-            this.carLabels[i].setBounds(this.gameCars[i].getPosX(), this.gameCars[i].getPosY(), 50, 50);
-            carPanelSpeedLabels[0][i].setText("" + gameCars[i].getPosX());
-            carPanelSpeedLabels[1][i].setText("" + gameCars[i].getPosY());
+            this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, 50, 50);
+            carPanelSpeedLabels[0][i].setText("" + gameCars[i].getPosition().x);
+            carPanelSpeedLabels[1][i].setText("" + gameCars[i].getPosition().y);
         }
     }
 

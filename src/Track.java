@@ -8,7 +8,8 @@ name in a comment on the same line to not interfere with other important documen
                     - wrote basic constructors and a test method with hardcoded Tiles variable
                     - wrote loadTrackTiles() method
 3/14    [chris]     - testing a total track path implementation with createPath() method
-3/20    [Kat]       - added constructor for passing in LinkedList from importTrackfromFile function
+3/20    [Kat]       - wrote constructor for passing in LinkedList from importTrackfromFile function
+3/21    [chris]     - updated documentation for data file constructor
 
 
  */
@@ -18,7 +19,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  *  Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
@@ -37,45 +37,50 @@ public class Track {
     public Track() {
         this.raceTrack = null;
         this.trackTileSprites = null;
+        this.path = null;
     }
-// This constructor is for use by the importTrackFromFile function in Game, as it passes it a LinkedList of track data
 
+    /**
+     * Creates a new Track object from data file
+     * First line of data file: [0] = height, [1] = width, [2] = 0(nothing)
+     * All following lines: [0] = Row, [1] = Column, [2] = ImageID integer
+     * ImageID is the integer value at the beginning of the selected Tiles filename in the default tile set.
+     * @param data - List of Strings imported from the data File
+     */
     public Track(LinkedList<String> data) {
+        this();
+        /* Import all default Tile sprite images from "Sprites\\TrackTiles" */
         loadTrackTiles();
-        int[] dataArray = new int[5];
-        String[] stringArray;
-        stringArray = (data.pop()).split(",");
-        dataArray[0] = Integer.parseInt(stringArray[0]);
-        dataArray[1] = Integer.parseInt(stringArray[1]);
-        raceTrack = new Tile[dataArray[0]][dataArray[1]];
-        for (int row = 0; row < raceTrack.length; row++) {
-            for (int col = 0; col < raceTrack[row].length; col++) {
-                this.raceTrack[row][col] = new Tile(trackTileSprites[0]); // empty tile
+        /* Holds integer values from data file once imported and converted */
+        int[] tileArgs = new int[3];                                 // each line is 1 Tile and has 3 entries
+        String[] tileArgsStringArray = (data.pop()).split(",");// get first line from data file
+        tileArgs[0] = Integer.parseInt(tileArgsStringArray[0]);      // first line entry 1 = height of track
+        tileArgs[1] = Integer.parseInt(tileArgsStringArray[1]);      // first line entry 2 = width of track
+        this.raceTrack = new Tile[tileArgs[0]][tileArgs[1]];         // initialize raceTrack with given dimensions
+
+        /* Initialize all elements in raceTrack to a non-null Tile(0 - Empty Tile) */
+        for (int row = 0; row < this.raceTrack.length; row++) {
+            for (int col = 0; col < this.raceTrack[row].length; col++) {
+                this.raceTrack[row][col] = new Tile(this.trackTileSprites[0]);
             }
         }
-        while (!data.isEmpty()) {
-            stringArray = (data.pop()).split(",");
-            for (int x = 0; x < 5; x++) {
-                dataArray[x] = Integer.parseInt(stringArray[x]);
+
+        /* Modify Tiles in raceTrack with new Tiles from data File */
+        while (!(data.isEmpty())) {
+            tileArgsStringArray = (data.pop()).split(",");
+            for (int x = 0; x < tileArgsStringArray.length; x++) { // [chris] swapped integer value for stringArray.length
+                tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
-            raceTrack[dataArray[0]][dataArray[1]] = new Tile(trackTileSprites[dataArray[2]], dataArray[2], dataArray[3], dataArray[4]);
+            this.raceTrack[tileArgs[0]][tileArgs[1]] = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
         }
-    }
-
-    public Track(int width, int height) {
-        this.raceTrack = new Tile[height][width];
-    }
-
-    public Track(Tile[][] tiles) {
-        this.raceTrack = tiles;
     }
 
     /* ___ FUNCTIONS ___ */
-    /**
+    /*
      * This method is to create a Track object without importing data from a file. This
      * is a method used to test the gui system.
      * TODO: Remove this method after filereader implemented
-     */
+
     public void createHardCodedTrackTileData() {
         this.raceTrack = new Tile[9][13];
         loadTrackTiles();
@@ -95,7 +100,7 @@ public class Track {
             7              1                           1
             8              5   2   2   2   8   2   2   3
             9
-         */
+
         this.raceTrack[1][1] = new Tile(trackTileSprites[6], 6, 1, 1);
         this.raceTrack[2][1] = new Tile(trackTileSprites[1], 1, 2, 1);
         this.raceTrack[3][1] = new Tile(trackTileSprites[1], 1, 3, 1);
@@ -136,6 +141,16 @@ public class Track {
         this.raceTrack[2][3] = new Tile(trackTileSprites[1], 1, 2, 3);
         this.raceTrack[1][3] = new Tile(trackTileSprites[4], 4, 1, 3);
         this.raceTrack[1][2] = new Tile(trackTileSprites[2], 2, 1, 2);
+    }
+    */
+
+    /**
+     * Returns the next point on the path given an index value for the current path
+     * @param index - Index of current point on path
+     * @return - next point on path
+     */
+    public Point getNextPointOnPath(int index) {
+        return path[(index +1)];
     }
 
     /**

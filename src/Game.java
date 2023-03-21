@@ -40,14 +40,13 @@ public class Game implements ActionListener {
     }
 
     public void play() {
-        // TODO: Replace this code block with inputs from filereader
-//        this.raceTrack = new Track();
-//        this.raceTrack.createHardCodedTrackTileData();
         try {
             raceTrack = importTrackFromFile("Tracks\\Track1.csv");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        // TODO: Replace this code block with inputs from filereader
         this.racers = new Car[] { new Car(), new Car() };
         Image car1, car2;
         try {
@@ -56,8 +55,8 @@ public class Game implements ActionListener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.racers[0].setSprite(car1);
-        this.racers[1].setSprite(car2);
+        this.racers[0] = new Car("Tester 1", car1, new Point[]{new Point(50, 50), new Point(100, 100)}, 0, 50);
+        this.racers[1] = new Car("Tester 2", car2, new Point[]{new Point(50, 50), new Point(100, 100)}, 100, 50);
         // TODO: end of code block to remove
 
         Object[] gameAssets = new Object[] {this.raceTrack, this.racers, this};
@@ -74,11 +73,13 @@ public class Game implements ActionListener {
     }
 
     private void updateCarPositions() {
+        /* TODO: pending pathing implementation
         for(Car car: this.racers) {
-            // TODO: next positions should be the next point in the path array in raceTrack variable
-            car.getNextPosition();
+            // TODO: this hasn't been tested, needs the generation of Track.path to be completed
+            car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentPointOnPathIndex()));
             this.gui.drawNewCarPositions();
         }
+         */
     }
 
     public Car importCarFromFile(String fileName) throws IOException {
