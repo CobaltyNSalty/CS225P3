@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -14,7 +15,7 @@ name in a comment on the same line to not interfere with other important documen
  */
 public class Car {
     /* ___ FIELD VARIABLES ___ */
-    private Image sprite;
+     private Image sprite;
     private int posX;
     private int posY;
 
@@ -25,6 +26,7 @@ public class Car {
     /* ___ ACCESSORS / MUTATORS ___ */
     public void setSprite(Image sprite) {
         this.sprite = sprite;
+        //this.setIcon(new ImageIcon(sprite));
     }
 
     public Image getSprite() {

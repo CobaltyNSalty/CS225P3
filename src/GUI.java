@@ -199,8 +199,8 @@ public class GUI implements ActionListener{
             for (int col = 0; col < this.gameTrack.getRaceTrack()[0].length; col++) {
                 constraints2.gridx = col;
                 constraints2.gridy = row;
-                JLabel trackTileLabel = new JLabel(new ImageIcon(this.gameTrack.getTileSpriteAt(row, col)));
-                gameTilePanel.add(trackTileLabel, constraints2);
+                // JLabel trackTileLabel = new JLabel(new ImageIcon(this.gameTrack.getTileSpriteAt(row, col)));
+                gameTilePanel.add(this.gameTrack.getTileAtPoint(row, col), constraints2);
             }
         }
 

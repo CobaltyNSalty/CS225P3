@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  *  Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
@@ -183,7 +182,9 @@ public class Track {
     public Tile[][] getRaceTrack() {
         return raceTrack;
     }
-    public Image getTileSpriteAt(int x, int y) {
-        return this.raceTrack[x][y].getSprite();
+
+    public Tile getTileAtPoint(int x, int y) {
+        return this.raceTrack[x][y];
     }
+
 }

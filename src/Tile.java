@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -9,12 +10,13 @@ name in a comment on the same line to not interfere with other important documen
 3/13    [chris]     - Implemented minimum field variables to create gui, used UML
                     - added (Image image) constructor
 3/14    [chris]     - wrote createPath() method
+3/21    [chris]     - modified implementation to have Tile class extend JLabel
 
  */
-public class Tile {
+public class Tile extends JLabel {
     /* ___ FIELD VARIABLES ___ */
     /* Display image */
-    private Image sprite;
+    // private Image sprite;
     /* Sequence of points from entry point to exit point that Car objects travel across this Tile */
     private Point[] path;
     /* A value to represent the specific type of Tile, correlates to TrackTile filename of image */
@@ -28,18 +30,22 @@ public class Tile {
 
     /* ___ CONSTRUCTORS ___ */
     // TODO: update all constructors with new field variables
+
     public Tile(Image image) {
-        this.sprite = image;
+        // this.sprite = image;
+        this.setIcon(new ImageIcon(image));
     }
 
     public Tile(Image image, int imageIndexValue) {
-        this.sprite = image;
+        // this.sprite = image;
+        this.setIcon(new ImageIcon(image));
         this.tileIDNum = imageIndexValue; // integer value at start of image file name
         createPath(imageIndexValue);
     }
 
     public Tile(Image image, int imageID, int row, int col) {
-        this.sprite = image;
+        // this.sprite = image;
+        this.setIcon(new ImageIcon(image));
         this.tileIDNum = imageID; // integer value at start of image file name
         this.indexPosRow = row;
         this.indexPosCol = col;
@@ -105,11 +111,37 @@ public class Tile {
         }
     }
 
+    @Override
+    public void paintComponent(Graphics g) {
+        // Test method to paint path
+        super.paintComponent(g);
+            /*
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.RED);
+        g2d.setFont(new Font("Arial", Font.BOLD, 12));
+        g2d.drawString((this.indexPosRow+","+this.indexPosCol), 10, 10);
+        if(path != null) {
+            int x1 = path[0].x;
+            int y1 = path[0].y;
+
+            for (Point p : path) {
+                g2d.drawLine(x1, y1, p.x, p.y);
+                x1 = p.x;
+                y1 = p.y;
+            }
+
+        }
+             */
+
+    }
+
 
     /* ___ ACCESSORS / MUTATORS ___ */
+    /*
     public Image getSprite() {
         return sprite;
     }
+     */
     public int getTileIDNum() {
         return tileIDNum;
     }
