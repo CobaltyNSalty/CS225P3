@@ -16,7 +16,7 @@ name in a comment on the same line to not interfere with other important documen
 public class Tile extends JLabel {
     /* ___ FIELD VARIABLES ___ */
     /* Display image */
-    // private Image sprite;
+    //private Image sprite;
     /* Sequence of points from entry point to exit point that Car objects travel across this Tile */
     private Point[] path;
     /* A value to represent the specific type of Tile, correlates to TrackTile filename of image */

@@ -18,62 +18,77 @@ name in a comment on the same line to not interfere with other important documen
 3/14    [chris]     - added getNextPosition() method, no code
 3/15    [chris]     - added test code to getNextPosition() to test updating position in GUI
 3/18    [Kat]       - added constructor to allow LinkedList to be passed in from importCarFromFile
+3/21    [chris]     - implemented UML design
 
 
  */
-public class Car {
+public class Car extends JLabel {
     /* ___ FIELD VARIABLES ___ */
-     private Image sprite;
+    /* Name assigned to each Car or players name */
+    private String name;
+    /* Calculated value to be displayed as user feedback */
+    private double speed;
+    /* Series of points car must reach to complete race */
+    private Point[] checkpoints;
+    /* Current point car is heading towards */
+    private int checkpointIndex;
+
+
+    /* Holds the index value of the Track.path point the car is currently at */
+    private int currentPointOnPathIndex;
+    /* Catch-all value for car "alterations"  */
+    private int modifier;
+    /* Cars x position on raceTrack panel */
     private int posX;
+    /* Cars y position on raceTrack panel */
     private int posY;
 
 
     /* ___ CONSTRUCTORS ___ */
     public Car() {
-        sprite = null;
-        posX = 0;
-        posY = 0;
+        this.name = null;
+        this.speed = 0;
+        this.checkpoints = null;
+        this.checkpointIndex = 0;
+        this.modifier = 0;
+        this.posX = 0;
+        this.posY = 0;
+    }
+
+    public Car(String name, Image carImage, Point[] checkpoints, int startingX, int startingY) {
+        this();
+        this.name = name;
+        this.checkpoints = checkpoints;
+        this.posY = startingY;
+        this.posX = startingX;
+        this.setIcon(new ImageIcon(carImage));
     }
 
     public Car(LinkedList<String> data) {
-        String spriteLocation;
-        spriteLocation = data.get(0);
-
+        this();
+        String spriteLocation= data.get(0);
     }
-
 
     /* ___ FUNCTIONS ___ */
 
     /* ___ ACCESSORS / MUTATORS ___ */
-    public void setSprite(Image sprite) {
-        this.sprite = sprite;
-        //this.setIcon(new ImageIcon(sprite));
+    public void incrementCheckpointIndex() {
+        this.checkpointIndex += 1;
+    }
+    public Point getPosition() {
+        return new Point(posX, posY);
+    }
+    public void setPosition(Point position) {
+        this.posX = position.x;
+        this.posY = position.y;
+    }
+    public void setNextPosition(Point p) {
+        this.posX = p.x;
+        this.posY = p.y;
     }
 
-    public Image getSprite() {
-        return sprite;
-    }
-
-    public int getPosX() {
-        return posX;
-    }
-
-    public void setPosX(int posX) {
-        this.posX = posX;
-    }
-
-    public int getPosY() {
-        return posY;
-    }
-
-    public void setPosY(int posY) {
-        this.posY = posY;
-    }
-
-    public void getNextPosition() {
-        // TODO: update positions with next track coordinate
-        this.posX += 1;
-        this.posY += 1;
+    public int getCurrentPointOnPathIndex() {
+        return currentPointOnPathIndex;
     }
 }
 
