@@ -36,6 +36,7 @@ public class Car {
     }
 
     public Car(LinkedList<String> data) {
+        this();
         String spriteLocation;
         spriteLocation = data.get(0);
 

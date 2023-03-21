@@ -168,10 +168,11 @@ public class GUI implements ActionListener{
     }
     private void createGameWindow() {
         /* _Game Window_ */
-        this.gameWindowPanel.setLayout(new BorderLayout());
+        this.gameWindowPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         this.gameWindowPanel.setPreferredSize(new Dimension(1000,700));
 
-        JPanel topGamePanel = new JPanel(new BorderLayout());
+        JPanel topGamePanel = new JPanel();
+        topGamePanel.setLayout(new BoxLayout(topGamePanel, BoxLayout.X_AXIS));
         topGamePanel.setBackground(Color.BLACK);
         JPanel bottomGamePanel = createGameWindowInfoPanel();
 
@@ -193,6 +194,7 @@ public class GUI implements ActionListener{
 
         // Where the game will be displayed
         JLayeredPane centerPanel = new JLayeredPane();
+        centerPanel.setPreferredSize(new Dimension(800, 500));
 
         // Panel to house the racetrack Tile sprites
         JPanel gameTilePanel = new JPanel(new GridBagLayout());
@@ -237,25 +239,19 @@ public class GUI implements ActionListener{
         centerPanel.add(gameTilePanel, new Integer(1));
         centerPanel.add(carPanel, new Integer(2));
 
-        // info panel
-        JPanel infoPanel = new JPanel();
-        infoPanel.setPreferredSize(new Dimension(1000, 200));
-        infoPanel.setBackground(Color.PINK);
-        infoPanel.setBorder(new LineBorder(Color.RED));
-
         // car specific panels in info panel
         JPanel[] carPanels = new JPanel[2];
         JLabel[] carPanelTitles = new JLabel[2];
         carPanelSpeedLabels = new JLabel[2][2];
+
         GridBagConstraints layoutConstraints = new GridBagConstraints();
         layoutConstraints.insets = new Insets(10,10,10,10);
         layoutConstraints.weightx = 1;
         layoutConstraints.weighty = 1;
-        JLabel testField = new JLabel("50");
 
         for (int i = 0; i < 2; i++) {
-
             carPanels[i] = new JPanel(new GridBagLayout());
+            carPanels[i].setBorder(new LineBorder(Color.RED));
             carPanels[i].setPreferredSize(new Dimension(250, 100));
             carPanelTitles[i] = new JLabel("Car " + (i + 1));
             carPanelSpeedLabels[0][i] = new JLabel("50");
@@ -268,38 +264,42 @@ public class GUI implements ActionListener{
             layoutConstraints.gridx = 0;
             layoutConstraints.gridwidth = 2;
             carPanels[i].add(carPanelTitles[i], layoutConstraints);
+
             layoutConstraints.gridwidth = 1;
             layoutConstraints.gridy = 1;
             carPanels[i].add(new JLabel("X position:"), layoutConstraints);
+
             layoutConstraints.gridx = 1;
             carPanels[i].add( carPanelSpeedLabels[0][i], layoutConstraints);
+
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 2;
             carPanels[i].add(new JLabel("Y position:"), layoutConstraints);
+
             layoutConstraints.gridx = 1;
             carPanels[i].add( carPanelSpeedLabels[1][i], layoutConstraints);
-            infoPanel.add(carPanels[i]);
+
+            // BottomGamePanel created in createGameWindowInfoPanel() and has a JPanel added to it
+            ((JPanel)bottomGamePanel.getComponent(0)).add(carPanels[i]);
         }
 
-
         // Compose overall game window
-        topGamePanel.add(leftRootPanel, BorderLayout.WEST);
-        topGamePanel.add(centerPanel, BorderLayout.CENTER);
-        topGamePanel.add(rightRootPanel, BorderLayout.EAST);
+        topGamePanel.add(leftRootPanel);
+        topGamePanel.add(centerPanel);
+        topGamePanel.add(rightRootPanel);
 
-        this.gameWindowPanel.add(topGamePanel, BorderLayout.NORTH);
-        this.gameWindowPanel.add(bottomGamePanel, BorderLayout.SOUTH);
+        this.gameWindowPanel.add(topGamePanel);
+        this.gameWindowPanel.add(bottomGamePanel);
     }
 
     private JPanel createGameWindowInfoPanel() {
         JPanel bottomGamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        bottomGamePanel.setBounds(0, 0, 700, 200);
 
         // info panel
-        JPanel infoPanel = new JPanel();
+        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 4));
         infoPanel.setPreferredSize(new Dimension(1000, 200));
-        infoPanel.setBackground(Color.PINK);
-        infoPanel.setBorder(new LineBorder(Color.RED));
+        infoPanel.setBackground(Color.PINK); // REMOVE
+        infoPanel.setBorder(new LineBorder(Color.RED)); // REMOVE
 
         bottomGamePanel.add(infoPanel);
 

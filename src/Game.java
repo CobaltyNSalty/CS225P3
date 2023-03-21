@@ -83,7 +83,7 @@ public class Game implements ActionListener {
 
     public Car importCarFromFile(String fileName) throws IOException {
         Car importCar;
-        LinkedList data;
+        LinkedList<String> data;
 
         data = importData(fileName);
         importCar = new Car(data);
@@ -103,9 +103,9 @@ public class Game implements ActionListener {
     }
 
 
-    public LinkedList importData(String fileName) throws IOException {
+    public LinkedList<String> importData(String fileName) throws IOException {
         FileInputStream inFS = null;
-        LinkedList data;
+        LinkedList<String> data;
         try {
             inFS = new FileInputStream(fileName);
             data = extractInfoFromFile(inFS);
@@ -120,8 +120,8 @@ public class Game implements ActionListener {
     }
 
 
-    public LinkedList extractInfoFromFile(FileInputStream fIS) {
-        LinkedList entryList = new LinkedList<String>();
+    public LinkedList<String> extractInfoFromFile(FileInputStream fIS) {
+        LinkedList<String> entryList = new LinkedList<String>();
         Scanner scnr = new Scanner(fIS);
         while (scnr.hasNextLine()) {
             entryList.add(scnr.nextLine());
