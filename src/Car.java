@@ -1,5 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
+import java.util.Scanner;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
 The assignment details that code you wrote requires a comment with your name above it. We will implement
@@ -10,6 +17,7 @@ name in a comment on the same line to not interfere with other important documen
 3/13    [chris]     - added minimum field variables to test gui, used UML
 3/14    [chris]     - added getNextPosition() method, no code
 3/15    [chris]     - added test code to getNextPosition() to test updating position in GUI
+3/18    [Kat]       - added constructor to allow LinkedList to be passed in from importCarFromFile
 
 
  */
@@ -19,7 +27,20 @@ public class Car {
     private int posX;
     private int posY;
 
+
     /* ___ CONSTRUCTORS ___ */
+    public Car() {
+        sprite = null;
+        posX = 0;
+        posY = 0;
+    }
+
+    public Car(LinkedList<String> data) {
+        String spriteLocation;
+        spriteLocation = data.get(0);
+
+    }
+
 
     /* ___ FUNCTIONS ___ */
 
@@ -55,3 +76,4 @@ public class Car {
         this.posY += 1;
     }
 }
+

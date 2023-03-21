@@ -8,6 +8,7 @@ name in a comment on the same line to not interfere with other important documen
                     - wrote basic constructors and a test method with hardcoded Tiles variable
                     - wrote loadTrackTiles() method
 3/14    [chris]     - testing a total track path implementation with createPath() method
+3/20    [Kat]       - added constructor for passing in LinkedList from importTrackfromFile function
 
 
  */
@@ -16,6 +17,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  *  Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
@@ -34,6 +37,29 @@ public class Track {
     public Track() {
         this.raceTrack = null;
         this.trackTileSprites = null;
+    }
+// This constructor is for use by the importTrackFromFile function in Game, as it passes it a LinkedList of track data
+
+    public Track(LinkedList<String> data) {
+        loadTrackTiles();
+        int[] dataArray = new int[5];
+        String[] stringArray;
+        stringArray = (data.pop()).split(",");
+        dataArray[0] = Integer.parseInt(stringArray[0]);
+        dataArray[1] = Integer.parseInt(stringArray[1]);
+        raceTrack = new Tile[dataArray[0]][dataArray[1]];
+        for (int row = 0; row < raceTrack.length; row++) {
+            for (int col = 0; col < raceTrack[row].length; col++) {
+                this.raceTrack[row][col] = new Tile(trackTileSprites[0]); // empty tile
+            }
+        }
+        while (!data.isEmpty()) {
+            stringArray = (data.pop()).split(",");
+            for (int x = 0; x < 5; x++) {
+                dataArray[x] = Integer.parseInt(stringArray[x]);
+            }
+            raceTrack[dataArray[0]][dataArray[1]] = new Tile(trackTileSprites[dataArray[2]], dataArray[2], dataArray[3], dataArray[4]);
+        }
     }
 
     public Track(int width, int height) {
