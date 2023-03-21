@@ -18,7 +18,7 @@ public class Tile extends JLabel {
     /* Display image */
     // private Image sprite;
     /* Sequence of points from entry point to exit point that Car objects travel across this Tile */
-    //private Point[] path;
+    private Point[] path;
     /* A value to represent the specific type of Tile, correlates to TrackTile filename of image */
     private int tileIDNum;
     /* The row index of this Tile within the array housing it
