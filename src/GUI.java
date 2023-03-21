@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,6 +21,7 @@ name in a comment on the same line to not interfere with other important documen
 3/14    [chris]     - added JLayeredPane and carPanel implementation.
 3/15    [chris]     - tested how to get cars to move, no dedicated path. Got it working
                     - added empty bottom panel to display information about racers to user
+3/20    [Kat]       - added Car display panels to bottom of UI showing current position
                     - rearranged code by adding createWindow methods to simplify createGUI()
 
  */
@@ -46,7 +48,9 @@ public class GUI implements ActionListener{
     private JLabel[] carLabels;
     private ActionListener listener;
 
+    JLabel[][] carPanelSpeedLabels;
     /* ___ CONSTRUCTORS ___ */
+
     public GUI() {
         this.rootFrame = new JFrame();
         this.contentPanel = new JPanel();
@@ -233,6 +237,51 @@ public class GUI implements ActionListener{
         centerPanel.add(gameTilePanel, new Integer(1));
         centerPanel.add(carPanel, new Integer(2));
 
+        // info panel
+        JPanel infoPanel = new JPanel();
+        infoPanel.setPreferredSize(new Dimension(1000, 200));
+        infoPanel.setBackground(Color.PINK);
+        infoPanel.setBorder(new LineBorder(Color.RED));
+
+        // car specific panels in info panel
+        JPanel[] carPanels = new JPanel[2];
+        JLabel[] carPanelTitles = new JLabel[2];
+        carPanelSpeedLabels = new JLabel[2][2];
+        GridBagConstraints layoutConstraints = new GridBagConstraints();
+        layoutConstraints.insets = new Insets(10,10,10,10);
+        layoutConstraints.weightx = 1;
+        layoutConstraints.weighty = 1;
+        JLabel testField = new JLabel("50");
+
+        for (int i = 0; i < 2; i++) {
+
+            carPanels[i] = new JPanel(new GridBagLayout());
+            carPanels[i].setPreferredSize(new Dimension(250, 100));
+            carPanelTitles[i] = new JLabel("Car " + (i + 1));
+            carPanelSpeedLabels[0][i] = new JLabel("50");
+            //carPanelTextFields[0][i].setColumns(10);
+
+            carPanelSpeedLabels[0][i].setPreferredSize(new Dimension(50, 50));
+            carPanelSpeedLabels[1][i] = new JLabel("" + gameCars[i].getPosY());
+
+            layoutConstraints.gridy = 0;
+            layoutConstraints.gridx = 0;
+            layoutConstraints.gridwidth = 2;
+            carPanels[i].add(carPanelTitles[i], layoutConstraints);
+            layoutConstraints.gridwidth = 1;
+            layoutConstraints.gridy = 1;
+            carPanels[i].add(new JLabel("X position:"), layoutConstraints);
+            layoutConstraints.gridx = 1;
+            carPanels[i].add( carPanelSpeedLabels[0][i], layoutConstraints);
+            layoutConstraints.gridx = 0;
+            layoutConstraints.gridy = 2;
+            carPanels[i].add(new JLabel("Y position:"), layoutConstraints);
+            layoutConstraints.gridx = 1;
+            carPanels[i].add( carPanelSpeedLabels[1][i], layoutConstraints);
+            infoPanel.add(carPanels[i]);
+        }
+
+
         // Compose overall game window
         topGamePanel.add(leftRootPanel, BorderLayout.WEST);
         topGamePanel.add(centerPanel, BorderLayout.CENTER);
@@ -260,6 +309,8 @@ public class GUI implements ActionListener{
     public void drawNewCarPositions() {
         for(int i = 0; i < 2; i++) {
             this.carLabels[i].setBounds(this.gameCars[i].getPosX(), this.gameCars[i].getPosY(), 50, 50);
+            carPanelSpeedLabels[0][i].setText("" + gameCars[i].getPosX());
+            carPanelSpeedLabels[1][i].setText("" + gameCars[i].getPosY());
         }
     }
 
