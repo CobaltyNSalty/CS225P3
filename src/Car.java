@@ -45,6 +45,8 @@ public class Car extends JLabel {
 
 
     /* ___ CONSTRUCTORS ___ */
+    // TODO: 3/22/2023 Constructor setting variables to null and 0 may be redundant unless done for the sake of being explicit.
+    //  Need to look at this more closely first.
     public Car() {
         this.name = null;
         this.speed = 0;
@@ -66,7 +68,7 @@ public class Car extends JLabel {
 
     public Car(LinkedList<String> data) {
         this();
-        String spriteLocation= data.get(0);
+        String spriteLocation = data.get(0);
     }
 
     /* ___ FUNCTIONS ___ */

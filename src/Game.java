@@ -24,6 +24,7 @@ name in a comment on the same line to not interfere with other important documen
 3/13    [chris]     - added testing code for gui.
 3/14    [chris]     - testing gameLoop method for desired functionality, added updateCarPosition() from the UML
 3/18    [Kat]       - adding code for importing Car and Track data from files
+3/21    [Tre]       - Replace timer delay with constant
 
 
  */

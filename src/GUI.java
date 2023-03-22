@@ -23,6 +23,7 @@ name in a comment on the same line to not interfere with other important documen
                     - added empty bottom panel to display information about racers to user
                     - rearranged code by adding createWindow methods to simplify createGUI()
 3/20    [Kat]       - added Car display panels to bottom of UI showing current position
+3/21    [Tre]       - Replace tile width and tile height with constants.
 
  */
 public class GUI implements ActionListener{
