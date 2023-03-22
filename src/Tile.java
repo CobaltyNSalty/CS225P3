@@ -135,7 +135,6 @@ public class Tile extends JLabel {
 
     }
 
-
     /* ___ ACCESSORS / MUTATORS ___ */
     /*
     public Image getSprite() {

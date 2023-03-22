@@ -52,7 +52,7 @@ public class Track {
         /* Import all default Tile sprite images from "Sprites\\TrackTiles" */
         loadTrackTiles();
         /* Holds integer values from data file once imported and converted */
-        int[] tileArgs = new int[3];                                 // each line is 1 Tile and has 3 entries
+        int[] tileArgs = new int[4];                                 // each line is 1 Tile and has 3 entries
         String[] tileArgsStringArray = (data.pop()).split(",");// get first line from data file
         tileArgs[0] = Integer.parseInt(tileArgsStringArray[0]);      // first line entry 1 = height of track
         tileArgs[1] = Integer.parseInt(tileArgsStringArray[1]);      // first line entry 2 = width of track
@@ -194,7 +194,7 @@ public class Track {
         int rowIndex = start.getIndexPosRow();
         int colIndex = start.getIndexPosCol();
         Point startPoint = start.getPath()[0];
-        int posX = (int)((colIndex * 50) + startPoint.getX());
+        int posX = (int)((colIndex * 50) + startPoint.getX()); // TODO: 3/21/2023 Magic numbers could be replaced with constant variable.
         int posY = (int)((rowIndex * 50) + startPoint.getY());
         // TODO: add all points from path using offset values, create offset values to replace first factor in posX,posY
         Point lastPoint;
