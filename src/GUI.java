@@ -26,6 +26,16 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class GUI implements ActionListener{
+    // TODO: 3/21/2023 TILE_WIDTH and TILE_HEIGHT may need to be moved to another file.
+    /**
+     * The width of game tiles in pixels.
+     */
+    public static final int TILE_WIDTH = 50;
+
+    /**
+     * The height of game tiles in pixels.
+     */
+    public static final int TILE_HEIGHT = 50;
     /* ___ FIELD VARIABLES ___ */
     /* Base frame for the application */
     private JFrame rootFrame;
@@ -259,7 +269,7 @@ public class GUI implements ActionListener{
             carPanels[i].add(new JLabel("Y position:"), layoutConstraints);
 
             layoutConstraints.gridx = 1;
-            carPanels[i].add( carPanelSpeedLabels[1][i], layoutConstraints);
+            carPanels[i].add(carPanelSpeedLabels[1][i], layoutConstraints);
 
             // BottomGamePanel created in createGameWindowInfoPanel() and has a JPanel added to it
             ((JPanel)bottomGamePanel.getComponent(0)).add(carPanels[i]);
@@ -290,7 +300,7 @@ public class GUI implements ActionListener{
 
     public void drawNewCarPositions() {
         for(int i = 0; i < 2; i++) {
-            this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, 50, 50);
+            this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, TILE_WIDTH, TILE_HEIGHT);
             carPanelSpeedLabels[0][i].setText("" + gameCars[i].getPosition().x);
             carPanelSpeedLabels[1][i].setText("" + gameCars[i].getPosition().y);
         }
@@ -300,6 +310,7 @@ public class GUI implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String text = ((JButton)e.getSource()).getText();
         switch(text) {
+            // TODO: 3/21/2023 Magic strings should probably be replaced with constants.
             case "Start New Game":
                 //swapWindow(this.startGameOptionsWindowPanel);
                 swapWindow(this.gameWindowPanel);

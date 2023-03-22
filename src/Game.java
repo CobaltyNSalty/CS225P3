@@ -28,6 +28,10 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class Game implements ActionListener {
+    /**
+     * The delay in milliseconds of the game clock timer.
+     */
+    public static final int TIMER_DELAY = 50;
     private Track raceTrack;
     private Car[] racers;
     private GUI gui;
@@ -66,7 +70,7 @@ public class Game implements ActionListener {
 
     private void gameLoop() {
         // TODO: clock starts prior to game start
-        gameClock = new Timer(50, e -> {
+        gameClock = new Timer(TIMER_DELAY, e -> {
             updateCarPositions();
         });
         gameClock.start();
