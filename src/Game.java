@@ -100,7 +100,6 @@ public class Game implements ActionListener {
         importTrack = new Track(data);
 
         return importTrack;
-
     }
 
 
@@ -119,7 +118,6 @@ public class Game implements ActionListener {
         }
         return data;
     }
-
 
     public LinkedList<String> extractInfoFromFile(FileInputStream fIS) {
         LinkedList<String> entryList = new LinkedList<String>();

@@ -1,11 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -45,6 +43,7 @@ public class GUI implements ActionListener{
     private Track gameTrack;
     private Car[] gameCars;
     private ActionListener listener;
+    private Object gameClass;
 
     JLabel[][] carPanelSpeedLabels;
     /* ___ CONSTRUCTORS ___ */
@@ -68,6 +67,7 @@ public class GUI implements ActionListener{
         this.gameTrack = ((Track)this.gameAssets[0]);
         this.gameCars = ((Car[])this.gameAssets[1]);
         this.listener = ((ActionListener)this.gameAssets[2]);
+        this.gameClass = this.gameAssets[2];
         createGUI();
     }
 
@@ -85,21 +85,34 @@ public class GUI implements ActionListener{
 
         loadImages();
         createMenuWindow();
+        createGameOptionsWindow();
         createGameWindow();
 
         // TODO: this will initially be the menuWindow not the gameWindowPanel
-        //this.rootFrame.setContentPane(this.menuWindowPanel);
-        this.rootFrame.setContentPane(this.gameWindowPanel);
+        // this.rootFrame.setContentPane(this.menuWindowPanel);
+        // this.rootFrame.setContentPane(this.gameWindowPanel);
+        this.rootFrame.setContentPane(this.startGameOptionsWindowPanel);
 
         this.rootFrame.pack();
         this.rootFrame.setVisible(true);
     }
 
     private void loadImages() {
-        this.images = new Image[2];
+        this.images = new Image[12];
         try {
             this.images[0] = ImageIO.read(new File("Sprites\\Checkered.png"));
             this.images[1] = ImageIO.read(new File("Sprites\\MenuImage.png"));
+            this.images[2] = ImageIO.read(new File("Sprites\\carSprites\\blueCar.png"));
+            this.images[3] = ImageIO.read(new File("Sprites\\carSprites\\greenCar.png"));
+            this.images[4] = ImageIO.read(new File("Sprites\\carSprites\\orangeCar.png"));
+            this.images[5] = ImageIO.read(new File("Sprites\\carSprites\\purpleCar.png"));
+            this.images[6] = ImageIO.read(new File("Sprites\\carSprites\\redCar.png"));
+            this.images[7] = ImageIO.read(new File("Sprites\\carSprites\\yellowCar.png"));
+            this.images[8] = ImageIO.read(new File("Sprites\\TrackIcons\\Track1Icon.png"));
+            this.images[9] = ImageIO.read(new File("Sprites\\TrackIcons\\Track2Icon.png"));
+            this.images[10] = ImageIO.read(new File("Sprites\\TrackIcons\\Track3Icon.png"));
+            this.images[11] = ImageIO.read(new File("Sprites\\TrackIcons\\Track4Icon.png"));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -112,6 +125,90 @@ public class GUI implements ActionListener{
         this.rootFrame.revalidate();
         this.rootFrame.repaint();
         this.rootFrame.setVisible(true);
+    }
+    private void createGameOptionsWindow() {
+        // TODO: disable continue until at least 2 cars and 1 track are selected
+        // TODO: Add information to center
+        // TODO: add center panel
+        // TODO: this.gameClass is the Game object that created this GUI, use it to call importTrack and update game Asset Track
+
+        this.startGameOptionsWindowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        this.startGameOptionsWindowPanel.setPreferredSize(new Dimension(1000, 700));
+
+        JPanel optionsRootPanel = new JPanel(new BorderLayout());
+        optionsRootPanel.setPreferredSize(new Dimension(1000, 700));
+        optionsRootPanel.setBackground(Color.BLUE);
+
+        JPanel topPanel = new JPanel();     // feedback
+        topPanel.setPreferredSize(new Dimension(1000, 100));
+
+        JPanel leftPanel = new JPanel(new GridLayout(3, 2, 10, 10));    // display cars
+        leftPanel.setPreferredSize(new Dimension(300, 500));
+        leftPanel.setBorder(new LineBorder(Color.green));
+
+        JPanel rightPanel = new JPanel(new GridLayout(2, 2, 10, 10));   // display tracks
+        rightPanel.setPreferredSize(new Dimension(350, 500));
+        rightPanel.setBorder(new LineBorder(Color.RED));
+
+        JPanel bottomPanel = new JPanel();  // buttons
+        bottomPanel.setPreferredSize(new Dimension(1000, 100));
+
+        // bottom panel components and settings
+        JButton startButton = new JButton("Continue");
+        startButton.setPreferredSize(new Dimension(200, 40));
+        startButton.setFont(new Font("Arial", Font.BOLD, 20));
+        startButton.addActionListener(this);
+        bottomPanel.add(startButton);
+
+        // right panel components and settings
+        JButton track1Btn = makeTrackOptionButton(1);
+        JButton track2Btn = makeTrackOptionButton(2);
+        JButton track3Btn = makeTrackOptionButton(3);
+        JButton track4Btn = makeTrackOptionButton(4);
+        rightPanel.add(track1Btn);
+        rightPanel.add(track2Btn);
+        rightPanel.add(track3Btn);
+        rightPanel.add(track4Btn);
+
+        // Left panel components and settings
+        JButton car1Btn = makeCarOptionsButton(1);
+        JButton car2Btn = makeCarOptionsButton(2);
+        JButton car3Btn = makeCarOptionsButton(3);
+        JButton car4Btn = makeCarOptionsButton(4);
+        JButton car5Btn = makeCarOptionsButton(5);
+        JButton car6Btn = makeCarOptionsButton(6);
+        leftPanel.add(car1Btn);
+        leftPanel.add(car2Btn);
+        leftPanel.add(car3Btn);
+        leftPanel.add(car4Btn);
+        leftPanel.add(car5Btn);
+        leftPanel.add(car6Btn);
+
+        // Compose Window elements
+        optionsRootPanel.add(topPanel, BorderLayout.NORTH);
+        optionsRootPanel.add(leftPanel, BorderLayout.WEST);
+        optionsRootPanel.add(rightPanel, BorderLayout.EAST);
+        optionsRootPanel.add(bottomPanel, BorderLayout.SOUTH);
+        this.startGameOptionsWindowPanel.add(optionsRootPanel);
+    }
+    private JButton makeCarOptionsButton(int index) {
+        JButton button = new JButton("Car " + index);
+        button.setDoubleBuffered(true);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setIcon(new ImageIcon(this.images[(index + 1)]));
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
+        button.addActionListener(this);
+        return button;
+    }
+    private JButton makeTrackOptionButton(int index) {
+        JButton button = new JButton("Track " + index);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setIcon(new ImageIcon(this.images[(index + 7)]));
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
+        button.addActionListener(this);
+        return button;
     }
     private void createTrackCreationWindow() {
 
@@ -296,13 +393,29 @@ public class GUI implements ActionListener{
         }
     }
 
+    private void cycleButtonHighlight(JButton button) {
+        Color color = new Color(92, 255, 63, 126);
+        if(button.getBackground().equals(color)) {
+            button.setBackground(null);
+        } else {
+            button.setBackground(color);
+        }
+    }
+    private void singleSelectionOfButtons(JButton button) {
+        for(Component c : button.getParent().getComponents()) {
+            ((JButton)c).setBackground(null);
+        }
+        button.setBackground(new Color(92, 255, 63, 126));
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        String text = ((JButton)e.getSource()).getText();
+        JButton pressed = ((JButton)e.getSource());
+        String text = pressed.getText();
         switch(text) {
             case "Start New Game":
-                //swapWindow(this.startGameOptionsWindowPanel);
-                swapWindow(this.gameWindowPanel);
+                 swapWindow(this.gameWindowPanel);
+                // swapWindow(this.startGameOptionsWindowPanel);
                 break;
             case "Design a Car":
                 swapWindow(this.carCreationWindowPanel);
@@ -312,6 +425,36 @@ public class GUI implements ActionListener{
                 break;
             case "Start Game":
                 swapWindow(this.gameWindowPanel);
+                break;
+            case "Car 1":
+                cycleButtonHighlight(pressed);
+                break;
+            case "Car 2":
+                cycleButtonHighlight(pressed);
+                break;
+            case "Car 3":
+                cycleButtonHighlight(pressed);
+                break;
+            case "Car 4":
+                cycleButtonHighlight(pressed);
+                break;
+            case "Car 5":
+                cycleButtonHighlight(pressed);
+                break;
+            case "Car 6":
+                cycleButtonHighlight(pressed);
+                break;
+            case "Track 1":
+                singleSelectionOfButtons(pressed);
+                break;
+            case "Track 2":
+                singleSelectionOfButtons(pressed);
+                break;
+            case "Track 3":
+                singleSelectionOfButtons(pressed);
+                break;
+            case "Track 4":
+                singleSelectionOfButtons(pressed);
                 break;
             default:
                 swapWindow(this.menuWindowPanel);
