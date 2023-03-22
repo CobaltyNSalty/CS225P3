@@ -18,7 +18,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.*;
+import java.util.List;
 
 /**
  *  Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
@@ -31,13 +32,13 @@ public class Track {
     /* The Images used by 'raceTrack' to initialize Tiles */
     private Image[] trackTileSprites;
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
-    private Point[] path;
+    private List<Point> path;
 
     /* ___ CONSTRUCTORS ___ */
     public Track() {
         this.raceTrack = null;
         this.trackTileSprites = null;
-        this.path = null;
+        this.path = new ArrayList<>();
     }
 
     /**
@@ -72,6 +73,7 @@ public class Track {
                 tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
             this.raceTrack[tileArgs[0]][tileArgs[1]] = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
+            path.add(new Point(tileArgs[0] * 50, tileArgs[1] * 50));
         }
     }
 
@@ -150,7 +152,7 @@ public class Track {
      * @return - next point on path
      */
     public Point getNextPointOnPath(int index) {
-        return path[(index +1)];
+        return path.get(index + 1);
     }
 
     /**
