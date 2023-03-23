@@ -26,7 +26,7 @@ name in a comment on the same line to not interfere with other important documen
 
 
  */
-public class Game implements ActionListener {
+public class Game {
     private Track raceTrack;
     private Car[] racers;
     private GUI gui;
@@ -39,10 +39,10 @@ public class Game implements ActionListener {
     }
 
     public void play() {
-        Object[] gameAssets = new Object[] {this.raceTrack, this.racers, this};
-        this.gui = new GUI(gameAssets);
+        this.gui = new GUI(this::action); // TODO: this isn't working
         gameLoop();
     }
+
 
     private void gameLoop() {
         // TODO: clock starts prior to game start
@@ -62,12 +62,6 @@ public class Game implements ActionListener {
          */
     }
 
-    /**
-     *
-     * @param fileName
-     * @return
-     * @throws IOException
-     */
     public Car importCarFromFile(String fileName) throws IOException {
         Car importCar;
         LinkedList<String> data;
@@ -127,8 +121,8 @@ public class Game implements ActionListener {
         this.gui.gameAssetsSelected(assets);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+
+    private void action(ActionEvent e) {
         JButton pressed = (JButton)e.getSource();
         if(pressed.getText().equals("Continue")) {
             initializeGameWindow(pressed);

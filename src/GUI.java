@@ -61,6 +61,11 @@ public class GUI implements ActionListener{
         createGUI();
     }
 
+    public GUI(ActionListener listener) {
+        this();
+        this.listener = listener;
+    }
+
     /**
      * Objects used by 'Game' class that need to be displayed as part of the
      * game window.
@@ -93,9 +98,9 @@ public class GUI implements ActionListener{
         createGameOptionsWindow();
 
         // TODO: this will initially be the menuWindow not the gameWindowPanel
-        // this.rootFrame.setContentPane(this.menuWindowPanel);
+         this.rootFrame.setContentPane(this.menuWindowPanel);
         // this.rootFrame.setContentPane(this.gameWindowPanel);
-        this.rootFrame.setContentPane(this.startGameOptionsWindowPanel);
+        // this.rootFrame.setContentPane(this.startGameOptionsWindowPanel);
 
         this.rootFrame.pack();
         this.rootFrame.setVisible(true);
@@ -122,8 +127,6 @@ public class GUI implements ActionListener{
         }
     }
     private void swapWindow(JPanel newWindow) {
-        //this.contentPanel.add(newWindow);
-        //this.contentPanel.remove(0);
         this.rootFrame.setContentPane(newWindow);
         this.rootFrame.pack();
         this.rootFrame.revalidate();
@@ -489,7 +492,7 @@ public class GUI implements ActionListener{
         String text = pressed.getText();
         switch(text) {
             case "Start New Game":
-                swapWindow(this.gameWindowPanel);
+                swapWindow(this.startGameOptionsWindowPanel);
                 // swapWindow(this.startGameOptionsWindowPanel);
                 break;
             case "Design a Car":
