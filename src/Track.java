@@ -230,4 +230,7 @@ public class Track {
         return this.raceTrack[x][y];
     }
 
+    public List<Point> getPath() {
+        return path;
+    }
 }
