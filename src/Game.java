@@ -43,7 +43,6 @@ public class Game {
         gameLoop();
     }
 
-
     private void gameLoop() {
         // TODO: clock starts prior to game start
         gameClock = new Timer(50, e -> {
