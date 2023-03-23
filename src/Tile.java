@@ -15,8 +15,6 @@ name in a comment on the same line to not interfere with other important documen
  */
 public class Tile extends JLabel {
     /* ___ FIELD VARIABLES ___ */
-    /* Display image */
-    //private Image sprite;
     /* Sequence of points from entry point to exit point that Car objects travel across this Tile */
     private Point[] path;
     /* A value to represent the specific type of Tile, correlates to TrackTile filename of image */
@@ -36,15 +34,7 @@ public class Tile extends JLabel {
         this.setIcon(new ImageIcon(image));
     }
 
-    public Tile(Image image, int imageIndexValue) {
-        // this.sprite = image;
-        this.setIcon(new ImageIcon(image));
-        this.tileIDNum = imageIndexValue; // integer value at start of image file name
-        createPath(imageIndexValue);
-    }
-
     public Tile(Image image, int imageID, int row, int col) {
-        // this.sprite = image;
         this.setIcon(new ImageIcon(image));
         this.tileIDNum = imageID; // integer value at start of image file name
         this.indexPosRow = row;
@@ -111,36 +101,8 @@ public class Tile extends JLabel {
         }
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        // Test method to paint path
-        super.paintComponent(g);
-            /*
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.RED);
-        g2d.setFont(new Font("Arial", Font.BOLD, 12));
-        g2d.drawString((this.indexPosRow+","+this.indexPosCol), 10, 10);
-        if(path != null) {
-            int x1 = path[0].x;
-            int y1 = path[0].y;
-
-            for (Point p : path) {
-                g2d.drawLine(x1, y1, p.x, p.y);
-                x1 = p.x;
-                y1 = p.y;
-            }
-
-        }
-             */
-
-    }
 
     /* ___ ACCESSORS / MUTATORS ___ */
-    /*
-    public Image getSprite() {
-        return sprite;
-    }
-     */
     public int getTileIDNum() {
         return tileIDNum;
     }
