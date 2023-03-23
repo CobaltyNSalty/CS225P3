@@ -10,7 +10,9 @@ name in a comment on the same line to not interfere with other important documen
 3/14    [chris]     - testing a total track path implementation with createPath() method
 3/20    [Kat]       - wrote constructor for passing in LinkedList from importTrackfromFile function
 3/21    [chris]     - updated documentation for data file constructor
-
+3/22    [tre]       - change type of path field to List<Point>
+                    - change tileArgs size to 4 to account for the path index of each track tile
+                    - add method getPath() for getting the path field
 
  */
 

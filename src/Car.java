@@ -19,7 +19,7 @@ name in a comment on the same line to not interfere with other important documen
 3/15    [chris]     - added test code to getNextPosition() to test updating position in GUI
 3/18    [Kat]       - added constructor to allow LinkedList to be passed in from importCarFromFile
 3/21    [chris]     - implemented UML design
-
+3/22    [tre]       - add method for setting the cars current path index
 
  */
 public class Car extends JLabel {
