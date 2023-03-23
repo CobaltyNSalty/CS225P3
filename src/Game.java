@@ -82,6 +82,8 @@ public class Game implements ActionListener {
         for(Car car: this.racers) {
             // TODO: this hasn't been tested, needs the generation of Track.path to be completed
             car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentPointOnPathIndex()));
+            int nextPathIndex = car.getCurrentPointOnPathIndex() + 1;
+            car.setCurrentPointOnPathIndex(nextPathIndex >= 39 ? 0 : nextPathIndex); // TODO: 3/23/2023 Removed hard-coded last index of path.
             this.gui.drawNewCarPositions();
         }
     }

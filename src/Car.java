@@ -92,5 +92,9 @@ public class Car extends JLabel {
     public int getCurrentPointOnPathIndex() {
         return currentPointOnPathIndex;
     }
+
+    public void setCurrentPointOnPathIndex(int index) {
+        currentPointOnPathIndex = index;
+    }
 }
 
