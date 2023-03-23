@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -21,6 +23,9 @@ name in a comment on the same line to not interfere with other important documen
                     - added default constructor
 3/13    [chris]     - added testing code for gui.
 3/14    [chris]     - testing gameLoop method for desired functionality, added updateCarPosition() from the UML
+3/17    [joey]      - updated gameLoop to incorporate the timer
+3/20    [joey]      - added new Instant attribute "startTime"
+3/21    [joey]      - added getCurrentTime() method
 3/18    [Kat]       - adding code for importing Car and Track data from files
 3/21    [tre]       - replace timer delay with constant
 3/22    [tre]       - implement updateCarPositions() which now has the cars loop indefinitely around the track
@@ -35,6 +40,8 @@ public class Game implements ActionListener {
     private Car[] racers;
     private GUI gui;
     private Timer gameClock;
+    //test
+    private Instant startTime = Instant.now();
 
     public Game() {
         this.raceTrack = null;
@@ -71,8 +78,20 @@ public class Game implements ActionListener {
         // TODO: clock starts prior to game start
         gameClock = new Timer(TIMER_DELAY, e -> {
             updateCarPositions();
+          Instant updatedTime = Instant.now();
+
+         //   System.out.println(timeUpdate.getSeconds());
+            this.gui.updateTimer(getCurrentTime().getSeconds());
         });
         gameClock.start();
+
+    }
+
+
+    public Duration getCurrentTime(){
+        Instant currentTime = Instant.now();
+        Duration totalTime = Duration.between(startTime,currentTime);
+        return totalTime;
     }
 
     /**

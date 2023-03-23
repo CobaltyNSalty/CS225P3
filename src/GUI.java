@@ -4,6 +4,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,6 +21,8 @@ name in a comment on the same line to not interfere with other important documen
 3/15    [chris]     - tested how to get cars to move, no dedicated path. Got it working
                     - added empty bottom panel to display information about racers to user
                     - rearranged code by adding createWindow methods to simplify createGUI()
+3/17 [Joey]         - added updateTimer() method
+3/20 [Joey]         - Updated updateTimer() to keep time better
 3/20    [Kat]       - added Car display panels to bottom of UI showing current position
 3/21    [tre]       - Replace tile width and tile height with constants.
 3/22    [tre]       - replace TILE_WIDTH and TILE_HEIGHT constants with TILE_SIZE
@@ -55,9 +58,16 @@ public class GUI implements ActionListener{
     private Car[] gameCars;
     private ActionListener listener;
 
-    JLabel[][] carPanelSpeedLabels;
-    /* ___ CONSTRUCTORS ___ */
+    private JLabel[][] carPanelSpeedLabels;
+    private JLabel timeLabel;
 
+    private int seconds = 0;
+
+    private int minutes = 0;
+
+    private int hours = 0;
+
+    /* ___ CONSTRUCTORS ___ */
     public GUI() {
         this.rootFrame = new JFrame();
         this.contentPanel = new JPanel();
@@ -217,9 +227,15 @@ public class GUI implements ActionListener{
             }
         }
 
+
         // transparent panel for cars to move across using (x,y) coordinate values, cars are drawn over
         // the racetrack sprites.
+
         JPanel carPanel = new JPanel();
+        //Timer
+        timeLabel = new JLabel("00:00:00");
+        timeLabel.setBounds(0,5,100,50);
+       timeLabel.setFont(new Font("Helvetica", Font.PLAIN,25 ));
         carPanel.setOpaque(false);
         carPanel.setBounds(50, 0, 700, 500);
         carPanel.setLayout(null);
@@ -332,6 +348,18 @@ public class GUI implements ActionListener{
 
 
 
+    }
+
+    public void updateTimer(double elapsedSeconds){
+        int roundedSeconds = (int) elapsedSeconds;
+            hours = (int) (elapsedSeconds / 3600);
+            minutes = (int) (elapsedSeconds / 60);
+            seconds = (int) (elapsedSeconds % 60);
+            String timeString = String.format("%02d:%02d:%02d",hours, minutes, seconds);
+            timeLabel.setText(timeString);
+
+
+      //  System.out.println("rounded:" + roundedSeconds + ": actual seconds " + seconds);
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */
