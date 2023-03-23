@@ -78,9 +78,7 @@ public class Game implements ActionListener {
     }
 
     private void updateCarPositions() {
-        // TODO: pending pathing implementation
         for(Car car: this.racers) {
-            // TODO: this hasn't been tested, needs the generation of Track.path to be completed
             car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentPointOnPathIndex()));
             int nextPathIndex = car.getCurrentPointOnPathIndex() + 1;
             car.setCurrentPointOnPathIndex(nextPathIndex >= raceTrack.getPath().size() - 1 ? 0 : nextPathIndex);
