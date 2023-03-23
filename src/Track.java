@@ -73,7 +73,7 @@ public class Track {
                 tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
             this.raceTrack[tileArgs[0]][tileArgs[1]] = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
-            path.add(new Point(tileArgs[0] * GUI.TILE_WIDTH, tileArgs[1] * GUI.TILE_WIDTH));
+            path.add(new Point(tileArgs[0] * GUI.TILE_SIZE, tileArgs[1] * GUI.TILE_SIZE));
         }
     }
 

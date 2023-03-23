@@ -1,11 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -27,16 +25,12 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class GUI implements ActionListener{
-    // TODO: 3/21/2023 TILE_WIDTH and TILE_HEIGHT may need to be moved to another file.
+    // TODO: 3/21/2023 TILE_SIZE may need to be moved to another file.
     /**
      * The width of game tiles in pixels.
      */
-    public static final int TILE_WIDTH = 50;
+    public static final int TILE_SIZE = 50;
 
-    /**
-     * The height of game tiles in pixels.
-     */
-    public static final int TILE_HEIGHT = 50;
     /* ___ FIELD VARIABLES ___ */
     /* Base frame for the application */
     private JFrame rootFrame;
@@ -303,7 +297,7 @@ public class GUI implements ActionListener{
 
     public void drawNewCarPositions() {
         for(int i = 0; i < 2; i++) {
-            this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, TILE_WIDTH, TILE_HEIGHT);
+            this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, TILE_SIZE, TILE_SIZE);
             carPanelSpeedLabels[0][i].setText("" + gameCars[i].getPosition().x);
             carPanelSpeedLabels[1][i].setText("" + gameCars[i].getPosition().y);
         }
