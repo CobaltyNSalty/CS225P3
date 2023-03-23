@@ -21,8 +21,8 @@ name in a comment on the same line to not interfere with other important documen
 3/15    [chris]     - tested how to get cars to move, no dedicated path. Got it working
                     - added empty bottom panel to display information about racers to user
                     - rearranged code by adding createWindow methods to simplify createGUI()
-3/17 [Joey]         - added updateTimer() method
-3/20 [Joey]         - Updated updateTimer() to keep time better
+3/17    [Joey]      - added updateTimer() method
+3/20    [Joey]      - Updated updateTimer() to keep time better
 3/20    [Kat]       - added Car display panels to bottom of UI showing current position
 3/21    [tre]       - Replace tile width and tile height with constants.
 3/22    [tre]       - replace TILE_WIDTH and TILE_HEIGHT constants with TILE_SIZE
@@ -30,6 +30,7 @@ name in a comment on the same line to not interfere with other important documen
                     - replace magic numbers of value 50 with TILE_SIZE constant
 3/22    [chris]     - wrote a couple methods to extract game options from selection window
                     - then trigger the Game class to create the new game window and display it.
+3/23    [chris]     - added controlFunctions support
 
 
  */
@@ -43,8 +44,6 @@ public class GUI implements ActionListener{
     /* ___ FIELD VARIABLES ___ */
     /* Base frame for the application */
     private JFrame rootFrame;
-    /* Content pane for rootFrame */
-    private JPanel contentPanel;
     /* Start menu */
     private JPanel menuWindowPanel;
     /* Window to display game, track, cars, and movement */
@@ -54,49 +53,20 @@ public class GUI implements ActionListener{
     private JPanel trackCreationWindowPanel;
     private JPanel startGameOptionsWindowPanel;
     private Object[] gameAssets;
-
     private Image[] images;
     private Track gameTrack;
     private Car[] gameCars;
-    private ActionListener listener;
-    private Object gameClass;
-    private Track emptyTrack;
-
     private JLabel[][] carPanelSpeedLabels;
     private JLabel timeLabel;
-
-    private int seconds = 0;
-
-    private int minutes = 0;
-
-    private int hours = 0;
+    private Object[] controls;
 
     /* ___ CONSTRUCTORS ___ */
-    public GUI() {
+    public GUI(Object[] controls) {
         this.rootFrame = new JFrame();
-        this.contentPanel = new JPanel();
         this.menuWindowPanel = new JPanel();
         this.gameWindowPanel = new JPanel();
         this.gameAssets = null;
-        createGUI();
-    }
-
-    public GUI(ActionListener listener) {
-        this();
-        this.listener = listener;
-    }
-
-    /**
-     * Objects used by 'Game' class that need to be displayed as part of the
-     * game window.
-     * @param assets - [0] Track, [1] Cars[], [2] ActionListener
-     */
-    public GUI(Object[] assets) {
-        this();
-        this.gameAssets = assets;
-        this.gameTrack = ((Track)this.gameAssets[0]);
-        this.gameCars = ((Car[])this.gameAssets[1]);
-        this.listener = ((ActionListener)this.gameAssets[2]);
+        this.controls = controls;
         createGUI();
     }
 
@@ -178,10 +148,10 @@ public class GUI implements ActionListener{
         bottomPanel.setPreferredSize(new Dimension(1000, 100));
 
         // bottom panel components and settings
-        JButton startButton = new JButton("Continue");
+        JButton startButton = (JButton) this.controls[0];
+        startButton.setText("Continue");
         startButton.setPreferredSize(new Dimension(200, 40));
         startButton.setFont(new Font("Arial", Font.BOLD, 20));
-        startButton.addActionListener(this.listener);
         bottomPanel.add(startButton);
 
         // TODO: track button text must match track file name not including .csv, this is added later.
@@ -322,7 +292,6 @@ public class GUI implements ActionListener{
         JLayeredPane centerPanel = new JLayeredPane();
         centerPanel.setPreferredSize(new Dimension(800, 500));
 
-        // TODO: make this a method that is called by Game after options Window
         // Panel to house the racetrack Tile sprites
         JPanel gameTilePanel = new JPanel(new GridBagLayout());
         gameTilePanel.setBackground(new Color(67, 174, 32));
@@ -332,34 +301,40 @@ public class GUI implements ActionListener{
             for (int col = 0; col < this.gameTrack.getRaceTrack()[0].length; col++) {
                 constraints2.gridx = col;
                 constraints2.gridy = row;
-                // JLabel trackTileLabel = new JLabel(new ImageIcon(this.gameTrack.getTileSpriteAt(row, col)));
                 gameTilePanel.add(this.gameTrack.getTileAtPoint(row, col), constraints2);
             }
         }
 
-        // transparent panel for cars to move across using (x,y) coordinate values, cars are drawn over
-        // the racetrack sprites.
-
+        /*  transparent panel for cars to move across using (x,y) coordinate values, cars are drawn over
+         *  the racetrack sprites.
+         */
         JPanel carPanel = new JPanel();
-        //Timer
-        timeLabel = new JLabel("00:00:00");
-        timeLabel.setBounds(0,5,100,50);
-       timeLabel.setFont(new Font("Helvetica", Font.PLAIN,25 ));
         carPanel.setOpaque(false);
         carPanel.setBounds(50, 0, 700, 500);
         carPanel.setLayout(null);
 
-        carPanel.add(gameCars[0]);
-        carPanel.add(gameCars[1]);
-
+        for(Car car : this.gameCars) {
+            // TODO: SET starting POSITIONs for each car to be one of the Track checkpoints
+            // TODO: max cars per track = number of checkpoints.
+            carPanel.add(car);
+        }
         // Compose gameplay area
         centerPanel.add(gameTilePanel, new Integer(1));
         centerPanel.add(carPanel, new Integer(2));
 
+        // feedback panel for race timer
+        JPanel feedbackPanel = new JPanel();
+        feedbackPanel.setPreferredSize(new Dimension(250, 100));
+        this.timeLabel = new JLabel("00:00:00");
+        this.timeLabel.setBounds(0,5,100,50);
+        this.timeLabel.setFont(new Font("Helvetica", Font.PLAIN,25 ));
+        feedbackPanel.add(this.timeLabel);
+        ((JPanel)bottomGamePanel.getComponent(0)).add(feedbackPanel);
+
         // car specific panels in info panel
-        // TODO: make dynamic
-        JPanel[] carPanels = new JPanel[2];
-        JLabel[] carPanelTitles = new JLabel[2];
+        // TODO: make dynamic - this needs to display the number of cars not a fixed number, i.e. 2
+        JPanel[] carInfoPanels = new JPanel[2];
+        JLabel[] carInfoPanelLabels = new JLabel[2];
         carPanelSpeedLabels = new JLabel[2][2];
 
         GridBagConstraints layoutConstraints = new GridBagConstraints();
@@ -368,37 +343,36 @@ public class GUI implements ActionListener{
         layoutConstraints.weighty = 1;
 
         for (int i = 0; i < 2; i++) {
-            carPanels[i] = new JPanel(new GridBagLayout());
-            carPanels[i].setBorder(new LineBorder(Color.RED));
-            carPanels[i].setPreferredSize(new Dimension(250, 100));
-            carPanelTitles[i] = new JLabel("Car " + (i + 1));
-            carPanelSpeedLabels[0][i] = new JLabel("50");
-            //carPanelTextFields[0][i].setColumns(10);
+            carInfoPanels[i] = new JPanel(new GridBagLayout());
+            carInfoPanels[i].setBorder(new LineBorder(Color.RED));
+            carInfoPanels[i].setPreferredSize(new Dimension(250, 100));
 
+            carInfoPanelLabels[i] = new JLabel("Car " + (i + 1));
+            carPanelSpeedLabels[0][i] = new JLabel("50");
             carPanelSpeedLabels[0][i].setPreferredSize(new Dimension(50, 50));
             carPanelSpeedLabels[1][i] = new JLabel("" + gameCars[i].getPosition().y);
 
             layoutConstraints.gridy = 0;
             layoutConstraints.gridx = 0;
             layoutConstraints.gridwidth = 2;
-            carPanels[i].add(carPanelTitles[i], layoutConstraints);
+            carInfoPanels[i].add(carInfoPanelLabels[i], layoutConstraints);
 
             layoutConstraints.gridwidth = 1;
             layoutConstraints.gridy = 1;
-            carPanels[i].add(new JLabel("X position:"), layoutConstraints);
+            carInfoPanels[i].add(new JLabel("X position:"), layoutConstraints);
 
             layoutConstraints.gridx = 1;
-            carPanels[i].add( carPanelSpeedLabels[0][i], layoutConstraints);
+            carInfoPanels[i].add( carPanelSpeedLabels[0][i], layoutConstraints);
 
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 2;
-            carPanels[i].add(new JLabel("Y position:"), layoutConstraints);
+            carInfoPanels[i].add(new JLabel("Y position:"), layoutConstraints);
 
             layoutConstraints.gridx = 1;
-            carPanels[i].add(carPanelSpeedLabels[1][i], layoutConstraints);
+            carInfoPanels[i].add(carPanelSpeedLabels[1][i], layoutConstraints);
 
             // BottomGamePanel created in createGameWindowInfoPanel() and has a JPanel added to it
-            ((JPanel)bottomGamePanel.getComponent(0)).add(carPanels[i]);
+            ((JPanel)bottomGamePanel.getComponent(0)).add(carInfoPanels[i]);
         }
 
         // Compose overall game window
@@ -503,7 +477,6 @@ public class GUI implements ActionListener{
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */
-
     public void gameAssetsSelected(Object[] gameAssets) {
         this.gameAssets = gameAssets;
         this.gameCars = ((Car[])this.gameAssets[0]);
@@ -569,15 +542,12 @@ public class GUI implements ActionListener{
     }
 
     public void updateTimer(double elapsedSeconds){
-        int roundedSeconds = (int) elapsedSeconds;
-            hours = (int) (elapsedSeconds / 3600);
-            minutes = (int) (elapsedSeconds / 60);
-            seconds = (int) (elapsedSeconds % 60);
-            String timeString = String.format("%02d:%02d:%02d",hours, minutes, seconds);
-            timeLabel.setText(timeString);
+        int hours = (int) (elapsedSeconds / 3600);
+        int minutes = (int) (elapsedSeconds / 60);
+        int seconds = (int) (elapsedSeconds % 60);
+        String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        this.timeLabel.setText(timeString);
 
-
-      //  System.out.println("rounded:" + roundedSeconds + ": actual seconds " + seconds);
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */

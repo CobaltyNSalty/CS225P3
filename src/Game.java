@@ -30,9 +30,11 @@ name in a comment on the same line to not interfere with other important documen
 3/21    [tre]       - replace timer delay with constant
 3/22    [tre]       - implement updateCarPositions() which now has the cars loop indefinitely around the track
 3/22    [chris]     - added initializeGameWindow() to create game from options selected in application
+3/23    [chris]     - added control functions array, merged branches and troubleshot, implemented game start method
+                    - sequence using actionListener and controlFunction.
 
  */
-public class Game {
+public class Game implements ActionListener {
     /**
      * The delay in milliseconds of the game clock timer.
      */
@@ -41,31 +43,41 @@ public class Game {
     private Car[] racers;
     private GUI gui;
     private Timer gameClock;
+    private Object[] controlFunctions;
     //test
     private Instant startTime = Instant.now();
+    private boolean play;
+
 
     public Game() {
         this.raceTrack = null;
         this.racers = null;
         this.gui = null;
+        this.play = false;
+        this.controlFunctions = new Object[2];
+        initControlFunctions();
+    }
+
+    private void initControlFunctions() {
+        JButton continueButton = new JButton();
+        continueButton.addActionListener(this);
+        this.controlFunctions[0] = continueButton;
     }
 
     public void play() {
-        this.gui = new GUI(); // TODO: this isn't working
-        gameLoop();
+        this.gui = new GUI(this.controlFunctions); // TODO: this isn't working
     }
 
     private void gameLoop() {
         // TODO: clock starts prior to game start
-        gameClock = new Timer(TIMER_DELAY, e -> {
-            updateCarPositions();
-          Instant updatedTime = Instant.now();
-
-         //   System.out.println(timeUpdate.getSeconds());
-            this.gui.updateTimer(getCurrentTime().getSeconds());
-        });
-        gameClock.start();
-
+        if(play) {
+            gameClock = new Timer(TIMER_DELAY, e -> {
+                updateCarPositions();
+                // Instant updatedTime = Instant.now();
+                this.gui.updateTimer(getCurrentTime().getSeconds());
+            });
+            gameClock.start();
+        }
     }
 
 
@@ -139,6 +151,7 @@ public class Game {
     }
 
     public void initializeGameWindow(JButton pressed) {
+        // TODO: Create JButton[] of control functions that affect the state of the game then pass it as part of gameAssets to GUI object
         Object[] args = this.gui.extractGameArgs(pressed);
         this.racers = (Car[]) args[0];
         String filename = ((String) args[1]);
@@ -151,4 +164,11 @@ public class Game {
         this.gui.gameAssetsSelected(assets);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO: for now, there is only one control button
+        initializeGameWindow((JButton) e.getSource());
+        this.play = true;
+        gameLoop();
+    }
 }
