@@ -22,6 +22,7 @@ name in a comment on the same line to not interfere with other important documen
 3/13    [chris]     - added testing code for gui.
 3/14    [chris]     - testing gameLoop method for desired functionality, added updateCarPosition() from the UML
 3/18    [Kat]       - adding code for importing Car and Track data from files
+3/22    [chris]     - added initializeGameWindow() to create game from options selected in application
 
 
  */
@@ -38,28 +39,6 @@ public class Game implements ActionListener {
     }
 
     public void play() {
-        /*
-        try {
-            raceTrack = importTrackFromFile("Tracks\\Track1.csv");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-         */
-
-        // TODO: Replace this code block with inputs from filereader
-        this.racers = new Car[] { new Car(), new Car() };
-        Image car1, car2;
-        try {
-            car1 = ImageIO.read(new File("Sprites\\carSprites\\blueCar.png"));
-            car2 = ImageIO.read(new File("Sprites\\carSprites\\orangeCar.png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        this.racers[0] = new Car("Tester 1", car1, new Point[]{new Point(50, 50), new Point(100, 100)}, 0, 50);
-        this.racers[1] = new Car("Tester 2", car2, new Point[]{new Point(50, 50), new Point(100, 100)}, 100, 50);
-        // TODO: end of code block to remove
-
         Object[] gameAssets = new Object[] {this.raceTrack, this.racers, this};
         this.gui = new GUI(gameAssets);
         gameLoop();
@@ -83,6 +62,12 @@ public class Game implements ActionListener {
          */
     }
 
+    /**
+     *
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
     public Car importCarFromFile(String fileName) throws IOException {
         Car importCar;
         LinkedList<String> data;
@@ -129,7 +114,7 @@ public class Game implements ActionListener {
         return entryList;
     }
 
-    public void getgameArgs(JButton pressed) {
+    public void initializeGameWindow(JButton pressed) {
         Object[] args = this.gui.extractGameArgs(pressed);
         this.racers = (Car[]) args[0];
         String filename = ((String) args[1]);
@@ -146,8 +131,7 @@ public class Game implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JButton pressed = (JButton)e.getSource();
         if(pressed.getText().equals("Continue")) {
-            getgameArgs(pressed);
-
+            initializeGameWindow(pressed);
         }
     }
 }

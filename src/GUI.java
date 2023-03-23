@@ -22,6 +22,8 @@ name in a comment on the same line to not interfere with other important documen
                     - added empty bottom panel to display information about racers to user
                     - rearranged code by adding createWindow methods to simplify createGUI()
 3/20    [Kat]       - added Car display panels to bottom of UI showing current position
+3/22    [chris]     - wrote a couple methods to extract game options from selection window
+                    - then trigger the Game class to create the new game window and display it.
 
  */
 public class GUI implements ActionListener{
@@ -89,8 +91,6 @@ public class GUI implements ActionListener{
         loadImages();
         createMenuWindow();
         createGameOptionsWindow();
-        // todo: this will be removed, game will be created after options window
-        // createGameWindow();
 
         // TODO: this will initially be the menuWindow not the gameWindowPanel
         // this.rootFrame.setContentPane(this.menuWindowPanel);
@@ -133,8 +133,6 @@ public class GUI implements ActionListener{
     private void createGameOptionsWindow() {
         // TODO: disable continue until at least 2 cars and 1 track are selected
         // TODO: Add information to center
-        // TODO: add center panel
-        // TODO: this.gameClass is the Game object that created this GUI, use it to call importTrack and update game Asset Track
 
         this.startGameOptionsWindowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         this.startGameOptionsWindowPanel.setPreferredSize(new Dimension(1000, 700));
@@ -382,7 +380,6 @@ public class GUI implements ActionListener{
         this.gameWindowPanel.add(topGamePanel);
         this.gameWindowPanel.add(bottomGamePanel);
     }
-
     private JPanel createGameWindowInfoPanel() {
         JPanel bottomGamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
@@ -424,13 +421,75 @@ public class GUI implements ActionListener{
         button.setSelected(true);
     }
 
+    public Object[] extractGameArgs(JButton component) {
+        Object[] args = new Object[2];
+        // get parent root panel
+        JPanel panel = (JPanel) component.getParent();
+        JPanel rootPanel = (JPanel) panel.getParent();
+        // local variables containing game argument selection panels
+        Component[] cars = ((JPanel) rootPanel.getComponent(1)).getComponents();
+        Component[] tracks = ((JPanel) rootPanel.getComponent(2)).getComponents();
+
+        ArrayList<Car> racers = new ArrayList<Car>();
+        for(Component car : cars ) {
+            JButton carBtn = (JButton) car;
+            if(carBtn.isSelected()) {
+                String name = carBtn.getText();
+                Image image = getCarSpriteFromText(name);
+                racers.add(new Car(name, image));
+            }
+        }
+        this.gameCars = new Car[racers.size()];
+        args[0] = racers.toArray(this.gameCars);
+
+        for(Component track : tracks ) {
+            JButton trackBtn = (JButton) track;
+            if(trackBtn.isSelected()) {
+                String file = ("Tracks\\" + trackBtn.getText() + ".csv");
+                args[1] = file;
+            }
+        }
+
+        return args;
+    }
+
+    private Image getCarSpriteFromText(String name) {
+        switch(name) {
+            case "blue":
+                return images[2];
+            case "green":
+                return images[3];
+            case "orange":
+                return images[4];
+            case "purple":
+                return images[5];
+            case "red":
+                return images[6];
+            case "yellow":
+                return images[7];
+
+        }
+        return null;
+    }
+
+    /* ___ ACCESSORS / MUTATORS ___ */
+
+    public void gameAssetsSelected(Object[] gameAssets) {
+        this.gameAssets = gameAssets;
+        this.gameCars = ((Car[])this.gameAssets[0]);
+        this.gameTrack = ((Track)this.gameAssets[1]);
+        createGameWindow();
+        swapWindow(this.gameWindowPanel);
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton pressed = ((JButton)e.getSource());
         String text = pressed.getText();
         switch(text) {
             case "Start New Game":
-                 swapWindow(this.gameWindowPanel);
+                swapWindow(this.gameWindowPanel);
                 // swapWindow(this.startGameOptionsWindowPanel);
                 break;
             case "Design a Car":
@@ -476,70 +535,5 @@ public class GUI implements ActionListener{
                 swapWindow(this.menuWindowPanel);
                 break;
         }
-
-
-
-    }
-
-    public Object[] extractGameArgs(JButton component) {
-        Object[] args = new Object[2];
-        // get parent root panel
-        JPanel panel = (JPanel) component.getParent();
-        JPanel rootPanel = (JPanel) panel.getParent();
-        // local variables containing game argument selection panels
-        Component[] cars = ((JPanel) rootPanel.getComponent(1)).getComponents();
-        Component[] tracks = ((JPanel) rootPanel.getComponent(2)).getComponents();
-
-        Color selectionColor = new Color(67, 174, 32, 126);
-
-        ArrayList<Car> racers = new ArrayList<Car>();
-        for(Component car : cars ) {
-            JButton carBtn = (JButton) car;
-            if(carBtn.isSelected()) {
-                String name = carBtn.getText();
-                Image image = getCarSpriteFromText(name);
-                racers.add(new Car(name, image));
-            }
-        }
-        args[0] = racers.toArray(this.gameCars);
-
-        for(Component track : tracks ) {
-            JButton trackBtn = (JButton) track;
-            if(trackBtn.isSelected()) {
-                String file = ("Tracks\\" + trackBtn.getText() + ".csv");
-                args[1] = file;
-            }
-        }
-
-        return args;
-    }
-
-    private Image getCarSpriteFromText(String name) {
-        switch(name) {
-            case "blue":
-                return images[2];
-            case "green":
-                return images[3];
-            case "orange":
-                return images[4];
-            case "purple":
-                return images[5];
-            case "red":
-                return images[6];
-            case "yellow":
-                return images[7];
-
-        }
-        return null;
-    }
-
-    /* ___ ACCESSORS / MUTATORS ___ */
-
-    public void gameAssetsSelected(Object[] gameAssets) {
-        this.gameAssets = gameAssets;
-        this.gameCars = ((Car[])this.gameAssets[0]);
-        this.gameTrack = ((Track)this.gameAssets[1]);
-        createGameWindow();
-        swapWindow(this.gameWindowPanel);
     }
 }

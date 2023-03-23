@@ -32,8 +32,6 @@ public class Car extends JLabel {
     private Point[] checkpoints;
     /* Current point car is heading towards */
     private int checkpointIndex;
-
-
     /* Holds the index value of the Track.path point the car is currently at */
     private int currentPointOnPathIndex;
     /* Catch-all value for car "alterations"  */
@@ -57,15 +55,6 @@ public class Car extends JLabel {
     public Car(String name, Image carImage) {
         this();
         this.name = name;
-        this.setIcon(new ImageIcon(carImage));
-    }
-
-    public Car(String name, Image carImage, Point[] checkpoints, int startingX, int startingY) {
-        this();
-        this.name = name;
-        this.checkpoints = checkpoints;
-        this.posY = startingY;
-        this.posX = startingX;
         this.setIcon(new ImageIcon(carImage));
     }
 
