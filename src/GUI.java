@@ -225,7 +225,9 @@ public class GUI implements ActionListener{
         carPanel.setOpaque(false);
         carPanel.setBounds(50, 0, 700, 500);
         carPanel.setLayout(null);
-        // TODO: add cars
+
+        carPanel.add(gameCars[0]);
+        carPanel.add(gameCars[1]);
 
         // Compose gameplay area
         centerPanel.add(gameTilePanel, new Integer(1));
