@@ -54,6 +54,11 @@ public class Car extends JLabel {
         this.posX = 0;
         this.posY = 0;
     }
+    public Car(String name, Image carImage) {
+        this();
+        this.name = name;
+        this.setIcon(new ImageIcon(carImage));
+    }
 
     public Car(String name, Image carImage, Point[] checkpoints, int startingX, int startingY) {
         this();

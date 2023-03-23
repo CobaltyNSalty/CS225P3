@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -40,11 +38,14 @@ public class Game implements ActionListener {
     }
 
     public void play() {
+        /*
         try {
             raceTrack = importTrackFromFile("Tracks\\Track1.csv");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+         */
 
         // TODO: Replace this code block with inputs from filereader
         this.racers = new Car[] { new Car(), new Car() };
@@ -128,8 +129,25 @@ public class Game implements ActionListener {
         return entryList;
     }
 
+    public void getgameArgs(JButton pressed) {
+        Object[] args = this.gui.extractGameArgs(pressed);
+        this.racers = (Car[]) args[0];
+        String filename = ((String) args[1]);
+        try {
+            this.raceTrack = importTrackFromFile(filename);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Object[] assets = new Object[] { this.racers, this.raceTrack};
+        this.gui.gameAssetsSelected(assets);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
+        JButton pressed = (JButton)e.getSource();
+        if(pressed.getText().equals("Continue")) {
+            getgameArgs(pressed);
 
+        }
     }
 }

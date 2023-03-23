@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
 The assignment details that code you wrote requires a comment with your name above it. We will implement
@@ -44,6 +45,7 @@ public class GUI implements ActionListener{
     private Car[] gameCars;
     private ActionListener listener;
     private Object gameClass;
+    private Track emptyTrack;
 
     JLabel[][] carPanelSpeedLabels;
     /* ___ CONSTRUCTORS ___ */
@@ -54,6 +56,7 @@ public class GUI implements ActionListener{
         this.menuWindowPanel = new JPanel();
         this.gameWindowPanel = new JPanel();
         this.gameAssets = null;
+        createGUI();
     }
 
     /**
@@ -86,7 +89,8 @@ public class GUI implements ActionListener{
         loadImages();
         createMenuWindow();
         createGameOptionsWindow();
-        createGameWindow();
+        // todo: this will be removed, game will be created after options window
+        // createGameWindow();
 
         // TODO: this will initially be the menuWindow not the gameWindowPanel
         // this.rootFrame.setContentPane(this.menuWindowPanel);
@@ -157,9 +161,10 @@ public class GUI implements ActionListener{
         JButton startButton = new JButton("Continue");
         startButton.setPreferredSize(new Dimension(200, 40));
         startButton.setFont(new Font("Arial", Font.BOLD, 20));
-        startButton.addActionListener(this);
+        startButton.addActionListener(this.listener);
         bottomPanel.add(startButton);
 
+        // TODO: track button text must match track file name not including .csv, this is added later.
         // right panel components and settings
         JButton track1Btn = makeTrackOptionButton(1);
         JButton track2Btn = makeTrackOptionButton(2);
@@ -172,11 +177,17 @@ public class GUI implements ActionListener{
 
         // Left panel components and settings
         JButton car1Btn = makeCarOptionsButton(1);
+        car1Btn.setText("blue");
         JButton car2Btn = makeCarOptionsButton(2);
+        car2Btn.setText("green");
         JButton car3Btn = makeCarOptionsButton(3);
+        car3Btn.setText("orange");
         JButton car4Btn = makeCarOptionsButton(4);
+        car4Btn.setText("purple");
         JButton car5Btn = makeCarOptionsButton(5);
+        car5Btn.setText("red");
         JButton car6Btn = makeCarOptionsButton(6);
+        car6Btn.setText("yellow");
         leftPanel.add(car1Btn);
         leftPanel.add(car2Btn);
         leftPanel.add(car3Btn);
@@ -192,7 +203,7 @@ public class GUI implements ActionListener{
         this.startGameOptionsWindowPanel.add(optionsRootPanel);
     }
     private JButton makeCarOptionsButton(int index) {
-        JButton button = new JButton("Car " + index);
+        JButton button = new JButton();
         button.setDoubleBuffered(true);
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setIcon(new ImageIcon(this.images[(index + 1)]));
@@ -202,7 +213,7 @@ public class GUI implements ActionListener{
         return button;
     }
     private JButton makeTrackOptionButton(int index) {
-        JButton button = new JButton("Track " + index);
+        JButton button = new JButton("Track" + index);
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setIcon(new ImageIcon(this.images[(index + 7)]));
         button.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -291,6 +302,7 @@ public class GUI implements ActionListener{
         JLayeredPane centerPanel = new JLayeredPane();
         centerPanel.setPreferredSize(new Dimension(800, 500));
 
+        // TODO: make this a method that is called by Game after options Window
         // Panel to house the racetrack Tile sprites
         JPanel gameTilePanel = new JPanel(new GridBagLayout());
         gameTilePanel.setBackground(new Color(67, 174, 32));
@@ -397,15 +409,19 @@ public class GUI implements ActionListener{
         Color color = new Color(92, 255, 63, 126);
         if(button.getBackground().equals(color)) {
             button.setBackground(null);
+            button.setSelected(false);
         } else {
             button.setBackground(color);
+            button.setSelected(true);
         }
     }
     private void singleSelectionOfButtons(JButton button) {
         for(Component c : button.getParent().getComponents()) {
-            ((JButton)c).setBackground(null);
+            c.setBackground(null);
+            ((JButton)c).setSelected(false);
         }
         button.setBackground(new Color(92, 255, 63, 126));
+        button.setSelected(true);
     }
 
     @Override
@@ -426,34 +442,34 @@ public class GUI implements ActionListener{
             case "Start Game":
                 swapWindow(this.gameWindowPanel);
                 break;
-            case "Car 1":
+            case "blue":
                 cycleButtonHighlight(pressed);
                 break;
-            case "Car 2":
+            case "green":
                 cycleButtonHighlight(pressed);
                 break;
-            case "Car 3":
+            case "orange":
                 cycleButtonHighlight(pressed);
                 break;
-            case "Car 4":
+            case "purple":
                 cycleButtonHighlight(pressed);
                 break;
-            case "Car 5":
+            case "red":
                 cycleButtonHighlight(pressed);
                 break;
-            case "Car 6":
+            case "yellow":
                 cycleButtonHighlight(pressed);
                 break;
-            case "Track 1":
+            case "Track1":
                 singleSelectionOfButtons(pressed);
                 break;
-            case "Track 2":
+            case "Track2":
                 singleSelectionOfButtons(pressed);
                 break;
-            case "Track 3":
+            case "Track3":
                 singleSelectionOfButtons(pressed);
                 break;
-            case "Track 4":
+            case "Track4":
                 singleSelectionOfButtons(pressed);
                 break;
             default:
@@ -465,6 +481,65 @@ public class GUI implements ActionListener{
 
     }
 
+    public Object[] extractGameArgs(JButton component) {
+        Object[] args = new Object[2];
+        // get parent root panel
+        JPanel panel = (JPanel) component.getParent();
+        JPanel rootPanel = (JPanel) panel.getParent();
+        // local variables containing game argument selection panels
+        Component[] cars = ((JPanel) rootPanel.getComponent(1)).getComponents();
+        Component[] tracks = ((JPanel) rootPanel.getComponent(2)).getComponents();
+
+        Color selectionColor = new Color(67, 174, 32, 126);
+
+        ArrayList<Car> racers = new ArrayList<Car>();
+        for(Component car : cars ) {
+            JButton carBtn = (JButton) car;
+            if(carBtn.isSelected()) {
+                String name = carBtn.getText();
+                Image image = getCarSpriteFromText(name);
+                racers.add(new Car(name, image));
+            }
+        }
+        args[0] = racers.toArray(this.gameCars);
+
+        for(Component track : tracks ) {
+            JButton trackBtn = (JButton) track;
+            if(trackBtn.isSelected()) {
+                String file = ("Tracks\\" + trackBtn.getText() + ".csv");
+                args[1] = file;
+            }
+        }
+
+        return args;
+    }
+
+    private Image getCarSpriteFromText(String name) {
+        switch(name) {
+            case "blue":
+                return images[2];
+            case "green":
+                return images[3];
+            case "orange":
+                return images[4];
+            case "purple":
+                return images[5];
+            case "red":
+                return images[6];
+            case "yellow":
+                return images[7];
+
+        }
+        return null;
+    }
+
     /* ___ ACCESSORS / MUTATORS ___ */
 
+    public void gameAssetsSelected(Object[] gameAssets) {
+        this.gameAssets = gameAssets;
+        this.gameCars = ((Car[])this.gameAssets[0]);
+        this.gameTrack = ((Track)this.gameAssets[1]);
+        createGameWindow();
+        swapWindow(this.gameWindowPanel);
+    }
 }

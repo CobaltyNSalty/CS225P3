@@ -32,12 +32,17 @@ public class Track {
     private Image[] trackTileSprites;
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
     private Point[] path;
+    private String filename;
 
     /* ___ CONSTRUCTORS ___ */
     public Track() {
         this.raceTrack = null;
         this.trackTileSprites = null;
         this.path = null;
+    }
+
+    public Track(String filename) {
+
     }
 
     /**
@@ -228,4 +233,7 @@ public class Track {
         return this.raceTrack[x][y];
     }
 
+    public String getFilename() {
+        return filename;
+    }
 }
