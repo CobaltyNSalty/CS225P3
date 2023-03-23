@@ -7,8 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -88,7 +86,7 @@ public class Game implements ActionListener {
 
             /* Sets the cars new position along the track. When the car reaches the end of the track
             * the position is reset to the start of the track. */
-            car.setCurrentPointOnPathIndex(nextTilePathIndex >= raceTrack.getPath().size() - 1 ? 0 : nextTilePathIndex);
+            car.setCurrentIndexAlongTrackPath(nextTilePathIndex >= raceTrack.getPath().size() - 1 ? 0 : nextTilePathIndex);
 
             this.gui.drawNewCarPositions();
         }

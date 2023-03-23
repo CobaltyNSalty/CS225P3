@@ -1,12 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
 The assignment details that code you wrote requires a comment with your name above it. We will implement
@@ -93,7 +87,7 @@ public class Car extends JLabel {
         return currentPointOnPathIndex;
     }
 
-    public void setCurrentPointOnPathIndex(int index) {
+    public void setCurrentIndexAlongTrackPath(int index) {
         currentPointOnPathIndex = index;
     }
 }
