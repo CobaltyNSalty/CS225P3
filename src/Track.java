@@ -55,6 +55,9 @@ public class Track {
      */
     public Track(LinkedList<String> data) {
         this();
+        /* TODO: Create methods that the constructor calls that perform all these actions, a function should
+                 only perform 1 task.
+         */
         /* Import default Tile set */
         loadTrackTiles();
         /* Holds integer values from data file once imported and converted */
@@ -94,7 +97,6 @@ public class Track {
     public Point getNextPointOnPath(int index) {
         return path.get(index + 1);
     }
-
     /**
      * Import default tile set for Track tiles
      */
@@ -121,7 +123,6 @@ public class Track {
         }
 
     }
-
     /**
      * Extract the Path from each tile, correct points to the (x,y) position of the parent container,
      * then string together each tiles path to create a sequence of coordinates that represent the
@@ -141,7 +142,6 @@ public class Track {
 
 
     }
-
     /**
      * Search through Tile[][] until a tile that is not an empty tile is found, this becomes
      * the start of the racetrack path creation.
@@ -162,15 +162,12 @@ public class Track {
     public Tile[][] getRaceTrack() {
         return raceTrack;
     }
-
     public Tile getTileAtPoint(int x, int y) {
         return this.raceTrack[x][y];
     }
-
     public List<Point> getPath() {
         return path;
     }
-
     public List<Point> getCheckpoints() {
         return this.checkpoints;
     }

@@ -38,7 +38,7 @@ public class Game implements ActionListener {
     /**
      * The delay in milliseconds of the game clock timer.
      */
-    public static final int TIMER_DELAY = 1000;
+    public static final int TIMER_DELAY = 100;
     private Track raceTrack;
     private Car[] racers;
     private GUI gui;
@@ -58,18 +58,12 @@ public class Game implements ActionListener {
         initControlFunctions();
     }
 
-    private void initControlFunctions() {
-        JButton continueButton = new JButton();
-        continueButton.addActionListener(this);
-        this.controlFunctions[0] = continueButton;
-    }
-
+    /* Game control methods */
     public void play() {
-        this.gui = new GUI(this.controlFunctions); // TODO: this isn't working
+        this.gui = new GUI(this.controlFunctions);
     }
 
     private void gameLoop() {
-        // TODO: clock starts prior to game start
         if(play) {
             gameClock = new Timer(TIMER_DELAY, e -> {
                 updateCarPositions();
@@ -79,14 +73,6 @@ public class Game implements ActionListener {
             gameClock.start();
         }
     }
-
-
-    public Duration getCurrentTime(){
-        Instant currentTime = Instant.now();
-        Duration totalTime = Duration.between(startTime,currentTime);
-        return totalTime;
-    }
-
     /**
      * Determines the cars next position along the track and moves the car to that position.
      *
@@ -97,13 +83,25 @@ public class Game implements ActionListener {
             int nextTilePathIndex = car.getCurrentPointOnPathIndex() + 1;
 
             /* Sets the cars new position along the track. When the car reaches the end of the track
-            * the position is reset to the start of the track. */
+             * the position is reset to the start of the track. */
             car.setCurrentIndexAlongTrackPath(nextTilePathIndex >= raceTrack.getPath().size() - 1 ? 0 : nextTilePathIndex);
 
             this.gui.drawNewCarPositions();
         }
     }
 
+    /* Helper methods */
+    private void initControlFunctions() {
+        JButton continueButton = new JButton();
+        continueButton.addActionListener(this);
+        this.controlFunctions[0] = continueButton;
+    }
+
+    /* Class Functions */
+    public Duration getCurrentTime(){
+        Instant currentTime = Instant.now();
+        return Duration.between(startTime,currentTime);
+    }
     public Car importCarFromFile(String fileName) throws IOException {
         Car importCar;
         LinkedList<String> data;
@@ -113,7 +111,6 @@ public class Game implements ActionListener {
 
         return importCar;
     }
-
     public Track importTrackFromFile(String fileName) throws IOException {
         Track importTrack;
         LinkedList<String> data;
@@ -123,8 +120,6 @@ public class Game implements ActionListener {
 
         return importTrack;
     }
-
-
     public LinkedList<String> importData(String fileName) throws IOException {
         FileInputStream inFS = null;
         LinkedList<String> data;
@@ -140,7 +135,6 @@ public class Game implements ActionListener {
         }
         return data;
     }
-
     public LinkedList<String> extractInfoFromFile(FileInputStream fIS) {
         LinkedList<String> entryList = new LinkedList<String>();
         Scanner scnr = new Scanner(fIS);
@@ -149,7 +143,6 @@ public class Game implements ActionListener {
         }
         return entryList;
     }
-
     public void initializeGameWindow(JButton pressed) {
         // TODO: Create JButton[] of control functions that affect the state of the game then pass it as part of gameAssets to GUI object
         Object[] args = this.gui.extractGameArgs(pressed);

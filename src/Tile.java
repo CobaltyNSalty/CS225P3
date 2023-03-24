@@ -118,11 +118,9 @@ public class Tile extends JLabel {
     public int getIndexPosCol() {
         return indexPosCol;
     }
-
     public boolean isCheckpoint() {
         return isCheckpoint;
     }
-
     public Point getCheckpoint() {
         // TODO: may be a different point, UNTESTED
         return this.path[24];
