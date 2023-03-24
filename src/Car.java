@@ -29,7 +29,7 @@ public class Car extends JLabel {
 
 
     /* Holds the index value of the Track.path point the car is currently at */
-    private int currentPointOnPathIndex;
+    private int currentIndexOnTrackPointPath;
     /* Catch-all value for car "alterations"  */
     private int modifier;
     /* Cars x position on raceTrack panel */
@@ -83,12 +83,12 @@ public class Car extends JLabel {
         this.posY = p.y;
     }
 
-    public int getCurrentPointOnPathIndex() {
-        return currentPointOnPathIndex;
+    public int getCurrentIndexOnTrackPointPath() {
+        return currentIndexOnTrackPointPath;
     }
 
-    public void setCurrentIndexAlongTrackPath(int index) {
-        currentPointOnPathIndex = index;
+    public void incrementCurrentIndexOnTrackPointPath(int amount) {
+        currentIndexOnTrackPointPath += amount;
     }
 }
 

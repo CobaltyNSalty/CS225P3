@@ -81,13 +81,8 @@ public class Game implements ActionListener {
      */
     private void updateCarPositions() {
         for(Car car: this.racers) {
-            car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentPointOnPathIndex()));
-            int nextTilePathIndex = car.getCurrentPointOnPathIndex() + 1;
-
-            /* Sets the cars new position along the track. When the car reaches the end of the track
-            * the position is reset to the start of the track. */
-            car.setCurrentIndexAlongTrackPath(nextTilePathIndex >= raceTrack.getPath().size() - 1 ? 0 : nextTilePathIndex);
-
+            car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentIndexOnTrackPointPath()));
+            car.incrementCurrentIndexOnTrackPointPath(3); // TODO: 3/24/2023 make 3 vary for car speed
             this.gui.drawNewCarPositions();
         }
     }

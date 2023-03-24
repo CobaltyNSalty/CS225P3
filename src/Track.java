@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *  Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
@@ -74,7 +75,17 @@ public class Track {
             for (int x = 0; x < tileArgsStringArray.length; x++) { // [chris] swapped integer value for stringArray.length
                 tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
-            this.raceTrack[tileArgs[0]][tileArgs[1]] = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
+            Tile tile = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
+            this.raceTrack[tileArgs[0]][tileArgs[1]] = tile;
+            Point[] tilePath = tile.getPath();
+            /* multiply the location of each point on the tile by the tiles column and row index
+            * to properly position the point on the racetrack */
+            for (Point point : tilePath) {
+                point.translate(tile.getIndexPosCol() * GUI.TILE_SIZE, tile.getIndexPosRow() * GUI.TILE_SIZE);
+            }
+            /* convert tilePath Point array to a List so that it can be easily added
+            * to the tracks list of Point's then add it to the tracks List<Point> path */
+            path.addAll(Arrays.stream(tilePath).collect(Collectors.toList()));
         }
     }
 
