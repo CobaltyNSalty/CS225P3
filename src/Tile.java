@@ -14,6 +14,8 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class Tile extends JLabel {
+    /** The size of game tiles in pixels.*/
+    public static final int SIZE = 50;
     /* ___ FIELD VARIABLES ___ */
     /* Display image */
     //private Image sprite;

@@ -81,7 +81,7 @@ public class Track {
             /* multiply the location of each point on the tile by the tiles column and row index
             * to properly position the point on the racetrack */
             for (Point point : tilePath) {
-                point.translate(tile.getIndexPosCol() * GUI.TILE_SIZE, tile.getIndexPosRow() * GUI.TILE_SIZE);
+                point.translate(tile.getIndexPosCol() * Tile.SIZE, tile.getIndexPosRow() * Tile.SIZE);
             }
             /* convert tilePath Point array to a List so that it can be easily added
             * to the tracks list of Point's then add it to the tracks List<Point> path */

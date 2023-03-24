@@ -29,12 +29,6 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class GUI implements ActionListener{
-    // TODO: 3/21/2023 TILE_SIZE may need to be moved to another file.
-    /**
-     * The width of game tiles in pixels.
-     */
-    public static final int TILE_SIZE = 50;
-
     /* ___ FIELD VARIABLES ___ */
     /* Base frame for the application */
     private JFrame rootFrame;
@@ -301,7 +295,7 @@ public class GUI implements ActionListener{
 
     public void drawNewCarPositions() {
         for(int i = 0; i < 2; i++) {
-            this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, TILE_SIZE, TILE_SIZE);
+            this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, Tile.SIZE, Tile.SIZE);
             carPanelSpeedLabels[0][i].setText("" + gameCars[i].getPosition().x);
             carPanelSpeedLabels[1][i].setText("" + gameCars[i].getPosition().y);
         }
