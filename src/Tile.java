@@ -11,6 +11,7 @@ name in a comment on the same line to not interfere with other important documen
                     - added (Image image) constructor
 3/14    [chris]     - wrote createPath() method
 3/21    [chris]     - modified implementation to have Tile class extend JLabel
+3/24    [chris]     - added isCheckPoint boolean and related methods to identify Tiles that contain checkpoints
 
  */
 public class Tile extends JLabel {
@@ -25,6 +26,7 @@ public class Tile extends JLabel {
     /* The column index of this Tile within the array housing it
        used to access neighboring Tiles in array */
     private int indexPosCol;
+    private boolean isCheckpoint;
 
     /* ___ CONSTRUCTORS ___ */
     // TODO: update all constructors with new field variables
@@ -34,11 +36,12 @@ public class Tile extends JLabel {
         this.setIcon(new ImageIcon(image));
     }
 
-    public Tile(Image image, int imageID, int row, int col) {
+    public Tile(Image image, int imageID, int row, int col, boolean hasCheckpoint) {
         this.setIcon(new ImageIcon(image));
         this.tileIDNum = imageID; // integer value at start of image file name
         this.indexPosRow = row;
         this.indexPosCol = col;
+        this.isCheckpoint = hasCheckpoint;
         createPath(imageID);
     }
 
@@ -114,5 +117,14 @@ public class Tile extends JLabel {
     }
     public int getIndexPosCol() {
         return indexPosCol;
+    }
+
+    public boolean isCheckpoint() {
+        return isCheckpoint;
+    }
+
+    public Point getCheckpoint() {
+        // TODO: may be a different point, UNTESTED
+        return this.path[24];
     }
 }

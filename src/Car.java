@@ -62,15 +62,13 @@ public class Car extends JLabel {
     /* ___ FUNCTIONS ___ */
 
     /* ___ ACCESSORS / MUTATORS ___ */
-    public void incrementCheckpointIndex() {
-        this.checkpointIndex += 1;
-    }
     public Point getPosition() {
         return new Point(posX, posY);
     }
     public void setPosition(Point position) {
         this.posX = position.x;
         this.posY = position.y;
+
     }
     public void setNextPosition(Point p) {
         this.posX = p.x;
@@ -78,11 +76,11 @@ public class Car extends JLabel {
     }
 
     public int getCurrentPointOnPathIndex() {
-        return currentPointOnPathIndex;
+        return this.currentPointOnPathIndex;
     }
 
     public void setCurrentIndexAlongTrackPath(int index) {
-        currentPointOnPathIndex = index;
+        this.currentPointOnPathIndex = index;
     }
 }
 

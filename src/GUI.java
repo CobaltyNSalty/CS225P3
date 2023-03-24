@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
 The assignment details that code you wrote requires a comment with your name above it. We will implement
@@ -158,8 +159,11 @@ public class GUI implements ActionListener{
         // right panel components and settings
         JButton track1Btn = makeTrackOptionButton(1);
         JButton track2Btn = makeTrackOptionButton(2);
+        track2Btn.setEnabled(false);
         JButton track3Btn = makeTrackOptionButton(3);
+        track3Btn.setEnabled(false);
         JButton track4Btn = makeTrackOptionButton(4);
+        track4Btn.setEnabled(false);
         rightPanel.add(track1Btn);
         rightPanel.add(track2Btn);
         rightPanel.add(track3Btn);
@@ -314,8 +318,10 @@ public class GUI implements ActionListener{
         carPanel.setLayout(null);
 
         for(Car car : this.gameCars) {
-            // TODO: SET starting POSITIONs for each car to be one of the Track checkpoints
-            // TODO: max cars per track = number of checkpoints.
+            // TODO: set starting positions for each car to be random
+            Random rng = new Random();
+
+            car.setCurrentIndexAlongTrackPath(rng.nextInt(this.gameTrack.getPath().size()));
             carPanel.add(car);
         }
         // Compose gameplay area

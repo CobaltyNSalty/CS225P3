@@ -38,7 +38,7 @@ public class Game implements ActionListener {
     /**
      * The delay in milliseconds of the game clock timer.
      */
-    public static final int TIMER_DELAY = 50;
+    public static final int TIMER_DELAY = 1000;
     private Track raceTrack;
     private Car[] racers;
     private GUI gui;

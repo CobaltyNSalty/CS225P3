@@ -13,6 +13,7 @@ name in a comment on the same line to not interfere with other important documen
 3/22    [tre]       - change type of path field to List<Point>
                     - change tileArgs size to 4 to account for the path index of each track tile
                     - add method getPath() for getting the path field
+3/24    [chris]     - added isCheckPoint boolean and related methods to identify Tiles that contain checkpoints
 
  */
 
@@ -35,12 +36,14 @@ public class Track {
     private Image[] trackTileSprites;
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
     private List<Point> path;
+    private List<Point> checkpoints;
 
     /* ___ CONSTRUCTORS ___ */
     public Track() {
         this.raceTrack = null;
         this.trackTileSprites = null;
         this.path = new ArrayList<>();
+        this.checkpoints = new ArrayList<>();
     }
 
     /**
@@ -74,13 +77,15 @@ public class Track {
             for (int x = 0; x < tileArgsStringArray.length; x++) { // [chris] swapped integer value for stringArray.length
                 tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
-            this.raceTrack[tileArgs[0]][tileArgs[1]] = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
-            path.add(new Point((tileArgs[1] * GUI.TILE_SIZE) + GUI.TILE_SIZE, (tileArgs[0] * GUI.TILE_SIZE) + GUI.TILE_SIZE));
+
+            boolean checkpoint = (tileArgs[2] == 7) || (tileArgs[2] == 8); // [chris]
+            this.raceTrack[tileArgs[0]][tileArgs[1]] = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1], checkpoint);
+            this.path.add(new Point((tileArgs[1] * GUI.TILE_SIZE) + GUI.TILE_SIZE, (tileArgs[0] * GUI.TILE_SIZE) + GUI.TILE_SIZE));
+            // TODO: save index values along path that are checkpoints
         }
     }
 
     /* ___ FUNCTIONS ___ */
-
     /**
      * Returns the next point on the path given an index value for the current path
      * @param index - Index of current point on path
@@ -92,13 +97,12 @@ public class Track {
 
     /**
      * Import default tile set for Track tiles
-     * @return if images loaded successfully
      */
-    private boolean loadTrackTiles() {
+    private void loadTrackTiles() {
         File imageDirectory = new File("Sprites\\TrackTiles");
         String[] imageNames = imageDirectory.list();
         if (imageNames == null) {
-            return false;
+            return;
         }
 
         this.trackTileSprites = new Image[imageNames.length];
@@ -116,7 +120,6 @@ public class Track {
             index++;
         }
 
-        return true;
     }
 
     /**
@@ -155,7 +158,6 @@ public class Track {
         return null;
     }
 
-
     /* ___ ACCESSORS / MUTATORS ___ */
     public Tile[][] getRaceTrack() {
         return raceTrack;
@@ -167,5 +169,9 @@ public class Track {
 
     public List<Point> getPath() {
         return path;
+    }
+
+    public List<Point> getCheckpoints() {
+        return this.checkpoints;
     }
 }
