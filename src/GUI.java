@@ -85,11 +85,7 @@ public class GUI implements ActionListener{
         createMenuWindow();
         createGameOptionsWindow();
 
-        // TODO: this will be the menuWindow after testing
-         this.rootFrame.setContentPane(this.menuWindowPanel);
-        // this.rootFrame.setContentPane(this.gameWindowPanel);
-        // this.rootFrame.setContentPane(this.startGameOptionsWindowPanel);
-
+        this.rootFrame.setContentPane(this.menuWindowPanel); // starting window
         this.rootFrame.pack();
         this.rootFrame.setVisible(true);
     }
@@ -341,7 +337,7 @@ public class GUI implements ActionListener{
         JButton button = new JButton();
         button.setDoubleBuffered(true);
         button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setIcon(new ImageIcon(this.images[(index + 1)]));
+        button.setIcon(new ImageIcon(this.images[(index + 1)])); // TODO: UPDATE to include sprite rotation and Tile orientation
         button.setVerticalTextPosition(SwingConstants.BOTTOM);
         button.setHorizontalTextPosition(SwingConstants.CENTER);
         button.addActionListener(this);
@@ -390,20 +386,39 @@ public class GUI implements ActionListener{
 
     /* Class Functions */
     private void loadImages() {
-        this.images = new Image[12];
+        this.images = new Image[30];
+        // TODO: modify images to be a 2d array and put each direction of car into its own array
         try {
             this.images[0] = ImageIO.read(new File("Sprites\\Checkered.png"));
             this.images[1] = ImageIO.read(new File("Sprites\\MenuImage.png"));
-            this.images[2] = ImageIO.read(new File("Sprites\\carSprites\\blueCar.png"));
-            this.images[3] = ImageIO.read(new File("Sprites\\carSprites\\greenCar.png"));
-            this.images[4] = ImageIO.read(new File("Sprites\\carSprites\\orangeCar.png"));
-            this.images[5] = ImageIO.read(new File("Sprites\\carSprites\\purpleCar.png"));
-            this.images[6] = ImageIO.read(new File("Sprites\\carSprites\\redCar.png"));
-            this.images[7] = ImageIO.read(new File("Sprites\\carSprites\\yellowCar.png"));
-            this.images[8] = ImageIO.read(new File("Sprites\\TrackIcons\\Track1Icon.png"));
-            this.images[9] = ImageIO.read(new File("Sprites\\TrackIcons\\Track2Icon.png"));
-            this.images[10] = ImageIO.read(new File("Sprites\\TrackIcons\\Track3Icon.png"));
-            this.images[11] = ImageIO.read(new File("Sprites\\TrackIcons\\Track4Icon.png"));
+            this.images[2] = ImageIO.read(new File("Sprites\\carSprites\\blueCarUp.png"));
+            this.images[3] = ImageIO.read(new File("Sprites\\carSprites\\greenCarUp.png"));
+            this.images[4] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarUp.png"));
+            this.images[5] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarUp.png"));
+            this.images[6] = ImageIO.read(new File("Sprites\\carSprites\\redCarUp.png"));
+            this.images[7] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarUp.png"));
+            this.images[8] = ImageIO.read(new File("Sprites\\carSprites\\blueCarLeft.png"));
+            this.images[9] = ImageIO.read(new File("Sprites\\carSprites\\greenCarLeft.png"));
+            this.images[10] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarLeft.png"));
+            this.images[11] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarLeft.png"));
+            this.images[12] = ImageIO.read(new File("Sprites\\carSprites\\redCarLeft.png"));
+            this.images[13] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarLeft.png"));
+            this.images[14] = ImageIO.read(new File("Sprites\\carSprites\\blueCarRight.png"));
+            this.images[15] = ImageIO.read(new File("Sprites\\carSprites\\greenCarRight.png"));
+            this.images[16] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarRight.png"));
+            this.images[17] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarRight.png"));
+            this.images[18] = ImageIO.read(new File("Sprites\\carSprites\\redCarRight.png"));
+            this.images[19] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarRight.png"));
+            this.images[20] = ImageIO.read(new File("Sprites\\carSprites\\blueCarDown.png"));
+            this.images[21] = ImageIO.read(new File("Sprites\\carSprites\\greenCarDown.png"));
+            this.images[22] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarDown.png"));
+            this.images[23] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarDown.png"));
+            this.images[24] = ImageIO.read(new File("Sprites\\carSprites\\redCarDown.png"));
+            this.images[25] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarDown.png"));
+            this.images[26] = ImageIO.read(new File("Sprites\\TrackIcons\\Track1Icon.png"));
+            this.images[27] = ImageIO.read(new File("Sprites\\TrackIcons\\Track2Icon.png"));
+            this.images[28] = ImageIO.read(new File("Sprites\\TrackIcons\\Track3Icon.png"));
+            this.images[29] = ImageIO.read(new File("Sprites\\TrackIcons\\Track4Icon.png"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -437,7 +452,7 @@ public class GUI implements ActionListener{
             JButton carBtn = (JButton) car;
             if(carBtn.isSelected()) {
                 String name = carBtn.getText();
-                Image image = getCarSpriteFromText(name);
+                Image image = getCarSpriteFromText(name); // Car default image is 'Up'
                 racers.add(new Car(name, image));
             }
         }
@@ -456,6 +471,7 @@ public class GUI implements ActionListener{
     }
     private Image getCarSpriteFromText(String name) {
         switch(name) {
+            // default sprite is 'Up'
             case "blue":
                 return images[2];
             case "green":

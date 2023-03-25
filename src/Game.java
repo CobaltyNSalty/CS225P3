@@ -32,6 +32,7 @@ name in a comment on the same line to not interfere with other important documen
 3/22    [chris]     - added initializeGameWindow() to create game from options selected in application
 3/23    [chris]     - added control functions array, merged branches and troubleshot, implemented game start method
                     - sequence using actionListener and controlFunction.
+3/25    [chris]     - moved initialization of startTime to when the gameClock control boolean 'play' is set to true.
 
  */
 public class Game implements ActionListener {
@@ -45,7 +46,7 @@ public class Game implements ActionListener {
     private Timer gameClock;
     private Object[] controlFunctions;
     //test
-    private Instant startTime = Instant.now();
+    private Instant startTime;
     private boolean play;
 
 
@@ -144,7 +145,6 @@ public class Game implements ActionListener {
         return entryList;
     }
     public void initializeGameWindow(JButton pressed) {
-        // TODO: Create JButton[] of control functions that affect the state of the game then pass it as part of gameAssets to GUI object
         Object[] args = this.gui.extractGameArgs(pressed);
         this.racers = (Car[]) args[0];
         String filename = ((String) args[1]);
@@ -162,6 +162,7 @@ public class Game implements ActionListener {
         // TODO: for now, there is only one control button
         initializeGameWindow((JButton) e.getSource());
         this.play = true;
+        this.startTime = Instant.now();
         gameLoop();
     }
 }
