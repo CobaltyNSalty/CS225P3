@@ -56,10 +56,11 @@ public class Track {
         /* Import all default Tile sprite images from "Sprites\\TrackTiles" */
         loadTrackTiles();
         /* Holds integer values from data file once imported and converted */
-        int[] tileArgs = new int[3];                                 // each line is 1 Tile and has 3 entries
+        int[] tileArgs = new int[4];                                 // each line is 1 Tile and has 4 entries
         String[] tileArgsStringArray = (data.pop()).split(",");// get first line from data file
         tileArgs[0] = Integer.parseInt(tileArgsStringArray[0]);      // first line entry 1 = height of track
         tileArgs[1] = Integer.parseInt(tileArgsStringArray[1]);      // first line entry 2 = width of track
+        tileArgs[2] = Integer.parseInt(tileArgsStringArray[2]);      // first line entry 3 = tile orientation
         this.raceTrack = new Tile[tileArgs[0]][tileArgs[1]];         // initialize raceTrack with given dimensions
 
         /* Initialize all elements in raceTrack to a non-null Tile(0 - Empty Tile) */
@@ -75,7 +76,7 @@ public class Track {
             for (int x = 0; x < tileArgsStringArray.length; x++) { // [chris] swapped integer value for stringArray.length
                 tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
-            Tile tile = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
+            Tile tile = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1], tileArgs[3]);
             this.raceTrack[tileArgs[0]][tileArgs[1]] = tile;
             Point[] tilePath = tile.getPath();
             /* multiply the location of each point on the tile by the tiles column and row index

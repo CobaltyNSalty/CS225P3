@@ -47,12 +47,13 @@ public class Tile extends JLabel {
         createPath(imageIndexValue);
     }
 
-    public Tile(Image image, int imageID, int row, int col) {
+    public Tile(Image image, int imageID, int row, int col, int orientation) {
         // this.sprite = image;
         this.setIcon(new ImageIcon(image));
         this.tileIDNum = imageID; // integer value at start of image file name
         this.indexPosRow = row;
         this.indexPosCol = col;
+        this.orientation = Orientation.values()[orientation];
         createPath(imageID);
     }
 
