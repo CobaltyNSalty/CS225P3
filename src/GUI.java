@@ -284,24 +284,24 @@ public class GUI implements ActionListener{
 
         // car specific panels in info panel
         // TODO: make dynamic - this needs to display the number of cars not a fixed number, i.e. 2
-        JPanel[] carInfoPanels = new JPanel[2];
-        JLabel[] carInfoPanelLabels = new JLabel[2];
-        carPanelSpeedLabels = new JLabel[2][2];
+        JPanel[] carInfoPanels = new JPanel[gameCars.length];
+        JLabel[] carInfoPanelLabels = new JLabel[gameCars.length];
+        carPanelSpeedLabels = new JLabel[gameCars.length][2];
 
         GridBagConstraints layoutConstraints = new GridBagConstraints();
         layoutConstraints.insets = new Insets(10,10,10,10);
         layoutConstraints.weightx = 1;
         layoutConstraints.weighty = 1;
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < gameCars.length; i++) {
             carInfoPanels[i] = new JPanel(new GridBagLayout());
             carInfoPanels[i].setBorder(new LineBorder(Color.RED));
             carInfoPanels[i].setPreferredSize(new Dimension(250, 100));
 
             carInfoPanelLabels[i] = new JLabel("Car " + (i + 1));
-            carPanelSpeedLabels[0][i] = new JLabel("50");
-            carPanelSpeedLabels[0][i].setPreferredSize(new Dimension(50, 50));
-            carPanelSpeedLabels[1][i] = new JLabel("" + gameCars[i].getPosition().y);
+            carPanelSpeedLabels[i][0] = new JLabel("50");
+            carPanelSpeedLabels[i][0].setPreferredSize(new Dimension(50, 50));
+            carPanelSpeedLabels[i][1] = new JLabel("" + gameCars[i].getPosition().y);
 
             layoutConstraints.gridy = 0;
             layoutConstraints.gridx = 0;
@@ -313,14 +313,14 @@ public class GUI implements ActionListener{
             carInfoPanels[i].add(new JLabel("X position:"), layoutConstraints);
 
             layoutConstraints.gridx = 1;
-            carInfoPanels[i].add( carPanelSpeedLabels[0][i], layoutConstraints);
+            carInfoPanels[i].add(carPanelSpeedLabels[i][0], layoutConstraints);
 
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 2;
             carInfoPanels[i].add(new JLabel("Y position:"), layoutConstraints);
 
             layoutConstraints.gridx = 1;
-            carInfoPanels[i].add(carPanelSpeedLabels[1][i], layoutConstraints);
+            carInfoPanels[i].add(carPanelSpeedLabels[i][1], layoutConstraints);
 
             // BottomGamePanel created in createGameWindowInfoPanel() and has a JPanel added to it
             ((JPanel)bottomGamePanel.getComponent(0)).add(carInfoPanels[i]);
