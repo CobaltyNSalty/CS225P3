@@ -30,6 +30,8 @@ public class Tile extends JLabel {
        used to access neighboring Tiles in array */
     private int indexPosCol;
 
+    private Orientation orientation;
+
     /* ___ CONSTRUCTORS ___ */
     // TODO: update all constructors with new field variables
 
@@ -68,12 +70,12 @@ public class Tile extends JLabel {
         switch(imageID) { // TODO: needs testing
             case 1: // 1 Straight vertical
                 for(int i = 0; i < 50; i++) {
-                    path[i] = new Point(25, i);
+                    path[i] = new Point(25, orientation == Orientation.BOTTOM_TO_TOP ? Tile.SIZE - 1 - i : i);
                 }
                 break;
             case 2: // 2 Straight horizontal
                 for(int i = 0; i < 50; i++) {
-                    path[i] = new Point(i, 25);
+                    path[i] = new Point(orientation == Orientation.RIGHT_TO_LEFT ? Tile.SIZE - 1 - i : i, 25);
                 }
                 break;
             case 3: // 3 Corner between left edge and top edge
