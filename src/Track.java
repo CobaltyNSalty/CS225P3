@@ -81,7 +81,10 @@ public class Track {
             for (int x = 0; x < tileArgsStringArray.length; x++) { // [chris] swapped integer value for stringArray.length
                 tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
-            Tile tile = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
+            // TODO: UPDATE TO INCLUDE ISBOOLEAN IF NECESSARY
+
+            boolean isCheckpoint = (tileArgs[2] == 7) || (tileArgs[2] == 8); // [chris]
+            Tile tile = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1], isCheckpoint);
             this.raceTrack[tileArgs[0]][tileArgs[1]] = tile;
             Point[] tilePath = tile.getPath();
             /* multiply the location of each point on the tile by the tiles column and row index

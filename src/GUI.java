@@ -263,7 +263,7 @@ public class GUI implements ActionListener{
             // TODO: set starting positions for each car to be random
             Random rng = new Random();
 
-            car.setCurrentIndexAlongTrackPath(rng.nextInt(this.gameTrack.getPath().size()));
+            car.incrementCurrentIndexOnTrackPointPath(rng.nextInt(this.gameTrack.getPath().size()));
             carPanel.add(car);
         }
         // Compose gameplay area
@@ -453,7 +453,7 @@ public class GUI implements ActionListener{
             if(carBtn.isSelected()) {
                 String name = carBtn.getText();
                 Image image = getCarSpriteFromText(name); // Car default image is 'Up'
-                racers.add(new Car(name, image));
+                racers.add(new Car(name, image, null, 0, 0)); // TODO: needs testing
             }
         }
         this.gameCars = new Car[racers.size()];
