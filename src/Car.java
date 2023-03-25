@@ -21,7 +21,7 @@ public class Car extends JLabel {
     /* Name assigned to each Car or players name */
     private String name;
     /* Calculated value to be displayed as user feedback */
-    private double speed;
+    private int speed;
     /* Series of points car must reach to complete race */
     private Point[] checkpoints;
     /* Current point car is heading towards */
@@ -56,6 +56,7 @@ public class Car extends JLabel {
         this.posY = startingY;
         this.posX = startingX;
         this.setIcon(new ImageIcon(carImage));
+        determineCarSpeed();
     }
 
     public Car(LinkedList<String> data) {
@@ -64,6 +65,22 @@ public class Car extends JLabel {
     }
 
     /* ___ FUNCTIONS ___ */
+    private void determineCarSpeed() {
+        switch(this.name) {
+            case "blue":
+            case "purple":
+                this.speed = 3;
+                break;
+            case "green":
+            case "red":
+                this.speed = 4;
+                break;
+            case "orange":
+            case "yellow":
+                this.speed = 5;
+                break;
+        }
+    }
 
     /* ___ ACCESSORS / MUTATORS ___ */
     public void incrementCheckpointIndex() {
@@ -72,21 +89,36 @@ public class Car extends JLabel {
     public Point getPosition() {
         return new Point(posX, posY);
     }
-    public void setPosition(Point position) {
-        this.posX = position.x;
-        this.posY = position.y;
-    }
     public void setNextPosition(Point p) {
         this.posX = p.x;
         this.posY = p.y;
+        // TODO: check for rotation
+    }
+
+    private void checkForRotation() {
+        // if orientation = down and x changes =>  turn left or turn right
+        // change sprite
     }
 
     public int getCurrentIndexOnTrackPointPath() {
         return currentIndexOnTrackPointPath;
     }
 
+    public void setCurrentIndexOnTrackPointPath(int index) {
+        this.currentIndexOnTrackPointPath = index;
+    }
     public void incrementCurrentIndexOnTrackPointPath(int amount) {
         currentIndexOnTrackPointPath += amount;
+    }
+
+    public void checkIndexRange(int length) {
+        if(this.currentIndexOnTrackPointPath >= length) {
+            setCurrentIndexOnTrackPointPath(0);
+        }
+    }
+
+    public int getSpeed() {
+        return this.speed;
     }
 }
 

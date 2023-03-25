@@ -38,6 +38,7 @@ public class Track {
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
     private List<Point> path;
     private List<Point> checkpoints;
+    enum direction { UP, DOWN, LEFT, RIGHT};
 
     /* ___ CONSTRUCTORS ___ */
     public Track() {
@@ -62,11 +63,11 @@ public class Track {
         /* Import default Tile set */
         loadTrackTiles();
         /* Holds integer values from data file once imported and converted */
-        int[] tileArgs = new int[4];                                 // each line is 1 Tile and has 3 entries
+        int[] nextTileArgs = new int[3];                                 // each line is 1 Tile and has 3 entries
         String[] tileArgsStringArray = (data.pop()).split(",");// get first line from data file
-        tileArgs[0] = Integer.parseInt(tileArgsStringArray[0]);      // first line entry 1 = height of track
-        tileArgs[1] = Integer.parseInt(tileArgsStringArray[1]);      // first line entry 2 = width of track
-        this.raceTrack = new Tile[tileArgs[0]][tileArgs[1]];         // initialize raceTrack with given dimensions
+        nextTileArgs[0] = Integer.parseInt(tileArgsStringArray[0]);      // first line entry 1 = height of track
+        nextTileArgs[1] = Integer.parseInt(tileArgsStringArray[1]);      // first line entry 2 = width of track
+        this.raceTrack = new Tile[nextTileArgs[0]][nextTileArgs[1]];         // initialize raceTrack with given dimensions
 
         /* Initialize all elements in raceTrack to a non-null Tile(0 - Empty Tile) */
         for (int row = 0; row < this.raceTrack.length; row++) {
@@ -75,18 +76,50 @@ public class Track {
             }
         }
 
-        /* Modify Tiles in raceTrack with new Tiles from data File */
+        boolean firstTile = true;
+        int lastX = 0;
+        int lastY = 0;
+        /* Modify Tiles in raceTrack with new Tiles from data File
+         * TODO: not a todo, but this method relies on elements in track files list of tiles being consecutive
+         */
         while (!(data.isEmpty())) {
             tileArgsStringArray = (data.pop()).split(",");
             for (int x = 0; x < tileArgsStringArray.length; x++) { // [chris] swapped integer value for stringArray.length
-                tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
+                nextTileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
-            // TODO: UPDATE TO INCLUDE ISBOOLEAN IF NECESSARY
+            if(firstTile) {
+                // last tile = this tile
+                lastY = nextTileArgs[0];
+                lastX = nextTileArgs[1];
+                firstTile = false;
+            }
 
-            boolean isCheckpoint = (tileArgs[2] == 7) || (tileArgs[2] == 8); // [chris]
-            Tile tile = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1], isCheckpoint);
-            this.raceTrack[tileArgs[0]][tileArgs[1]] = tile;
-            Point[] tilePath = tile.getPath();
+            int nextY = nextTileArgs[0];
+            int nextX = nextTileArgs[1];
+
+            boolean isCheckpoint = (nextTileArgs[2] == 7) || (nextTileArgs[2] == 8); // [chris]
+            Tile tile = new Tile(this.trackTileSprites[nextTileArgs[2]], nextTileArgs[2], nextTileArgs[0], nextTileArgs[1], isCheckpoint);
+            this.raceTrack[nextTileArgs[0]][nextTileArgs[1]] = tile;
+
+            Point[] tilePath;
+            /* Factors: next tiles position relative to last tile (above, below, left or right)
+             *          and the type of tile(next tile), will determine if path gets flipped.
+             *  if( ) determine relative movement
+             *    if( ) based on type
+             *       add path or add reverse path
+             */
+
+            boolean reverse = determineReversePath(lastX, lastY, nextX, nextY, nextTileArgs[2]);
+            if(reverse) {
+                tilePath = tile.getReversePath();
+            } else {
+                tilePath = tile.getPath();
+            }
+
+
+            lastY = nextTileArgs[0];
+            lastX = nextTileArgs[1];
+
             /* multiply the location of each point on the tile by the tiles column and row index
             * to properly position the point on the racetrack */
             for (Point point : tilePath) {
@@ -94,8 +127,101 @@ public class Track {
             }
             /* convert tilePath Point array to a List so that it can be easily added
             * to the tracks list of Point's then add it to the tracks List<Point> path */
-            path.addAll(Arrays.stream(tilePath).collect(Collectors.toList()));
+            // TODO: CHECK ORIENTATION before adding
+            this.path.addAll(Arrays.stream(tilePath).collect(Collectors.toList()));
         }
+    }
+
+    private boolean determineReversePath(int lastX, int lastY, int nextX, int nextY, int imageType) {
+        if(imageType == 7) { // vertical checkpoint
+            imageType = 1;
+        }
+        if(imageType == 8) { //horizontal checkpoint
+            imageType = 2;
+        }
+        if        ((nextX - lastX ==   0) && (nextY - lastY ==  -1)) { // above
+            /* Tiles that can have a tile below them:vertical=1,  rightBot=6, leftBot=4
+
+            switch (imageType) {
+                case 1:
+                    return true;
+                    break;
+                case 6:
+                    return true;
+                    break;
+                case 4:
+                    return true;
+                    break;
+            }
+             */
+            return true;
+        } else if ((nextX - lastX ==  -1) && (nextY - lastY ==   0)) { // left
+            /* tiles that can have a tile to the right of them: horizontal=2, right top=5, right bot=6
+
+            switch (imageType) {
+                case 2:
+                    return true;
+                    break;
+                case 5: // false
+                case 6:
+                    return false;
+                    break;
+            }
+            */
+            return (imageType == 2);
+
+        } else if ((nextX - lastX ==   0) && (nextY - lastY ==   1)) { // below
+            /* tiles that can have a tile above them: vertical=1, left top=3, right top=5
+
+            switch (imageType) {
+                case 1:
+                    return false;
+                    break;
+                case 3: // true
+                case 5:
+                    return true;
+                    break;
+            }
+             */
+            return (imageType != 1);
+
+        } else if ((nextX - lastX ==   1) && (nextY - lastY ==   0)) { // right
+            /* tiles that can have a tile to the left of them: horizontal=2, left top=3, left bot=4
+
+            switch (imageType) {
+                case 2:
+                    return false;
+                    break;
+                case 3:
+                    return false;
+                    break;
+                case 4:
+                    return false;
+                    break;
+            }
+             */
+            return false;
+        }
+        return false; // default
+    }
+
+    private void normalizePath() {
+        // for every point on the path
+        for(int b = 0; b < (this.path.size()-1); b++) {
+            Point start = this.path.get(b);     // new point
+            Point next = this.path.get(b + 1);  // point after
+            // find difference between the two points
+            Point nextPointValidationCheck = new Point((next.x - start.x), (next.y - start.y));
+            // if difference is > 1 in any direction
+            if(!( (nextPointValidationCheck.x == 0  && nextPointValidationCheck.y == 1)  ||
+                  (nextPointValidationCheck.x == 0  && nextPointValidationCheck.y == -1) ||
+                  (nextPointValidationCheck.x == 1  && nextPointValidationCheck.y == 0)  ||
+                  (nextPointValidationCheck.x == -1 && nextPointValidationCheck.y == 0)     )) {
+
+
+            }
+        }
+
     }
 
     /**
@@ -104,7 +230,11 @@ public class Track {
      * @return - next point on path
      */
     public Point getNextPointOnPath(int index) {
-        return path.get(index + 1);
+        int next = index + 1;
+        if (this.path.size() <= next) {
+            return this.path.get(0);
+        }
+        return path.get(next);
     }
     /**
      * Import default tile set for Track tiles
@@ -171,7 +301,9 @@ public class Track {
         return null;
     }
 
-
+    public Point getPointAtIndex(int index) {
+        return this.path.get(index);
+    }
     /* ___ ACCESSORS / MUTATORS ___ */
     public Tile[][] getRaceTrack() {
         return raceTrack;

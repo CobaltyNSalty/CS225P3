@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -39,7 +40,7 @@ public class Game implements ActionListener {
     /**
      * The delay in milliseconds of the game clock timer.
      */
-    public static final int TIMER_DELAY = 100;
+    public static final int TIMER_DELAY = 10;
     private Track raceTrack;
     private Car[] racers;
     private GUI gui;
@@ -68,7 +69,6 @@ public class Game implements ActionListener {
         if(play) {
             gameClock = new Timer(TIMER_DELAY, e -> {
                 updateCarPositions();
-                // Instant updatedTime = Instant.now();
                 this.gui.updateTimer(getCurrentTime().getSeconds());
             });
             gameClock.start();
@@ -82,7 +82,8 @@ public class Game implements ActionListener {
     private void updateCarPositions() {
         for(Car car: this.racers) {
             car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentIndexOnTrackPointPath()));
-            car.incrementCurrentIndexOnTrackPointPath(3); // TODO: 3/24/2023 make 3 vary for car speed
+            car.checkIndexRange(this.raceTrack.getPath().size()); // [chris] added check to have path array be circular
+            car.incrementCurrentIndexOnTrackPointPath(car.getSpeed()); // [chris] added a simple speed variance between cars
             this.gui.drawNewCarPositions();
         }
     }
@@ -99,15 +100,7 @@ public class Game implements ActionListener {
         Instant currentTime = Instant.now();
         return Duration.between(startTime,currentTime);
     }
-    public Car importCarFromFile(String fileName) throws IOException {
-        Car importCar;
-        LinkedList<String> data;
 
-        data = importData(fileName);
-        importCar = new Car(data);
-
-        return importCar;
-    }
     public Track importTrackFromFile(String fileName) throws IOException {
         Track importTrack;
         LinkedList<String> data;

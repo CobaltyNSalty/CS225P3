@@ -104,6 +104,15 @@ public class Tile extends JLabel {
         }
     }
 
+    public Point[] getReversePath() {
+        Point[] reverse = new Point[this.path.length];
+        int length = this.path.length;
+        for (int i = 0; i < reverse.length; i++) {
+            reverse[i] = this.path[(length - 1) - i];
+        }
+        return reverse;
+    }
+
 
     /* ___ ACCESSORS / MUTATORS ___ */
     public int getTileIDNum() {

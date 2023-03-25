@@ -4,9 +4,11 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -58,6 +60,7 @@ public class GUI implements ActionListener{
     private JLabel[][] carPanelSpeedLabels;
     private JLabel timeLabel;
     private Object[] controls;
+    private JLayeredPane centerPanel;
 
     /* ___ CONSTRUCTORS ___ */
     public GUI(Object[] controls) {
@@ -235,8 +238,8 @@ public class GUI implements ActionListener{
         rightRootPanel.add(rightImageLabel);
 
         // Where the game will be displayed
-        JLayeredPane centerPanel = new JLayeredPane();
-        centerPanel.setPreferredSize(new Dimension(800, 500));
+        this.centerPanel = new JLayeredPane();
+        this.centerPanel.setPreferredSize(new Dimension(800, 500));
 
         // Panel to house the racetrack Tile sprites
         JPanel gameTilePanel = new JPanel(new GridBagLayout());
@@ -267,8 +270,8 @@ public class GUI implements ActionListener{
             carPanel.add(car);
         }
         // Compose gameplay area
-        centerPanel.add(gameTilePanel, new Integer(1));
-        centerPanel.add(carPanel, new Integer(2));
+        this.centerPanel.add(gameTilePanel, new Integer(1));
+        this.centerPanel.add(carPanel, new Integer(2));
 
         // feedback panel for race timer
         JPanel feedbackPanel = new JPanel();
@@ -325,7 +328,7 @@ public class GUI implements ActionListener{
 
         // Compose overall game window
         topGamePanel.add(leftRootPanel);
-        topGamePanel.add(centerPanel);
+        topGamePanel.add(this.centerPanel);
         topGamePanel.add(rightRootPanel);
 
         this.gameWindowPanel.add(topGamePanel);
@@ -552,6 +555,5 @@ public class GUI implements ActionListener{
                 break;
         }
     }
-
 
 }
