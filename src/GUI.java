@@ -346,7 +346,7 @@ public class GUI implements ActionListener{
     private JButton makeTrackOptionButton(int index) {
         JButton button = new JButton("Track" + index);
         button.setFont(new Font("Arial", Font.BOLD, 16));
-        button.setIcon(new ImageIcon(this.images[(index + 7)]));
+        button.setIcon(new ImageIcon(this.images[(index + 25)]));
         button.setVerticalTextPosition(SwingConstants.BOTTOM);
         button.setHorizontalTextPosition(SwingConstants.CENTER);
         button.addActionListener(this);
