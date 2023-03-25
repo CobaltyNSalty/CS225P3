@@ -14,6 +14,7 @@ name in a comment on the same line to not interfere with other important documen
                     - change tileArgs size to 4 to account for the path index of each track tile
                     - add method getPath() for getting the path field
 3/24    [chris]     - added isCheckPoint boolean and related methods to identify Tiles that contain checkpoints
+3/25    [chris]     - wrote reverse path algorithm
 
  */
 
@@ -38,7 +39,6 @@ public class Track {
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
     private List<Point> path;
     private List<Point> checkpoints;
-    enum direction { UP, DOWN, LEFT, RIGHT};
 
     /* ___ CONSTRUCTORS ___ */
     public Track() {
