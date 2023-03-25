@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *  Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
@@ -80,15 +81,20 @@ public class Track {
             for (int x = 0; x < tileArgsStringArray.length; x++) { // [chris] swapped integer value for stringArray.length
                 tileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
-
-            boolean checkpoint = (tileArgs[2] == 7) || (tileArgs[2] == 8); // [chris]
-            this.raceTrack[tileArgs[0]][tileArgs[1]] = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1], checkpoint);
-            this.path.add(new Point((tileArgs[1] * GUI.TILE_SIZE) + GUI.TILE_SIZE, (tileArgs[0] * GUI.TILE_SIZE) + GUI.TILE_SIZE));
-            // TODO: save index values along path that are checkpoints
+            Tile tile = new Tile(this.trackTileSprites[tileArgs[2]], tileArgs[2], tileArgs[0], tileArgs[1]);
+            this.raceTrack[tileArgs[0]][tileArgs[1]] = tile;
+            Point[] tilePath = tile.getPath();
+            /* multiply the location of each point on the tile by the tiles column and row index
+            * to properly position the point on the racetrack */
+            for (Point point : tilePath) {
+                point.translate(tile.getIndexPosCol() * GUI.TILE_SIZE, tile.getIndexPosRow() * GUI.TILE_SIZE);
+            }
+            /* convert tilePath Point array to a List so that it can be easily added
+            * to the tracks list of Point's then add it to the tracks List<Point> path */
+            path.addAll(Arrays.stream(tilePath).collect(Collectors.toList()));
         }
     }
 
-    /* ___ FUNCTIONS ___ */
     /**
      * Returns the next point on the path given an index value for the current path
      * @param index - Index of current point on path
@@ -99,12 +105,13 @@ public class Track {
     }
     /**
      * Import default tile set for Track tiles
+     * @return if images loaded successfully
      */
-    private void loadTrackTiles() {
+    private boolean loadTrackTiles() {
         File imageDirectory = new File("Sprites\\TrackTiles");
         String[] imageNames = imageDirectory.list();
         if (imageNames == null) {
-            return;
+            return false;
         }
 
         this.trackTileSprites = new Image[imageNames.length];
@@ -122,7 +129,9 @@ public class Track {
             index++;
         }
 
+        return true;
     }
+
     /**
      * Extract the Path from each tile, correct points to the (x,y) position of the parent container,
      * then string together each tiles path to create a sequence of coordinates that represent the
@@ -142,6 +151,7 @@ public class Track {
 
 
     }
+
     /**
      * Search through Tile[][] until a tile that is not an empty tile is found, this becomes
      * the start of the racetrack path creation.
@@ -158,13 +168,16 @@ public class Track {
         return null;
     }
 
+
     /* ___ ACCESSORS / MUTATORS ___ */
     public Tile[][] getRaceTrack() {
         return raceTrack;
     }
+
     public Tile getTileAtPoint(int x, int y) {
         return this.raceTrack[x][y];
     }
+
     public List<Point> getPath() {
         return path;
     }

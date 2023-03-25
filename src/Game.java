@@ -74,19 +74,15 @@ public class Game implements ActionListener {
             gameClock.start();
         }
     }
+
     /**
      * Determines the cars next position along the track and moves the car to that position.
      *
      */
     private void updateCarPositions() {
         for(Car car: this.racers) {
-            car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentPointOnPathIndex()));
-            int nextTilePathIndex = car.getCurrentPointOnPathIndex() + 1;
-
-            /* Sets the cars new position along the track. When the car reaches the end of the track
-             * the position is reset to the start of the track. */
-            car.setCurrentIndexAlongTrackPath(nextTilePathIndex >= raceTrack.getPath().size() - 1 ? 0 : nextTilePathIndex);
-
+            car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentIndexOnTrackPointPath()));
+            car.incrementCurrentIndexOnTrackPointPath(3); // TODO: 3/24/2023 make 3 vary for car speed
             this.gui.drawNewCarPositions();
         }
     }
@@ -121,6 +117,7 @@ public class Game implements ActionListener {
 
         return importTrack;
     }
+
     public LinkedList<String> importData(String fileName) throws IOException {
         FileInputStream inFS = null;
         LinkedList<String> data;
@@ -136,6 +133,7 @@ public class Game implements ActionListener {
         }
         return data;
     }
+
     public LinkedList<String> extractInfoFromFile(FileInputStream fIS) {
         LinkedList<String> entryList = new LinkedList<String>();
         Scanner scnr = new Scanner(fIS);

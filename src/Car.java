@@ -27,7 +27,7 @@ public class Car extends JLabel {
     /* Current point car is heading towards */
     private int checkpointIndex;
     /* Holds the index value of the Track.path point the car is currently at */
-    private int currentPointOnPathIndex;
+    private int currentIndexOnTrackPointPath;
     /* Catch-all value for car "alterations"  */
     private int modifier;
     /* Cars x position on raceTrack panel */
@@ -48,9 +48,13 @@ public class Car extends JLabel {
         this.posX = 0;
         this.posY = 0;
     }
-    public Car(String name, Image carImage) {
+
+    public Car(String name, Image carImage, Point[] checkpoints, int startingX, int startingY) {
         this();
         this.name = name;
+        this.checkpoints = checkpoints;
+        this.posY = startingY;
+        this.posX = startingX;
         this.setIcon(new ImageIcon(carImage));
     }
 
@@ -62,25 +66,27 @@ public class Car extends JLabel {
     /* ___ FUNCTIONS ___ */
 
     /* ___ ACCESSORS / MUTATORS ___ */
+    public void incrementCheckpointIndex() {
+        this.checkpointIndex += 1;
+    }
     public Point getPosition() {
         return new Point(posX, posY);
     }
     public void setPosition(Point position) {
         this.posX = position.x;
         this.posY = position.y;
-
     }
     public void setNextPosition(Point p) {
         this.posX = p.x;
         this.posY = p.y;
     }
 
-    public int getCurrentPointOnPathIndex() {
-        return this.currentPointOnPathIndex;
+    public int getCurrentIndexOnTrackPointPath() {
+        return currentIndexOnTrackPointPath;
     }
 
-    public void setCurrentIndexAlongTrackPath(int index) {
-        this.currentPointOnPathIndex = index;
+    public void incrementCurrentIndexOnTrackPointPath(int amount) {
+        currentIndexOnTrackPointPath += amount;
     }
 }
 
