@@ -36,6 +36,7 @@ name in a comment on the same line to not interfere with other important documen
 3/25    [chris]     - added turning methods to swap sprites based on direction
 3/25    [Kat]       - changed carPanel to pull name of car for identification, also changed to displaying speed and
                       last checkpoint Passed
+3/26    [Kat]       - changed carPanel to show speed (still), checkpoint list, and checkpoint Index
 
 
  */
@@ -59,7 +60,7 @@ public class GUI implements ActionListener{
     private Image[] images;
     private Track gameTrack;
     private Car[] gameCars;
-    private JLabel[][] carPanelSpeedLabels;
+    private JLabel[][] carPanelLabels;
     private JLabel timeLabel;
     private Object[] controls;
     private JLayeredPane centerPanel;
@@ -291,8 +292,8 @@ public class GUI implements ActionListener{
         // car specific panels in info panel
         // TODO: make dynamic - this needs to display the number of cars not a fixed number, i.e. 2
         JPanel[] carInfoPanels = new JPanel[gameCars.length];
-        JLabel[] carInfoPanelLabels = new JLabel[gameCars.length];
-        this.carPanelSpeedLabels = new JLabel[gameCars.length][2]; // [# of cars][ x and y values ]
+        JLabel[] carNameLabels = new JLabel[gameCars.length];
+        this.carPanelLabels = new JLabel[gameCars.length][3]; // [# of cars][ x and y values ]
 
         GridBagConstraints layoutConstraints = new GridBagConstraints();
         //layoutConstraints.insets = new Insets(0,0,0,0);
@@ -304,37 +305,47 @@ public class GUI implements ActionListener{
             carInfoPanels[i].setBorder(new LineBorder(Color.green));
             //carInfoPanels[i].setPreferredSize(new Dimension(250, 100));
 
-            carInfoPanelLabels[i] = new JLabel(gameCars[i].getName());
-            this.carPanelSpeedLabels[i][0] = new JLabel("50");
-            this.carPanelSpeedLabels[i][0].setBorder(new LineBorder(Color.red));
+            carNameLabels[i] = new JLabel(gameCars[i].getName());
+            this.carPanelLabels[i][0] = new JLabel();
+            this.carPanelLabels[i][0].setBorder(new LineBorder(Color.red));
             //this.carPanelSpeedLabels[i][0].setPreferredSize(new Dimension(50, 50));
-            this.carPanelSpeedLabels[i][1] = new JLabel("" + gameCars[i].getPosition().y);
-            this.carPanelSpeedLabels[i][1].setBorder(new LineBorder(Color.MAGENTA));
+            this.carPanelLabels[i][1] = new JLabel();
+            this.carPanelLabels[i][1].setBorder(new LineBorder(Color.MAGENTA));
+            this.carPanelLabels[i][2]= new JLabel();
 
             layoutConstraints.gridy = 0;
             layoutConstraints.gridx = 0;
             layoutConstraints.gridwidth = 2;
-            carInfoPanels[i].add(carInfoPanelLabels[i], layoutConstraints);
+            carInfoPanels[i].add(carNameLabels[i], layoutConstraints);
 
             layoutConstraints.gridwidth = 1;
             layoutConstraints.gridy = 1;
 
-            JLabel xLabel = new JLabel("Current Speed: ");
-            xLabel.setBorder(new LineBorder(Color.BLUE));
-            carInfoPanels[i].add(xLabel, layoutConstraints);
+            JLabel speedLabel = new JLabel("Current Speed: ");
+            speedLabel.setBorder(new LineBorder(Color.BLUE));
+            carInfoPanels[i].add(speedLabel, layoutConstraints);
 
             layoutConstraints.gridx = 1;
-            carInfoPanels[i].add(carPanelSpeedLabels[i][0], layoutConstraints);
+            carInfoPanels[i].add(carPanelLabels[i][0], layoutConstraints);
 
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 2;
-            // JLabel yLabel = new JLabel("Checkpoints Remaining: ");   // Commenting out for moment while testing checkpoint feature - Kat
-            JLabel yLabel = new JLabel("Last Checkpoint: ");
-            yLabel.setBorder(new LineBorder(Color.MAGENTA));
-            carInfoPanels[i].add(yLabel, layoutConstraints);
+            JLabel pathLabel = new JLabel("Checkpoint Path: ");
+            pathLabel.setBorder(new LineBorder(Color.YELLOW));
+            carInfoPanels[i].add(pathLabel, layoutConstraints);
 
             layoutConstraints.gridx = 1;
-            carInfoPanels[i].add(carPanelSpeedLabels[i][1], layoutConstraints);
+            carInfoPanels[i].add(carPanelLabels[i][1], layoutConstraints);
+
+            layoutConstraints.gridx = 0;
+            layoutConstraints.gridy = 3;
+            JLabel indexLabel = new JLabel("Checkpoint Index: ");
+            indexLabel.setBorder(new LineBorder(Color.MAGENTA));
+            carInfoPanels[i].add(indexLabel, layoutConstraints);
+
+            layoutConstraints.gridx = 1;
+            carInfoPanels[i].add(carPanelLabels[i][2], layoutConstraints);
+
 
             // BottomGamePanel created in createGameWindowInfoPanel() and has a JPanel added to it
             ((JPanel)bottomGamePanel.getComponent(0)).add(carInfoPanels[i]);
@@ -470,8 +481,9 @@ public class GUI implements ActionListener{
             if(this.gameCars[i].getWasRotated()) {
                 swapCarSprite(i);
             }
-            this.carPanelSpeedLabels[i][0].setText(gameCars[i].getSpeed() * 15 + " mph");
-            this.carPanelSpeedLabels[i][1].setText("" + gameCars[i].getLastCheckpoint());
+            this.carPanelLabels[i][0].setText(gameCars[i].getSpeed() * 15 + " mph");
+            this.carPanelLabels[i][1].setText("" + makeCheckpointsReadable(gameCars[i].getCheckpoints()));
+            this.carPanelLabels[i][2].setText("" + gameCars[i].getCheckpointIndex());
         }
     }
 
@@ -565,6 +577,14 @@ public class GUI implements ActionListener{
         String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
         this.timeLabel.setText(timeString);
 
+    }
+
+    private String makeCheckpointsReadable(int[] checkpointList) {
+        String output = "";
+        for (int checkpointIndex : checkpointList) {
+            output += checkpointIndex;
+        }
+        return output;
     }
 
     @Override
