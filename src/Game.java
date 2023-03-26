@@ -1,15 +1,12 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -35,6 +32,7 @@ name in a comment on the same line to not interfere with other important documen
                     - sequence using actionListener and controlFunction.
 3/25    [chris]     - moved initialization of startTime to when the gameClock control boolean 'play' is set to true.
                     - made the continue button not enabled until at least 1 car and 1 track are selected
+3/26    [Kat]       - changed updateCarPosition to now check for if the car passed through a checkpoint
 
  */
 public class Game implements ActionListener {
@@ -81,12 +79,19 @@ public class Game implements ActionListener {
      *
      */
     private void updateCarPositions() {
-        for(Car car: this.racers) {
+        for (Car car : this.racers) {
+            Point current = car.getPosition();
             Point next = this.raceTrack.getNextPointOnPath(car.getCurrentIndexOnTrackPointPath());
+            int checkPoint;
+
             car.setNextPosition(next);
             car.checkIndexRange(this.raceTrack.getPath().size()); // [chris] added check to have path array be circular
             car.incrementCurrentIndexOnTrackPointPath(car.getSpeed()); // [chris] added a simple speed variance between cars
             this.gui.drawNewCarPositions();
+            checkPoint = raceTrack.CheckpointCrossedIndex(current, next);
+            if (checkPoint >= 0) {
+                car.setLastCheckpoint(checkPoint);
+            }
         }
     }
 

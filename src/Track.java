@@ -15,6 +15,9 @@ name in a comment on the same line to not interfere with other important documen
                     - add method getPath() for getting the path field
 3/24    [chris]     - added isCheckPoint boolean and related methods to identify Tiles that contain checkpoints
 3/25    [chris]     - wrote reverse path algorithm
+3/26    [Kat]       - wrote determineCheckpoint function to populate checkpoints with Point values of checkpoints,
+                      and CheckpointCrossedIndex to return which checkpoint was crossed between two car positions, and
+                      isCheckpointCrossed to do the math to actually determine if there was a crossing
 
  */
 
@@ -129,6 +132,7 @@ public class Track {
             * to the tracks list of Point's then add it to the tracks List<Point> path */
             this.path.addAll(Arrays.stream(tilePath).collect(Collectors.toList()));
         }
+        determineCheckpoints();
     }
 
     private boolean determineReversePath(int lastX, int lastY, int nextX, int nextY, int imageType) {
@@ -166,6 +170,9 @@ public class Track {
         }
         return path.get(next);
     }
+
+
+
     /**
      * Import default tile set for Track tiles
      * @return if images loaded successfully
@@ -213,6 +220,50 @@ public class Track {
         Point lastPoint;
 
 
+    }
+
+    // Function to determine the positions of the checkpoints
+    public void determineCheckpoints() {
+        // sweeps entire Track for checkpoint tiles
+        int rowIndex;
+        int colIndex;
+        Point checkpoint;
+        int posX;
+        int posY;
+
+        for (Tile[] tA: raceTrack) {
+            for (Tile t: tA) {
+                if (t.isCheckpoint()) {
+                    rowIndex = t.getIndexPosRow();
+                    colIndex = t.getIndexPosCol();
+                    posX = (colIndex * 50) + 25; // TODO: 3/21/2023 Magic numbers could be replaced with constant variable.
+                    posY = (rowIndex * 50) + 25;
+                    checkpoint = new Point(posX, posY);
+                    checkpoints.add(checkpoint);
+                }
+            }
+        }
+    }
+
+    // Function to return what checkpoint was crossed between two car positions, if any
+    public int CheckpointCrossedIndex(Point current, Point next) {
+        for (int i = 0; i < checkpoints.size(); i++) {
+            if(isCheckpointCrossed(current, next, i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private boolean isCheckpointCrossed(Point current, Point next, int i) {
+        int alpha = 50;
+        if ((Math.abs(checkpoints.get(i).x - next.x) < alpha) && ((current.y < checkpoints.get(i).y) == (checkpoints.get(i).y <= next.y))) {
+            return true;
+        } else if ((Math.abs(checkpoints.get(i).y - next.y) < alpha) && ((current.x < checkpoints.get(i).x) == (checkpoints.get(i).x <= next.x))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

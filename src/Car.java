@@ -15,6 +15,8 @@ name in a comment on the same line to not interfere with other important documen
 3/18    [Kat]       - added constructor to allow LinkedList to be passed in from importCarFromFile
 3/21    [chris]     - implemented UML design
 3/22    [tre]       - add method for setting the cars current path index
+3/26    [Kat]       - added getter for checkpointIndex, added lastCheckpoint field to hold the index of the last
+                      checkpoint passed for carpanel info
 
  */
 public class Car extends JLabel {
@@ -28,8 +30,12 @@ public class Car extends JLabel {
     private int speed;
     /* Series of points car must reach to complete race */
     private Point[] checkpoints;
+
     /* Current point car is heading towards */
+
     private int checkpointIndex;
+    // last checkpoint Car passed
+    private int lastCheckpoint;
     /* Holds the index value of the Track.path point the car is currently at */
     private int currentIndexOnTrackPointPath;
     /* Catch-all value for car "alterations"  */
@@ -40,10 +46,10 @@ public class Car extends JLabel {
     private int posY;
     private boolean wasRotated;
 
-
     /* ___ CONSTRUCTORS ___ */
     // TODO: 3/22/2023 Constructor setting variables to null and 0 may be redundant unless done for the sake of being explicit.
     //  Need to look at this more closely first.
+
     public Car() {
         this.name = null;
         this.speed = 0;
@@ -53,7 +59,6 @@ public class Car extends JLabel {
         this.posX = 0;
         this.posY = 0;
     }
-
     public Car(String name, Image carImage, Point[] checkpoints, int startingX, int startingY) {
         this();
         this.name = name;
@@ -67,6 +72,7 @@ public class Car extends JLabel {
     }
 
     /* ___ FUNCTIONS ___ */
+
     private void determineCarSpeed() {
         /* TODO: call this method each time getSpeed() is called
          * then either add or subtract 1 or 2 from the cars speed
@@ -88,8 +94,16 @@ public class Car extends JLabel {
                 break;
         }
     }
-
     /* ___ ACCESSORS / MUTATORS ___ */
+
+    public int getLastCheckpoint() {
+        return lastCheckpoint;
+    }
+
+    public void setLastCheckpoint(int lastCheckpoint) {
+        this.lastCheckpoint = lastCheckpoint;
+    }
+
     public void incrementCheckpointIndex() {
         this.checkpointIndex += 1;
     }
@@ -106,7 +120,6 @@ public class Car extends JLabel {
         this.posX = p.x;
         this.posY = p.y;
     }
-
     public void checkForRotation(Point next) {
         // if orientation = down and x changes =>  turn left or turn right
         // change sprite
@@ -147,8 +160,12 @@ public class Car extends JLabel {
     public void setCurrentIndexOnTrackPointPath(int index) {
         this.currentIndexOnTrackPointPath = index;
     }
+
     public void incrementCurrentIndexOnTrackPointPath(int amount) {
         currentIndexOnTrackPointPath += amount;
+    }
+    public int getCheckpointIndex() {
+        return checkpointIndex;
     }
 
     public void checkIndexRange(int length) {
