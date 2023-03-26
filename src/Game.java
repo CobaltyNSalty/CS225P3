@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,11 +62,11 @@ public class Game implements ActionListener {
 
     private void changeRandomCarsSpeed() {
         /* get a random racer whose speed will be changed */
-        Car racer = racers[(int) (Math.random() * (racers.length - 1))];
+        Car racer = racers[(int) (Math.random() * racers.length)];
         /* these are the values that will be added to the cars speed to increase it or decrease it */
-        int[] speedModifiers = new int[]{0,1, 2, 3};
+        int[] speedModifiers = new int[]{1,2};
         /* apply the modifier to the cars speed */
-        racer.setSpeed(racer.getBaseSpeed() + speedModifiers[(int) (Math.random() * 3)]);
+        racer.setSpeed(racer.getBaseSpeed() * speedModifiers[(int) (Math.random() * speedModifiers.length)]);
     }
 
     /* Game control methods */
@@ -77,7 +78,7 @@ public class Game implements ActionListener {
         if(play) {
             AtomicInteger count = new AtomicInteger();
             gameClock = new Timer(TIMER_DELAY, e -> {
-                if (count.get() % TIMER_DELAY * 200 == 0) {
+                if (count.incrementAndGet() % 100 == 0) {
                     changeRandomCarsSpeed();
                     count.set(0);
                 }

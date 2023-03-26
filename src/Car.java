@@ -22,7 +22,7 @@ public class Car extends JLabel {
     private int baseSpeed;
 
     public int getBaseSpeed() {
-        return 0;
+        return baseSpeed;
     }
 
     /* ___ FIELD VARIABLES ___ */
