@@ -19,6 +19,7 @@ name in a comment on the same line to not interfere with other important documen
                       and CheckpointCrossedIndex to return which checkpoint was crossed between two car positions, and
                       isCheckpointCrossed to do the math to actually determine if there was a crossing
 3/26    [chris]     - Updated documentation and deleted obsolete methods
+3/26    [Kat]       - Added checkPoint getter
 
  */
 
@@ -45,17 +46,18 @@ public class Track {
     private Image[] trackTileSprites;
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
     private List<Point> path;
-    /* A series of (x,y) points along the 'path' of special importance to Car objects */
-    private List<Point> checkpoints;
 
+    /* A series of (x,y) points along the 'path' of special importance to Car objects */
+
+    private List<Point> checkpoints;
     /* ___ CONSTRUCTORS ___ */
+
     public Track() {
         this.raceTrack = null;
         this.trackTileSprites = null;
         this.path = new ArrayList<>();
         this.checkpoints = new ArrayList<>();
     }
-
     /**
      * First line of data file: [0] = height, [1] = width, [2] = 0(nothing)
      * All following lines: [0] = Row, [1] = Column, [2] = ImageID value
@@ -187,6 +189,10 @@ public class Track {
             return false;
         }
         return false;
+    }
+
+    public List<Point> getCheckpoints() {
+        return checkpoints;
     }
 
     /**

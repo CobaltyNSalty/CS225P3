@@ -37,11 +37,15 @@ name in a comment on the same line to not interfere with other important documen
 3/26    [Kat]       - changed updateCarPosition to now check for if the car passed through a checkpoint
 3/26    [chris]     - added comments to updateCarPosition and reorganized car.position() get/set calls
 3/26    [tre]       - implemented variable random speed algorithm
+3/26    [Kat]       - added assignCheckpoints function, edited checkpoint checking functionality to check if the
+                      checkpoint crossed was the next one in the car's list
 
  */
 public class Game implements ActionListener {
     /* The delay in milliseconds of the game clock timer */
     public static final int TIMER_DELAY = 15;
+    // number of checkpoints the race consists of
+    private final int NUM_CHECKPOINTS = 8;
     /* 2-D image of racetrack and the path the raceCars move along */
     private Track raceTrack;
     /* The raceCars drawn on the raceTrack */
@@ -87,6 +91,7 @@ public class Game implements ActionListener {
      */
     private void gameLoop() {
         if(play) {
+            assignCheckpoints();
             AtomicInteger count = new AtomicInteger();
             Timer gameClock = new Timer(TIMER_DELAY, e -> {
                 if (count.incrementAndGet() % 100 == 0) {
@@ -97,6 +102,19 @@ public class Game implements ActionListener {
                 this.gui.updateTimer(getGameDuration().getSeconds());
             });
             gameClock.start();
+        }
+    }
+
+    // Method to give each car in the race a discrete set of checkpoints and pass it to their checkpoints field.
+    private void assignCheckpoints() {
+        int[] checkpointList;
+        for (Car c : racers) {
+            checkpointList = new int[NUM_CHECKPOINTS];
+            for (int i = 0; i < NUM_CHECKPOINTS; i ++) {
+                int checkpoint = (int)(Math.random() * 3);
+                checkpointList[i] = checkpoint;
+            }
+            c.setCheckpoints(checkpointList);
         }
     }
 
@@ -119,9 +137,11 @@ public class Game implements ActionListener {
             this.gui.drawNewCarPositions();
 
             // Determine if any car crossed any checkpoint
-            int checkPoint = this.raceTrack.CheckpointCrossedIndex(current, next);
-            if (checkPoint >= 0) {
-                car.setLastCheckpoint(checkPoint);
+            int checkpoint = this.raceTrack.CheckpointCrossedIndex(current, next);
+            if (checkpoint >= 0) {
+                if (checkpoint == car.getCheckpoints()[car.getCheckpointIndex()]) {
+                    car.incrementCheckpointIndex();
+                }
             }
         }
     }
