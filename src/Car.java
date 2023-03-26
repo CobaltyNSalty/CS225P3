@@ -59,6 +59,7 @@ public class Car extends JLabel {
         this.posX = 0;
         this.posY = 0;
     }
+
     public Car(String name, Image carImage, Point[] checkpoints, int startingX, int startingY) {
         this();
         this.name = name;
@@ -97,18 +98,14 @@ public class Car extends JLabel {
     /* ___ ACCESSORS / MUTATORS ___ */
 
     public int getLastCheckpoint() {
-        return lastCheckpoint;
+        return this.lastCheckpoint;
     }
 
     public void setLastCheckpoint(int lastCheckpoint) {
         this.lastCheckpoint = lastCheckpoint;
     }
-
-    public void incrementCheckpointIndex() {
-        this.checkpointIndex += 1;
-    }
     public Point getPosition() {
-        return new Point(posX, posY);
+        return new Point(this.posX, this.posY);
     }
     public void setNextPosition(Point p) {
         if(this.posX == 0 && this.posY == 0) {
@@ -170,7 +167,7 @@ public class Car extends JLabel {
 
     public void checkIndexRange(int length) {
         if(this.currentIndexOnTrackPointPath >= length) {
-            setCurrentIndexOnTrackPointPath(0);
+            setCurrentIndexOnTrackPointPath((this.currentIndexOnTrackPointPath - length));
         }
     }
 

@@ -18,6 +18,7 @@ name in a comment on the same line to not interfere with other important documen
 3/26    [Kat]       - wrote determineCheckpoint function to populate checkpoints with Point values of checkpoints,
                       and CheckpointCrossedIndex to return which checkpoint was crossed between two car positions, and
                       isCheckpointCrossed to do the math to actually determine if there was a crossing
+3/26    [chris]     - Updated documentation and deleted obsolete methods
 
  */
 
@@ -30,17 +31,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *  Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
+ *  A Track object is used to load tile sprite images and construct a 2-D array of Tile objects
+ *  as well as create a circular array of the (x,y) coordinates of the 'path' that the cars will
+ *  follow as they race around the racetrack.
+ *  Limitations: Tile array maximum size: width: 14, height: 10. Display window is fixed size so this is the
  *  maximum allowable grid dimensions.
  */
 public class Track {
     /* ___ FIELD VARIABLES ___ */
-    /* The background image of the racetrack, constructed via smaller images in a 2D grid */
+    /* The background image of the racetrack, constructed via smaller images in a 2-D grid */
     private Tile[][] raceTrack;
     /* The Images used by 'raceTrack' to initialize Tiles */
     private Image[] trackTileSprites;
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
     private List<Point> path;
+    /* A series of (x,y) points along the 'path' of special importance to Car objects */
     private List<Point> checkpoints;
 
     /* ___ CONSTRUCTORS ___ */
@@ -52,25 +57,36 @@ public class Track {
     }
 
     /**
-     * Creates a new Track object from data file
      * First line of data file: [0] = height, [1] = width, [2] = 0(nothing)
-     * All following lines: [0] = Row, [1] = Column, [2] = ImageID integer
+     * All following lines: [0] = Row, [1] = Column, [2] = ImageID value
      * ImageID is the integer value at the beginning of the selected Tiles filename in the default tile set.
      * @param data - List of Strings imported from the data File
      */
     public Track(LinkedList<String> data) {
         this();
-        /* TODO: Create methods that the constructor calls that perform all these actions, a function should
-         *       only perform 1 task.
-         */
         /* Import default Tile set */
         loadTrackTiles();
-        /* Holds integer values from data file once imported and converted */
-        int[] nextTileArgs = new int[3];                                 // each line is 1 Tile and has 3 entries
-        String[] tileArgsStringArray = (data.pop()).split(",");// get first line from data file
-        nextTileArgs[0] = Integer.parseInt(tileArgsStringArray[0]);      // first line entry 1 = height of track
-        nextTileArgs[1] = Integer.parseInt(tileArgsStringArray[1]);      // first line entry 2 = width of track
-        this.raceTrack = new Tile[nextTileArgs[0]][nextTileArgs[1]];         // initialize raceTrack with given dimensions
+        /* Convert data List to initialize 'raceTrack' and 'path' variables */
+        initRaceTrackAndPath(data);
+        /* Identify & init 'checkpoints' with center of checkpoint-tiles in 'raceTrack' */
+        determineCheckpoints();
+    }
+
+    /**
+     * Convert text data from data List into Track dimensions and tile init arguments to initialize
+     * 'raceTrack' and 'path' variables. Tiles in data file must be listed in a consecutive order
+     * meaning each line must be a tile that borders the line above and below it.
+     * @param data - Text from the data File as a List
+     */
+    private void initRaceTrackAndPath(LinkedList<String> data) {
+        /* Holds the rowIndex, colIndex and ImageID of each tile from data file */
+        int[] nextTileArgs = new int[3];
+
+        /* Initialize 'raceTrack' dimensions */
+        String[] tileArgsStringArray = (data.pop()).split(",");
+        nextTileArgs[0] = Integer.parseInt(tileArgsStringArray[0]);
+        nextTileArgs[1] = Integer.parseInt(tileArgsStringArray[1]);
+        this.raceTrack = new Tile[nextTileArgs[0]][nextTileArgs[1]];
 
         /* Initialize all elements in raceTrack to a non-null Tile(0 - Empty Tile) */
         for (int row = 0; row < this.raceTrack.length; row++) {
@@ -79,109 +95,117 @@ public class Track {
             }
         }
 
+        /* Modify blank tiles in 'raceTrack' with new Tiles from data file */
         boolean firstTile = true;
         int lastX = 0;
         int lastY = 0;
-        /* Modify Tiles in raceTrack with new Tiles from data File
-         * TODO: not a todo, but this method relies on elements in track files list of tiles being consecutive
-         */
+
+        /* Read each line of tile arguments from data file */
         while (!(data.isEmpty())) {
+            /* Convert text into integer arguments */
             tileArgsStringArray = (data.pop()).split(",");
             for (int x = 0; x < tileArgsStringArray.length; x++) { // [chris] swapped integer value for stringArray.length
                 nextTileArgs[x] = Integer.parseInt(tileArgsStringArray[x]);
             }
+
+            /* next and last values are used to determine if the default path direction of the Tile object
+            * needs to be swapped. For example, vertical tile paths start at the top[0] and end at the bottom[49].
+            * In order to create a continuous and consecutive series of points for the total path('path') as the
+            * individual tile paths are combined, it may be necessary to add the tile path to the total path
+            * from bottom to top. Therefore, its order must be reversed prior to being added to the 'path'. */
             if(firstTile) {
                 // last tile = this tile
                 lastY = nextTileArgs[0];
                 lastX = nextTileArgs[1];
                 firstTile = false;
             }
-
             int nextY = nextTileArgs[0];
             int nextX = nextTileArgs[1];
 
-            boolean isCheckpoint = (nextTileArgs[2] == 7) || (nextTileArgs[2] == 8); // [chris]
+            /* Initialize tiles with the extracted tile arguments */
+            boolean isCheckpoint = (nextTileArgs[2] == 7) || (nextTileArgs[2] == 8); // [chris] imageID 7 & 8 are checkpoints
             Tile tile = new Tile(this.trackTileSprites[nextTileArgs[2]], nextTileArgs[2], nextTileArgs[0], nextTileArgs[1], isCheckpoint);
             this.raceTrack[nextTileArgs[0]][nextTileArgs[1]] = tile;
 
+            /* Swap individual tile path direction if necessary */
             Point[] tilePath;
-            /* Factors: next tiles position relative to last tile (above, below, left or right)
-             *          and the type of tile(next tile), will determine if path gets flipped.
-             *  if( ) determine relative movement
-             *    if( ) based on type
-             *       add path or add reverse path
-             */
-
             boolean reverse = determineReversePath(lastX, lastY, nextX, nextY, nextTileArgs[2]);
             if(reverse) {
                 tilePath = tile.getReversePath();
             } else {
                 tilePath = tile.getPath();
             }
-
-
+            /* update 'last' tile to be the now complete 'next' tile */
             lastY = nextTileArgs[0];
             lastX = nextTileArgs[1];
 
-            /* multiply the location of each point on the tile by the tiles column and row index
-            * to properly position the point on the racetrack */
+            /* Convert the series of points along an individual tile to the global (x,y) coordinates
+            * of the entire image of 'raceTrack'. */
             for (Point point : tilePath) { // [chris] +10 and +20, centers the sprite on the track.
                 point.translate(((tile.getIndexPosCol() * GUI.TILE_SIZE)+10), ((tile.getIndexPosRow() * GUI.TILE_SIZE+20)));
             }
-            /* convert tilePath Point array to a List so that it can be easily added
-            * to the tracks list of Point's then add it to the tracks List<Point> path */
+            /* convert 'tilePath' to a List so that it can be added to total 'path' */
             this.path.addAll(Arrays.stream(tilePath).collect(Collectors.toList()));
         }
-        determineCheckpoints();
-    }
-
-    private boolean determineReversePath(int lastX, int lastY, int nextX, int nextY, int imageType) {
-        if(imageType == 7) { // vertical checkpoint
-            imageType = 1;
-        }
-        if(imageType == 8) { //horizontal checkpoint
-            imageType = 2;
-        }
-        if        ((nextX - lastX ==   0) && (nextY - lastY ==  -1)) { // above
-            // Tiles that can have a tile below them:vertical=1,  rightBot=6, leftBot=4
-            return true;
-        } else if ((nextX - lastX ==  -1) && (nextY - lastY ==   0)) { // left
-            // tiles that can have a tile to the right of them: horizontal=2, right top=5, right bot=6
-            return (imageType == 2);
-        } else if ((nextX - lastX ==   0) && (nextY - lastY ==   1)) { // below
-            // tiles that can have a tile above them: vertical=1, left top=3, right top=5
-            return (imageType != 1);
-        } else if ((nextX - lastX ==   1) && (nextY - lastY ==   0)) { // right
-            // tiles that can have a tile to the left of them: horizontal=2, left top=3, left bot=4
-            return false;
-        }
-        return false; // default
     }
 
     /**
-     * Returns the next point on the path given an index value for the current path
-     * @param index - Index of current point on path
-     * @return - next point on path
+     * Calculate the direction moved from 'last' to 'next' {up, down, left, right} and use this
+     * to determine if the first entry of the 'next' tiles path variable is the next point after
+     * 'last' tiles last point. ie. last.path[49] = (100, 100) DOES next.path[0] = (100, 101)? or
+     * (101, 100)? or is the default path for next not in the right order and instead next.path[49]
+     * = (101, 100)?. In this case reverse the path.
+     * @param lastX x coordinate of last tile
+     * @param lastY y coordinate of last tile
+     * @param nextX x coordinate of next tile
+     * @param nextY y coordinate of next tile
+     * @param imageType Each image type has a unique Point[] path variable create upon initialization
+     * @return - If the default or the reverse tile path should be used.
      */
-    public Point getNextPointOnPath(int index) {
-        int next = index + 1;
-        if (this.path.size() <= next) {
-            return this.path.get(0);
+    private boolean determineReversePath(int lastX, int lastY, int nextX, int nextY, int imageType) {
+        if(imageType == 7) { // vertical checkpoint
+            imageType = 1;   // vertical tile
         }
-        return path.get(next);
+        if(imageType == 8) { // horizontal checkpoint
+            imageType = 2;   // horizontal tile
+        }
+        if        ((nextX - lastX ==   0) && (nextY - lastY ==  -1)) { // next tile is above last tile.
+            // Tile types that could be the next tile:vertical, rightBot, leftBot
+            // reverse all of these tiles
+            return true;
+        } else if ((nextX - lastX ==  -1) && (nextY - lastY ==   0)) {  // next tile is left of the last tile.
+            // Tile types that could be the next tile: horizontal, rightTop, rightBot
+            // if(horizontal tile) -> reverse, otherwise don't
+            return (imageType == 2);
+        } else if ((nextX - lastX ==   0) && (nextY - lastY ==   1)) {  // next tile is below the last tile.
+            // Tile types that could be the next tile:vertical, left top, right top
+            // if(vertical tile) -> dont reverse, otherwise do
+            return (imageType != 1);
+        } else if ((nextX - lastX ==   1) && (nextY - lastY ==   0)) {  // next tile is to the right of the last tile.
+            // Tile types that could be the next tile:horizontal, left top, left bot
+            // don't reverse any of these tiles
+            return false;
+        }
+        return false;
     }
 
-
+    /**
+     * Returns the point on the path at the given index position
+     * @param index - Index of current point on path
+     * @return - Point at that index position
+     */
+    public Point getPointAtIndex(int index) {
+        return path.get(index);
+    }
 
     /**
      * Import default tile set for Track tiles
-     * @return if images loaded successfully
      */
-    private boolean loadTrackTiles() {
+    private void loadTrackTiles() {
         File imageDirectory = new File("Sprites\\TrackTiles");
         String[] imageNames = imageDirectory.list();
         if (imageNames == null) {
-            return false;
+            return;
         }
 
         this.trackTileSprites = new Image[imageNames.length];
@@ -199,44 +223,25 @@ public class Track {
             index++;
         }
 
-        return true;
     }
 
     /**
-     * Extract the Path from each tile, correct points to the (x,y) position of the parent container,
-     * then string together each tiles path to create a sequence of coordinates that represent the
-     * entire racetrack's path.
+     * Determine the coordinates of the checkpoints in 'raceTrack'
      */
-    private void createPath() {
-        // navigate 2D array based on Tile type
-        // get first road tile
-        Tile start = getNonEmptyTile();
-        int rowIndex = start.getIndexPosRow();
-        int colIndex = start.getIndexPosCol();
-        Point startPoint = start.getPath()[0];
-        int posX = (int)((colIndex * 50) + startPoint.getX()); // TODO: 3/21/2023 Magic numbers could be replaced with constant variable.
-        int posY = (int)((rowIndex * 50) + startPoint.getY());
-        // TODO: add all points from path using offset values, create offset values to replace first factor in posX,posY
-        Point lastPoint;
-
-
-    }
-
-    // Function to determine the positions of the checkpoints
     public void determineCheckpoints() {
-        // sweeps entire Track for checkpoint tiles
         int rowIndex;
         int colIndex;
         Point checkpoint;
         int posX;
         int posY;
 
+        /* Check every tile in 'raceTrack' for checkpoint tiles */
         for (Tile[] tA: raceTrack) {
             for (Tile t: tA) {
                 if (t.isCheckpoint()) {
                     rowIndex = t.getIndexPosRow();
                     colIndex = t.getIndexPosCol();
-                    posX = (colIndex * 50) + 25; // TODO: 3/21/2023 Magic numbers could be replaced with constant variable.
+                    posX = (colIndex * 50) + 25;
                     posY = (rowIndex * 50) + 25;
                     checkpoint = new Point(posX, posY);
                     checkpoints.add(checkpoint);
@@ -245,7 +250,9 @@ public class Track {
         }
     }
 
-    // Function to return what checkpoint was crossed between two car positions, if any
+    /**
+     * Function to return which checkpoint was crossed between two car positions, if any
+     */
     public int CheckpointCrossedIndex(Point current, Point next) {
         for (int i = 0; i < checkpoints.size(); i++) {
             if(isCheckpointCrossed(current, next, i)) {
@@ -255,6 +262,13 @@ public class Track {
         return -1;
     }
 
+    /**
+     * Function to return if a checkpoint was crossed between two car positions
+     * @param current
+     * @param next
+     * @param i
+     * @return
+     */
     private boolean isCheckpointCrossed(Point current, Point next, int i) {
         int alpha = 50;
         if ((Math.abs(checkpoints.get(i).x - next.x) < alpha) && ((current.y < checkpoints.get(i).y) == (checkpoints.get(i).y <= next.y))) {
@@ -264,22 +278,6 @@ public class Track {
         } else {
             return false;
         }
-    }
-
-    /**
-     * Search through Tile[][] until a tile that is not an empty tile is found, this becomes
-     * the start of the racetrack path creation.
-     * @return first non-empty Tile found in Tile[][]
-     */
-    private Tile getNonEmptyTile() {
-        for(int a = 0; a < this.raceTrack.length; a++) {
-            for(int b = 0; b < this.raceTrack[0].length; b++) {
-                if(this.raceTrack[a][b].getTileIDNum() > 0 ) {
-                    return this.raceTrack[a][b];
-                }
-            }
-        }
-        return null;
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */

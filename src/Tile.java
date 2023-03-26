@@ -26,16 +26,28 @@ public class Tile extends JLabel {
     /* The column index of this Tile within the array housing it
        used to access neighboring Tiles in array */
     private int indexPosCol;
+    /* Some tiles are checkpoints for the raceCars */
     private boolean isCheckpoint;
 
     /* ___ CONSTRUCTORS ___ */
     // TODO: update all constructors with new field variables
 
+    /**
+     * Used to initialize Blank tiles that only display an image of grass
+     * @param image - "0 Empty.png" from default tile set TrackTiles
+     */
     public Tile(Image image) {
-        // this.sprite = image;
         this.setIcon(new ImageIcon(image));
     }
 
+    /**
+     * Used to initialize Tile objects that are part of the raceTrack
+     * @param image - the section of raceTrack sprite image
+     * @param imageID - integer value to identify each sprite
+     * @param row - where this tile sits in Track objects 2-D array
+     * @param col - where this tile sits in Track objects 2-D array
+     * @param hasCheckpoint - is this tile a checkpoint tile, or a regular section of racetrack
+     */
     public Tile(Image image, int imageID, int row, int col, boolean hasCheckpoint) {
         this.setIcon(new ImageIcon(image));
         this.tileIDNum = imageID; // integer value at start of image file name
@@ -53,10 +65,10 @@ public class Tile extends JLabel {
      * @param imageID - value correlating the TrackTile filename used to create this Tile's sprite.
      */
     private void createPath(int imageID) {
-        path = new Point[50]; // TODO: needs testing
+        path = new Point[50];
         if(imageID == 7) { imageID = 1; } // same tile but with checkpoint
         if(imageID == 8) { imageID = 2; } // same tile but with checkpoint
-        switch(imageID) { // TODO: needs testing
+        switch(imageID) {
             case 1: // 1 Straight vertical
                 for(int i = 0; i < 50; i++) {
                     path[i] = new Point(25, i);
@@ -99,11 +111,18 @@ public class Tile extends JLabel {
                     path[(j+25)] = new Point(25, (j+25));
                 }
                 break;
-            default: // empty, no path
+            default:
                 break;
         }
     }
 
+    /**
+     * In the process of combining individual tiles 'path' variables into a Track objects total 'path'
+     * it will be necessary for some tiles to reverse the order of their default path initialized upon
+     * tile creation. This allows for the total path to be a series of consecutive points without large
+     * jumps.
+     * @return reversed path
+     */
     public Point[] getReversePath() {
         Point[] reverse = new Point[this.path.length];
         int length = this.path.length;
@@ -113,11 +132,7 @@ public class Tile extends JLabel {
         return reverse;
     }
 
-
     /* ___ ACCESSORS / MUTATORS ___ */
-    public int getTileIDNum() {
-        return tileIDNum;
-    }
     public Point[] getPath() {
         return path;
     }
@@ -129,9 +144,5 @@ public class Tile extends JLabel {
     }
     public boolean isCheckpoint() {
         return isCheckpoint;
-    }
-    public Point getCheckpoint() {
-        // TODO: may be a different point, UNTESTED
-        return this.path[24];
     }
 }
