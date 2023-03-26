@@ -33,6 +33,7 @@ name in a comment on the same line to not interfere with other important documen
                     - then trigger the Game class to create the new game window and display it.
 3/23    [chris]     - added controlFunctions support
 3/25    [Kat]       - reconfigured carPanels to display appropriate number of cars
+3/25    [chris]     - added turning methods to swap sprites based on direction
 
 
  */

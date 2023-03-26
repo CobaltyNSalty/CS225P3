@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
+import java.util.Random;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
 The assignment details that code you wrote requires a comment with your name above it. We will implement
@@ -65,13 +66,13 @@ public class Car extends JLabel {
         determineCarSpeed();
     }
 
-    public Car(LinkedList<String> data) {
-        this();
-        String spriteLocation = data.get(0);
-    }
-
     /* ___ FUNCTIONS ___ */
     private void determineCarSpeed() {
+        /* TODO: call this method each time getSpeed() is called
+         * then either add or subtract 1 or 2 from the cars speed
+         * every X number of iterations.
+         */
+
         switch(this.name) {
             case "blue":
             case "purple":
