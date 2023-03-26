@@ -96,28 +96,6 @@ public class Car extends JLabel {
                 break;
         }
     }
-    /* ___ ACCESSORS / MUTATORS ___ */
-
-    public int getLastCheckpoint() {
-        return this.lastCheckpoint;
-    }
-
-    public void setLastCheckpoint(int lastCheckpoint) {
-        this.lastCheckpoint = lastCheckpoint;
-    }
-    public Point getPosition() {
-        return new Point(this.posX, this.posY);
-    }
-    public void setNextPosition(Point p) {
-        if(this.posX == 0 && this.posY == 0) {
-            this.posX = p.x;
-            this.posY = p.y;
-            return;
-        }
-        checkForRotation(p);
-        this.posX = p.x;
-        this.posY = p.y;
-    }
     public void checkForRotation(Point next) {
         // if orientation = down and x changes =>  turn left or turn right
         // change sprite
@@ -150,6 +128,38 @@ public class Car extends JLabel {
         }
 
     }
+    public void incrementCurrentIndexOnTrackPointPath(int amount) {
+        currentIndexOnTrackPointPath += amount;
+    }
+    public void checkIndexRange(int length) {
+        if(this.currentIndexOnTrackPointPath >= length) {
+            setCurrentIndexOnTrackPointPath((this.currentIndexOnTrackPointPath - length));
+        }
+    }
+    public void incrementCheckpointIndex() {
+        checkpointIndex++;
+    }
+
+    /* ___ ACCESSORS / MUTATORS ___ */
+    public int getLastCheckpoint() {
+        return this.lastCheckpoint;
+    }
+    public void setLastCheckpoint(int lastCheckpoint) {
+        this.lastCheckpoint = lastCheckpoint;
+    }
+    public Point getPosition() {
+        return new Point(this.posX, this.posY);
+    }
+    public void setNextPosition(Point p) {
+        if(this.posX == 0 && this.posY == 0) {
+            this.posX = p.x;
+            this.posY = p.y;
+            return;
+        }
+        checkForRotation(p);
+        this.posX = p.x;
+        this.posY = p.y;
+    }
 
     public int getCurrentIndexOnTrackPointPath() {
         return currentIndexOnTrackPointPath;
@@ -159,17 +169,16 @@ public class Car extends JLabel {
         this.currentIndexOnTrackPointPath = index;
     }
 
-    public void incrementCurrentIndexOnTrackPointPath(int amount) {
-        currentIndexOnTrackPointPath += amount;
-    }
     public int getCheckpointIndex() {
         return checkpointIndex;
     }
 
-    public void checkIndexRange(int length) {
-        if(this.currentIndexOnTrackPointPath >= length) {
-            setCurrentIndexOnTrackPointPath((this.currentIndexOnTrackPointPath - length));
-        }
+    public int[] getCheckpoints() {
+        return checkpoints;
+    }
+
+    public void setCheckpoints(int[] checkpoints) {
+        this.checkpoints = checkpoints;
     }
 
     public int getSpeed() {
