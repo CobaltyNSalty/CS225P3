@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -34,20 +35,25 @@ name in a comment on the same line to not interfere with other important documen
                     - sequence using actionListener and controlFunction.
 3/25    [chris]     - moved initialization of startTime to when the gameClock control boolean 'play' is set to true.
                     - made the continue button not enabled until at least 1 car and 1 track are selected
+3/26    [Kat]       - changed updateCarPosition to now check for if the car passed through a checkpoint
+3/26    [chris]     - added comments to updateCarPosition and reorganized car.position() get/set calls
 
  */
 public class Game implements ActionListener {
-    /**
-     * The delay in milliseconds of the game clock timer.
-     */
+    /* The delay in milliseconds of the game clock timer */
     public static final int TIMER_DELAY = 15;
+    /* 2-D image of racetrack and the path the raceCars move along */
     private Track raceTrack;
+    /* The raceCars drawn on the raceTrack */
     private Car[] racers;
+    /* Graphical User Interface for Application */
     private GUI gui;
-    private Timer gameClock;
+    /* Functions performed by Game class that are triggered
+    * by user interaction with GUI. i.e. buttons */
     private Object[] controlFunctions;
-    //test
+    /* Used to provide feedback to user of elapsed time */
     private Instant startTime;
+    /* Control variable to start game */
     private boolean play;
 
 
@@ -69,21 +75,29 @@ public class Game implements ActionListener {
         racer.setSpeed(racer.getBaseSpeed() * speedModifiers[(int) (Math.random() * speedModifiers.length)]);
     }
 
+    /**
+     * Launches the application by initializing the User interface
+     */
     /* Game control methods */
     public void play() {
         this.gui = new GUI(this.controlFunctions);
     }
 
+    /**
+     * Primary method that calls recurring game functions. Limited implementation
+     * only includes animating car movement.
+     */
     private void gameLoop() {
         if(play) {
+            /* Method triggers every TIMER_DELAY to animate car movement */
+            Timer gameClock = new Timer(TIMER_DELAY, e -> {
             AtomicInteger count = new AtomicInteger();
-            gameClock = new Timer(TIMER_DELAY, e -> {
                 if (count.incrementAndGet() % 100 == 0) {
                     changeRandomCarsSpeed();
                     count.set(0);
                 }
                 updateCarPositions();
-                this.gui.updateTimer(getCurrentTime().getSeconds());
+                this.gui.updateTimer(getGameDuration().getSeconds());
             });
             gameClock.start();
         }
@@ -91,19 +105,36 @@ public class Game implements ActionListener {
 
     /**
      * Determines the cars next position along the track and moves the car to that position.
-     *
      */
     private void updateCarPositions() {
-        for(Car car: this.racers) {
-            Point next = this.raceTrack.getNextPointOnPath(car.getCurrentIndexOnTrackPointPath());
+        for (Car car : this.racers) {
+            // save current position value
+            Point current = car.getPosition();
+            // add speed to current index position
+            car.incrementCurrentIndexOnTrackPointPath(car.getSpeed());
+            // wrap around array total path if necessary
+            car.checkIndexRange(this.raceTrack.getPath().size());
+            // get Point value from new index position
+            Point next = this.raceTrack.getPointAtIndex(car.getCurrentIndexOnTrackPointPath());
+            // update tracker
             car.setNextPosition(next);
-            car.checkIndexRange(this.raceTrack.getPath().size()); // [chris] added check to have path array be circular
-            car.incrementCurrentIndexOnTrackPointPath(car.getSpeed()); // [chris] added a simple speed variance between cars
+            // redraw
             this.gui.drawNewCarPositions();
+
+            // Determine if any car crossed any checkpoint
+            int checkPoint = this.raceTrack.CheckpointCrossedIndex(current, next);
+            if (checkPoint >= 0) {
+                car.setLastCheckpoint(checkPoint);
+            }
         }
     }
 
     /* Helper methods */
+
+    /**
+     * Initialize control buttons for actions that affect the state of the game and must be handled
+     * by Game class but require a graphical trigger so must be passed to GUI.
+     */
     private void initControlFunctions() {
         JButton continueButton = new JButton();
         continueButton.setEnabled(false);
@@ -112,9 +143,13 @@ public class Game implements ActionListener {
     }
 
     /* Class Functions */
-    public Duration getCurrentTime(){
+    /**
+     * Calculate time between start of game play and now.
+     * @return - time
+     */
+    public Duration getGameDuration(){
         Instant currentTime = Instant.now();
-        return Duration.between(startTime,currentTime);
+        return Duration.between(this.startTime,currentTime);
     }
 
     public Track importTrackFromFile(String fileName) throws IOException {
@@ -152,21 +187,28 @@ public class Game implements ActionListener {
         return entryList;
     }
     public void initializeGameWindow(JButton pressed) {
+        // Get track and racers from selection window chosen by user
         Object[] args = this.gui.extractGameArgs(pressed);
         this.racers = (Car[]) args[0];
-        String filename = ((String) args[1]);
+        String trackFileName = ((String) args[1]);
+
+        // Initialize Track object from filename
         try {
-            this.raceTrack = importTrackFromFile(filename);
+            this.raceTrack = importTrackFromFile(trackFileName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        // initialize Gameplay window with user selection
         Object[] assets = new Object[] { this.racers, this.raceTrack};
         this.gui.gameAssetsSelected(assets);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO: for now, there is only one control button
+        /* The only control function is the 'continue' button to move
+         * from racer and track selection to the game play window.
+         */
         initializeGameWindow((JButton) e.getSource());
         this.play = true;
         this.startTime = Instant.now();

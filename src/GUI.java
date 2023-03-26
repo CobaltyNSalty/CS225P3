@@ -35,7 +35,7 @@ name in a comment on the same line to not interfere with other important documen
 3/25    [Kat]       - reconfigured carPanels to display appropriate number of cars
 3/25    [chris]     - added turning methods to swap sprites based on direction
 3/25    [Kat]       - changed carPanel to pull name of car for identification, also changed to displaying speed and
-                      remaining checkpoints
+                      last checkpoint Passed
 
 
  */
@@ -328,7 +328,8 @@ public class GUI implements ActionListener{
 
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 2;
-            JLabel yLabel = new JLabel("Checkpoints Remaining: ");
+            // JLabel yLabel = new JLabel("Checkpoints Remaining: ");   // Commenting out for moment while testing checkpoint feature - Kat
+            JLabel yLabel = new JLabel("Last Checkpoint: ");
             yLabel.setBorder(new LineBorder(Color.MAGENTA));
             carInfoPanels[i].add(yLabel, layoutConstraints);
 
@@ -470,7 +471,7 @@ public class GUI implements ActionListener{
                 swapCarSprite(i);
             }
             this.carPanelSpeedLabels[i][0].setText(gameCars[i].getSpeed() * 15 + " mph");
-            this.carPanelSpeedLabels[i][1].setText("Not Implemented");
+            this.carPanelSpeedLabels[i][1].setText("" + gameCars[i].getLastCheckpoint());
         }
     }
 
