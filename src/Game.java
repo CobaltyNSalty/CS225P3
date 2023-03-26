@@ -88,7 +88,7 @@ public class Game implements ActionListener {
     private void gameLoop() {
         if(play) {
             AtomicInteger count = new AtomicInteger();
-            gameClock = new Timer(TIMER_DELAY, e -> {
+            Timer gameClock = new Timer(TIMER_DELAY, e -> {
                 if (count.incrementAndGet() % 100 == 0) {
                     changeRandomCarsSpeed();
                     count.set(0);

@@ -21,14 +21,10 @@ name in a comment on the same line to not interfere with other important documen
  */
 public class Car extends JLabel {
 
-    private int baseSpeed;
-
-    public int getBaseSpeed() {
-        return baseSpeed;
-    }
-
     /* ___ FIELD VARIABLES ___ */
     enum direction {UP, DOWN, LEFT, RIGHT}
+
+    private int baseSpeed;
     private direction currDir;
     /* Name assigned to each Car or players name */
     private String name;
@@ -73,8 +69,8 @@ public class Car extends JLabel {
         this.setIcon(new ImageIcon(carImage));
         this.currDir = direction.UP;
         this.wasRotated = false;
+        this.speed = this.baseSpeed;
         determineCarSpeed();
-        speed = baseSpeed;
     }
 
     /* ___ FUNCTIONS ___ */
@@ -87,24 +83,65 @@ public class Car extends JLabel {
         switch(this.name) {
             case "blue":
             case "purple":
-                baseSpeed = 3;
+                this.baseSpeed = 1;
                 break;
             case "green":
             case "red":
-                baseSpeed = 4;
+                this.baseSpeed = 2;
                 break;
             case "orange":
             case "yellow":
-                baseSpeed = 5;
+                this.baseSpeed = 3;
                 break;
         }
     }
-    /* ___ ACCESSORS / MUTATORS ___ */
+    public void checkForRotation(Point next) {
+        // if orientation = down and x changes =>  turn left or turn right
+        // change sprite
+        if( (next.y - this.posY) >= 1)  { // Moving downwards
+            if(!(this.currDir.equals(direction.DOWN))) {
+                this.currDir = direction.DOWN;
+                this.wasRotated = true;
+            }
+        }
+        if( (next.y - this.posY) < 0)  { // Moving upwards
+            if(!(this.currDir.equals(direction.UP))) {
+                this.currDir = direction.UP;
+                this.wasRotated = true;
+            }
 
+        }
+        if( (next.x - this.posX) >= 1)  { // Moving right
+            if(!(this.currDir.equals(direction.RIGHT))) {
+                this.currDir = direction.RIGHT;
+                this.wasRotated = true;
+            }
+
+        }
+        if( (next.x - this.posX) < 0)  { // Moving left
+            if(!(this.currDir.equals(direction.LEFT))) {
+                this.currDir = direction.LEFT;
+                this.wasRotated = true;
+            }
+
+        }
+
+    }
+    public void checkIndexRange(int length) {
+        if(this.currentIndexOnTrackPointPath >= length) {
+            setCurrentIndexOnTrackPointPath((this.currentIndexOnTrackPointPath - length));
+        }
+    }
+
+    public void incrementCurrentIndexOnTrackPointPath(int amount) {
+        currentIndexOnTrackPointPath += amount;
+    }
+
+
+    /* ___ ACCESSORS / MUTATORS ___ */
     public int getLastCheckpoint() {
         return this.lastCheckpoint;
     }
-
     public void setLastCheckpoint(int lastCheckpoint) {
         this.lastCheckpoint = lastCheckpoint;
     }
@@ -121,39 +158,6 @@ public class Car extends JLabel {
         this.posX = p.x;
         this.posY = p.y;
     }
-    public void checkForRotation(Point next) {
-        // if orientation = down and x changes =>  turn left or turn right
-        // change sprite
-        if( (next.y - this.posY) >= 1)  { // Moving downwards
-            if(!(currDir.equals(direction.DOWN))) {
-                this.currDir = direction.DOWN;
-                this.wasRotated = true;
-            }
-        }
-        if( (next.y - this.posY) < 0)  { // Moving upwards
-            if(!(currDir.equals(direction.UP))) {
-                this.currDir = direction.UP;
-                this.wasRotated = true;
-            }
-
-        }
-        if( (next.x - this.posX) >= 1)  { // Moving right
-            if(!(currDir.equals(direction.RIGHT))) {
-                this.currDir = direction.RIGHT;
-                this.wasRotated = true;
-            }
-
-        }
-        if( (next.x - this.posX) < 0)  { // Moving left
-            if(!(currDir.equals(direction.LEFT))) {
-                this.currDir = direction.LEFT;
-                this.wasRotated = true;
-            }
-
-        }
-
-    }
-
     public int getCurrentIndexOnTrackPointPath() {
         return currentIndexOnTrackPointPath;
     }
@@ -161,22 +165,12 @@ public class Car extends JLabel {
     public void setCurrentIndexOnTrackPointPath(int index) {
         this.currentIndexOnTrackPointPath = index;
     }
-
-    public void incrementCurrentIndexOnTrackPointPath(int amount) {
-        currentIndexOnTrackPointPath += amount;
-    }
     public int getCheckpointIndex() {
         return checkpointIndex;
     }
 
-    public void checkIndexRange(int length) {
-        if(this.currentIndexOnTrackPointPath >= length) {
-            setCurrentIndexOnTrackPointPath((this.currentIndexOnTrackPointPath - length));
-        }
-    }
-
     public int getSpeed() {
-        return speed;
+        return this.speed;
     }
 
     public void setSpeed(int value) {
@@ -196,6 +190,10 @@ public class Car extends JLabel {
 
     public String getName() {
         return this.name;
+    }
+
+    public int getBaseSpeed() {
+        return this.baseSpeed;
     }
 }
 
