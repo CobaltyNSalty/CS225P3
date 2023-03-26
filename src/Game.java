@@ -1,17 +1,15 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -61,6 +59,15 @@ public class Game implements ActionListener {
         initControlFunctions();
     }
 
+    private void changeRandomCarsSpeed() {
+        /* get a random racer whose speed will be changed */
+        Car racer = racers[(int) (Math.random() * (racers.length - 1))];
+        /* these are the values that will be added to the cars speed to increase it or decrease it */
+        int[] speedModifiers = new int[]{0,1, 2, 3};
+        /* apply the modifier to the cars speed */
+        racer.setSpeed(racer.getBaseSpeed() + speedModifiers[(int) (Math.random() * 3)]);
+    }
+
     /* Game control methods */
     public void play() {
         this.gui = new GUI(this.controlFunctions);
@@ -68,7 +75,12 @@ public class Game implements ActionListener {
 
     private void gameLoop() {
         if(play) {
+            AtomicInteger count = new AtomicInteger();
             gameClock = new Timer(TIMER_DELAY, e -> {
+                if (count.get() % TIMER_DELAY * 200 == 0) {
+                    changeRandomCarsSpeed();
+                    count.set(0);
+                }
                 updateCarPositions();
                 this.gui.updateTimer(getCurrentTime().getSeconds());
             });
