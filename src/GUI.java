@@ -24,7 +24,7 @@ name in a comment on the same line to not interfere with other important documen
                     - rearranged code by adding createWindow methods to simplify createGUI()
 3/17    [Joey]      - added updateTimer() method
 3/20    [Joey]      - Updated updateTimer() to keep time better
-3/20    [Kat]       - added Car display panels to bottom of UI showing current position
+3/20    [Kat]       - added Car display panels to bottom of UI showing current position - only shows 2 right now
 3/21    [tre]       - Replace tile width and tile height with constants.
 3/22    [tre]       - replace TILE_WIDTH and TILE_HEIGHT constants with TILE_SIZE
                     - add cars to carPanel
@@ -32,6 +32,7 @@ name in a comment on the same line to not interfere with other important documen
 3/22    [chris]     - wrote a couple methods to extract game options from selection window
                     - then trigger the Game class to create the new game window and display it.
 3/23    [chris]     - added controlFunctions support
+3/25    [Kat]       - reconfigured carPanels to display appropriate number of cars
 
 
  */
