@@ -34,6 +34,8 @@ name in a comment on the same line to not interfere with other important documen
 3/23    [chris]     - added controlFunctions support
 3/25    [Kat]       - reconfigured carPanels to display appropriate number of cars
 3/25    [chris]     - added turning methods to swap sprites based on direction
+3/25    [Kat]       - changed carPanel to pull name of car for identification, also changed to displaying speed and
+                      remaining checkpoints
 
 
  */
@@ -302,7 +304,7 @@ public class GUI implements ActionListener{
             carInfoPanels[i].setBorder(new LineBorder(Color.green));
             //carInfoPanels[i].setPreferredSize(new Dimension(250, 100));
 
-            carInfoPanelLabels[i] = new JLabel("Car " + (i + 1));
+            carInfoPanelLabels[i] = new JLabel(gameCars[i].getName());
             this.carPanelSpeedLabels[i][0] = new JLabel("50");
             this.carPanelSpeedLabels[i][0].setBorder(new LineBorder(Color.red));
             //this.carPanelSpeedLabels[i][0].setPreferredSize(new Dimension(50, 50));
@@ -317,7 +319,7 @@ public class GUI implements ActionListener{
             layoutConstraints.gridwidth = 1;
             layoutConstraints.gridy = 1;
 
-            JLabel xLabel = new JLabel("X Position");
+            JLabel xLabel = new JLabel("Current Speed: ");
             xLabel.setBorder(new LineBorder(Color.BLUE));
             carInfoPanels[i].add(xLabel, layoutConstraints);
 
@@ -326,7 +328,7 @@ public class GUI implements ActionListener{
 
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 2;
-            JLabel yLabel = new JLabel("Y Position:");
+            JLabel yLabel = new JLabel("Checkpoints Remaining: ");
             yLabel.setBorder(new LineBorder(Color.MAGENTA));
             carInfoPanels[i].add(yLabel, layoutConstraints);
 
@@ -467,8 +469,8 @@ public class GUI implements ActionListener{
             if(this.gameCars[i].getWasRotated()) {
                 swapCarSprite(i);
             }
-            this.carPanelSpeedLabels[i][0].setText("" + gameCars[i].getPosition().x);
-            this.carPanelSpeedLabels[i][1].setText("" + gameCars[i].getPosition().y);
+            this.carPanelSpeedLabels[i][0].setText(gameCars[i].getSpeed() * 15 + " mph");
+            this.carPanelSpeedLabels[i][1].setText("Not Implemented");
         }
     }
 
