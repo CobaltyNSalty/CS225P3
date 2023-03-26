@@ -68,7 +68,7 @@ public class Track {
         loadTrackTiles();
         /* Convert data List to initialize 'raceTrack' and 'path' variables */
         initRaceTrackAndPath(data);
-        /* Identify & init 'checkpoints' with center of checkpoint-tiles in 'raceTrack' */
+        /* Identify & init 'checkpoints' with the center point of the checkpoint-tiles in 'raceTrack' */
         determineCheckpoints();
     }
 

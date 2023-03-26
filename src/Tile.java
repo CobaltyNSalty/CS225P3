@@ -30,7 +30,6 @@ public class Tile extends JLabel {
     private boolean isCheckpoint;
 
     /* ___ CONSTRUCTORS ___ */
-    // TODO: update all constructors with new field variables
 
     /**
      * Used to initialize Blank tiles that only display an image of grass
@@ -65,50 +64,50 @@ public class Tile extends JLabel {
      * @param imageID - value correlating the TrackTile filename used to create this Tile's sprite.
      */
     private void createPath(int imageID) {
-        path = new Point[50];
+        this.path = new Point[50];
         if(imageID == 7) { imageID = 1; } // same tile but with checkpoint
         if(imageID == 8) { imageID = 2; } // same tile but with checkpoint
         switch(imageID) {
             case 1: // 1 Straight vertical
                 for(int i = 0; i < 50; i++) {
-                    path[i] = new Point(25, i);
+                    this.path[i] = new Point(25, i);
                 }
                 break;
             case 2: // 2 Straight horizontal
                 for(int i = 0; i < 50; i++) {
-                    path[i] = new Point(i, 25);
+                    this.path[i] = new Point(i, 25);
                 }
                 break;
             case 3: // 3 Corner between left edge and top edge
                 for(int i = 0; i < 25; i++) {
-                    path[i] = new Point(i, 25);
+                    this.path[i] = new Point(i, 25);
                 }
                 for(int j = 0; j < 25; j++) {
-                    path[(j+25)] = new Point(25, (25-j));
+                    this.path[(j+25)] = new Point(25, (25-j));
                 }
                 break;
             case 4: // 4 Corner between left edge and bottom edge
                 for(int i = 0; i < 25; i++) {
-                    path[i] = new Point(i, 25);
+                    this.path[i] = new Point(i, 25);
                 }
                 for(int j = 0; j < 25; j++) {
-                    path[(j+25)] = new Point(25, (j+25));
+                    this.path[(j+25)] = new Point(25, (j+25));
                 }
                 break;
             case 5: // 5 Corner between right edge and top edge
                 for(int i = 0; i < 25; i++) {
-                    path[i] = new Point((50-i), 25);
+                    this.path[i] = new Point((50-i), 25);
                 }
                 for(int j = 0; j < 25; j++) {
-                    path[(j+25)] = new Point(25, (25-j));
+                    this.path[(j+25)] = new Point(25, (25-j));
                 }
                 break;
             case 6: // 6 Corner between right edge and bottom edge
                 for(int i = 0; i < 25; i++) {
-                    path[i] = new Point((50-i), 25);
+                    this.path[i] = new Point((50-i), 25);
                 }
                 for(int j = 0; j < 25; j++) {
-                    path[(j+25)] = new Point(25, (j+25));
+                    this.path[(j+25)] = new Point(25, (j+25));
                 }
                 break;
             default:
@@ -134,15 +133,15 @@ public class Tile extends JLabel {
 
     /* ___ ACCESSORS / MUTATORS ___ */
     public Point[] getPath() {
-        return path;
+        return this.path;
     }
     public int getIndexPosRow() {
-        return indexPosRow;
+        return this.indexPosRow;
     }
     public int getIndexPosCol() {
-        return indexPosCol;
+        return this.indexPosCol;
     }
     public boolean isCheckpoint() {
-        return isCheckpoint;
+        return this.isCheckpoint;
     }
 }

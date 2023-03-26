@@ -30,9 +30,7 @@ public class Car extends JLabel {
     private int speed;
     /* Series of points car must reach to complete race */
     private Point[] checkpoints;
-
     /* Current point car is heading towards */
-
     private int checkpointIndex;
     // last checkpoint Car passed
     private int lastCheckpoint;
