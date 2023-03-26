@@ -90,7 +90,7 @@ public class Game implements ActionListener {
      * only includes animating car movement.
      */
     private void gameLoop() {
-        if(play) {
+        if(this.play) {
             assignCheckpoints();
             AtomicInteger count = new AtomicInteger();
             Timer gameClock = new Timer(TIMER_DELAY, e -> {
@@ -99,9 +99,10 @@ public class Game implements ActionListener {
                     count.set(0);
                 }
                 if(updateCarPositions()) {
-                    // TODO: CAR WON
+                    this.play = false;
+                } else {
+                    this.gui.updateTimer(getGameDuration().getSeconds());
                 }
-                this.gui.updateTimer(getGameDuration().getSeconds());
             });
             gameClock.start();
         }
@@ -124,7 +125,7 @@ public class Game implements ActionListener {
      * Determines the cars next position along the track and moves the car to that position.
      */
     private boolean updateCarPositions() {
-        for (Car car : this.racers) {
+    for (Car car : this.racers) {
             // save current position value
             Point current = car.getPosition();
             // add speed to current index position
@@ -135,19 +136,21 @@ public class Game implements ActionListener {
             Point next = this.raceTrack.getPointAtIndex(car.getCurrentIndexOnTrackPointPath());
             // update tracker
             car.setNextPosition(next);
-            // redraw
-            this.gui.drawNewCarPositions();
 
             // Determine if any car crossed any checkpoint
             int checkpoint = this.raceTrack.CheckpointCrossedIndex(current, next);
             if (checkpoint >= 0) {
                 if (checkpoint == car.getCheckpoints()[car.getCheckpointIndex()]) {
-                    if(car.incrementCheckpointIndex()) {
-                        return true; // return to gameLoop for victory condition
+                    if (car.incrementCheckpointIndex()) {
+                        return true;
                     }
                 }
             }
         }
+
+        // redraw
+        this.gui.drawNewCarPositions();
+
         return false;
     }
 
