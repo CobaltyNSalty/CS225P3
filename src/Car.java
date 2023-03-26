@@ -21,6 +21,12 @@ name in a comment on the same line to not interfere with other important documen
  */
 public class Car extends JLabel {
 
+    private int baseSpeed;
+
+    public int getBaseSpeed() {
+        return baseSpeed;
+    }
+
     /* ___ FIELD VARIABLES ___ */
     enum direction {UP, DOWN, LEFT, RIGHT}
     private direction currDir;
@@ -68,6 +74,7 @@ public class Car extends JLabel {
         this.currDir = direction.UP;
         this.wasRotated = false;
         determineCarSpeed();
+        speed = baseSpeed;
     }
 
     /* ___ FUNCTIONS ___ */
@@ -77,19 +84,18 @@ public class Car extends JLabel {
          * then either add or subtract 1 or 2 from the cars speed
          * every X number of iterations.
          */
-
         switch(this.name) {
             case "blue":
             case "purple":
-                this.speed = 3;
+                baseSpeed = 3;
                 break;
             case "green":
             case "red":
-                this.speed = 4;
+                baseSpeed = 4;
                 break;
             case "orange":
             case "yellow":
-                this.speed = 5;
+                baseSpeed = 5;
                 break;
         }
     }
@@ -170,7 +176,11 @@ public class Car extends JLabel {
     }
 
     public int getSpeed() {
-        return this.speed;
+        return speed;
+    }
+
+    public void setSpeed(int value) {
+        this.speed = value;
     }
 
     public int getCurrDir() {

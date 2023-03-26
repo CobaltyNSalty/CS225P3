@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -34,6 +36,7 @@ name in a comment on the same line to not interfere with other important documen
                     - made the continue button not enabled until at least 1 car and 1 track are selected
 3/26    [Kat]       - changed updateCarPosition to now check for if the car passed through a checkpoint
 3/26    [chris]     - added comments to updateCarPosition and reorganized car.position() get/set calls
+3/26    [tre]       - implemented variable random speed algorithm
 
  */
 public class Game implements ActionListener {
@@ -63,6 +66,14 @@ public class Game implements ActionListener {
         initControlFunctions();
     }
 
+    private void changeRandomCarsSpeed() {
+        /* get a random racer whose speed will be changed */
+        Car racer = racers[(int) (Math.random() * racers.length)];
+        /* these are the values that will be added to the cars speed to increase it or decrease it */
+        int[] speedModifiers = new int[]{1,2};
+        /* apply the modifier to the cars speed */
+        racer.setSpeed(racer.getBaseSpeed() * speedModifiers[(int) (Math.random() * speedModifiers.length)]);
+    }
     /**
      * Launches the application by initializing the User interface
      */
@@ -76,8 +87,12 @@ public class Game implements ActionListener {
      */
     private void gameLoop() {
         if(play) {
-            /* Method triggers every TIMER_DELAY to animate car movement */
-            Timer gameClock = new Timer(TIMER_DELAY, e -> {
+            AtomicInteger count = new AtomicInteger();
+            gameClock = new Timer(TIMER_DELAY, e -> {
+                if (count.incrementAndGet() % 100 == 0) {
+                    changeRandomCarsSpeed();
+                    count.set(0);
+                }
                 updateCarPositions();
                 this.gui.updateTimer(getGameDuration().getSeconds());
             });
