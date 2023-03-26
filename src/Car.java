@@ -20,21 +20,18 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class Car extends JLabel {
-
     /* ___ FIELD VARIABLES ___ */
     enum direction {UP, DOWN, LEFT, RIGHT}
 
+    /* The unaltered starting speed of a car */
     private int baseSpeed;
     private direction currDir;
     /* Name assigned to each Car or players name */
     private String name;
-    /* Calculated value to be displayed as user feedback */
+    /* This speed is the altered, current, and variable speed of a car used to update position */
     private int speed;
-
     /* Series of checkpoint numbers car must reach to complete race */
-
     private int[] checkpoints;
-
     /* Current point car is heading towards */
     private int checkpointIndex;
     // last checkpoint Car passed
@@ -53,13 +50,18 @@ public class Car extends JLabel {
     // TODO: 3/22/2023 Constructor setting variables to null and 0 may be redundant unless done for the sake of being explicit.
     //  Need to look at this more closely first.
     public Car() {
+        this.baseSpeed = 0;
+        this.currDir = direction.UP;
         this.name = null;
         this.speed = 0;
         this.checkpoints = null;
         this.checkpointIndex = 0;
+        this.lastCheckpoint = 0;
+        this.currentIndexOnTrackPointPath = 0;
         this.modifier = 0;
         this.posX = 0;
         this.posY = 0;
+        this.wasRotated = false;
     }
 
     public Car(String name, Image carImage, int[] checkpoints, int startingX, int startingY) {
@@ -69,29 +71,23 @@ public class Car extends JLabel {
         this.posY = startingY;
         this.posX = startingX;
         this.setIcon(new ImageIcon(carImage));
-        this.currDir = direction.UP;
-        this.wasRotated = false;
+        setBaseSpeedByColor();
         this.speed = this.baseSpeed;
-        determineCarSpeed();
     }
 
     /* ___ FUNCTIONS ___ */
-    private void determineCarSpeed() {
-        /* TODO: call this method each time getSpeed() is called
-         * then either add or subtract 1 or 2 from the cars speed
-         * every X number of iterations.
-         */
+    private void setBaseSpeedByColor() {
         switch(this.name) {
-            case "blue":
             case "purple":
+            case "blue":
                 this.baseSpeed = 1;
                 break;
             case "green":
-            case "red":
+            case "yellow":
                 this.baseSpeed = 2;
                 break;
             case "orange":
-            case "yellow":
+            case "red":
                 this.baseSpeed = 3;
                 break;
         }
@@ -129,15 +125,19 @@ public class Car extends JLabel {
 
     }
     public void incrementCurrentIndexOnTrackPointPath(int amount) {
-        currentIndexOnTrackPointPath += amount;
+        this.currentIndexOnTrackPointPath += amount;
     }
     public void checkIndexRange(int length) {
         if(this.currentIndexOnTrackPointPath >= length) {
             setCurrentIndexOnTrackPointPath((this.currentIndexOnTrackPointPath - length));
         }
     }
-    public void incrementCheckpointIndex() {
-        checkpointIndex++;
+    public boolean incrementCheckpointIndex() {
+        this.checkpointIndex++;
+        if(this.checkpointIndex >= this.checkpoints.length) {
+            return true;
+        }
+        return false;
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */
@@ -162,7 +162,7 @@ public class Car extends JLabel {
     }
 
     public int getCurrentIndexOnTrackPointPath() {
-        return currentIndexOnTrackPointPath;
+        return this.currentIndexOnTrackPointPath;
     }
 
     public void setCurrentIndexOnTrackPointPath(int index) {
@@ -170,11 +170,14 @@ public class Car extends JLabel {
     }
 
     public int getCheckpointIndex() {
-        return checkpointIndex;
+        return this.checkpointIndex;
     }
 
     public int[] getCheckpoints() {
-        return checkpoints;
+        return this.checkpoints;
+    }
+    public int getCheckpointAtIndex(int index) {
+        return this.checkpoints[index];
     }
 
     public void setCheckpoints(int[] checkpoints) {
@@ -190,11 +193,11 @@ public class Car extends JLabel {
     }
 
     public int getCurrDir() {
-        return currDir.ordinal();
+        return this.currDir.ordinal();
     }
 
     public boolean getWasRotated() {
-        return wasRotated;
+        return this.wasRotated;
     }
     public void setWasRotated(boolean b) {
         this.wasRotated = b;

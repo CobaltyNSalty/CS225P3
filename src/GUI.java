@@ -282,10 +282,17 @@ public class GUI implements ActionListener{
 
         // feedback panel for race timer
         JPanel feedbackPanel = new JPanel();
-        feedbackPanel.setPreferredSize(new Dimension(250, 100));
+        feedbackPanel.setPreferredSize(new Dimension(150, 100));
+        feedbackPanel.setBorder(new LineBorder(Color.BLACK));
+
+        JLabel feedbackTitleLabel = new JLabel("Race Clock");
+        feedbackTitleLabel.setFont(new Font("Helvetica", Font.PLAIN,25 ));
+
         this.timeLabel = new JLabel("00:00:00");
-        this.timeLabel.setBounds(0,5,100,50);
+        this.timeLabel.setBounds(0,5,50,50);
         this.timeLabel.setFont(new Font("Helvetica", Font.PLAIN,25 ));
+
+        feedbackPanel.add(feedbackTitleLabel);
         feedbackPanel.add(this.timeLabel);
         ((JPanel)bottomGamePanel.getComponent(0)).add(feedbackPanel);
 
@@ -296,21 +303,17 @@ public class GUI implements ActionListener{
         this.carPanelLabels = new JLabel[gameCars.length][3]; // [# of cars][ x and y values ]
 
         GridBagConstraints layoutConstraints = new GridBagConstraints();
-        //layoutConstraints.insets = new Insets(0,0,0,0);
         layoutConstraints.weightx = 1.0;
         layoutConstraints.weighty = 1.0;
 
         for (int i = 0; i < gameCars.length; i++) {
             carInfoPanels[i] = new JPanel(new GridBagLayout());
             carInfoPanels[i].setBorder(new LineBorder(Color.green));
-            //carInfoPanels[i].setPreferredSize(new Dimension(250, 100));
+            carInfoPanels[i].setPreferredSize(new Dimension(225, 100));
 
             carNameLabels[i] = new JLabel(gameCars[i].getName());
             this.carPanelLabels[i][0] = new JLabel();
-            this.carPanelLabels[i][0].setBorder(new LineBorder(Color.red));
-            //this.carPanelSpeedLabels[i][0].setPreferredSize(new Dimension(50, 50));
             this.carPanelLabels[i][1] = new JLabel();
-            this.carPanelLabels[i][1].setBorder(new LineBorder(Color.MAGENTA));
             this.carPanelLabels[i][2]= new JLabel();
 
             layoutConstraints.gridy = 0;
@@ -322,7 +325,6 @@ public class GUI implements ActionListener{
             layoutConstraints.gridy = 1;
 
             JLabel speedLabel = new JLabel("Current Speed: ");
-            speedLabel.setBorder(new LineBorder(Color.BLUE));
             carInfoPanels[i].add(speedLabel, layoutConstraints);
 
             layoutConstraints.gridx = 1;
@@ -331,7 +333,6 @@ public class GUI implements ActionListener{
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 2;
             JLabel pathLabel = new JLabel("Checkpoint Path: ");
-            pathLabel.setBorder(new LineBorder(Color.YELLOW));
             carInfoPanels[i].add(pathLabel, layoutConstraints);
 
             layoutConstraints.gridx = 1;
@@ -340,7 +341,6 @@ public class GUI implements ActionListener{
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 3;
             JLabel indexLabel = new JLabel("Checkpoint Index: ");
-            indexLabel.setBorder(new LineBorder(Color.MAGENTA));
             carInfoPanels[i].add(indexLabel, layoutConstraints);
 
             layoutConstraints.gridx = 1;
@@ -415,7 +415,7 @@ public class GUI implements ActionListener{
         button.setSelected(true);
     }
     private JPanel createGameWindowInfoPanel(int length) {
-        JPanel bottomGamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        JPanel bottomGamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
         JPanel infoPanel = new JPanel(new GridLayout(1, (length + 1), 10, 10));
         bottomGamePanel.add(infoPanel);
         return bottomGamePanel;
@@ -481,9 +481,16 @@ public class GUI implements ActionListener{
             if(this.gameCars[i].getWasRotated()) {
                 swapCarSprite(i);
             }
-            this.carPanelLabels[i][0].setText(gameCars[i].getSpeed() * 15 + " mph");
-            this.carPanelLabels[i][1].setText("" + makeCheckpointsReadable(gameCars[i].getCheckpoints()));
-            this.carPanelLabels[i][2].setText("" + gameCars[i].getCheckpointIndex());
+            this.carPanelLabels[i][0].setText(this.gameCars[i].getSpeed() * 15 + " mph");
+            this.carPanelLabels[i][1].setText("" + makeCheckpointsReadable(this.gameCars[i].getCheckpoints()));
+            int checkpointIndex = this.gameCars[i].getCheckpointIndex();
+            String checkpointProgress = checkpointIndex +
+                    "/" +
+                    this.gameCars[i].getCheckpoints().length +
+                    "  " +
+                    "Next point: " +
+                    this.gameCars[i].getCheckpointAtIndex(checkpointIndex);
+            this.carPanelLabels[i][2].setText(checkpointProgress);
         }
     }
 
@@ -528,7 +535,7 @@ public class GUI implements ActionListener{
             if(carBtn.isSelected()) {
                 String name = carBtn.getText();
                 Image image = getCarSpriteFromText(name); // Car default image is 'Up'
-                racers.add(new Car(name, image, null, 0, 0)); // TODO: needs testing
+                racers.add(new Car(name, image, null, 0, 0));
             }
         }
         this.gameCars = new Car[racers.size()];
@@ -550,15 +557,15 @@ public class GUI implements ActionListener{
             case "blue":
                 return images[2];
             case "green":
-                return images[3];
-            case "orange":
-                return images[4];
-            case "purple":
-                return images[5];
-            case "red":
                 return images[6];
+            case "orange":
+                return images[10];
+            case "purple":
+                return images[14];
+            case "red":
+                return images[18];
             case "yellow":
-                return images[7];
+                return images[22];
 
         }
         return null;
@@ -580,11 +587,13 @@ public class GUI implements ActionListener{
     }
 
     private String makeCheckpointsReadable(int[] checkpointList) {
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for (int checkpointIndex : checkpointList) {
-            output += checkpointIndex;
+            output.append((checkpointIndex));
+            output.append("-");
         }
-        return output;
+        output.deleteCharAt(output.length() - 1); // remove last dash
+        return output.toString();
     }
 
     @Override

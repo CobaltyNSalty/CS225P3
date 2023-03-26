@@ -98,7 +98,9 @@ public class Game implements ActionListener {
                     changeRandomCarsSpeed();
                     count.set(0);
                 }
-                updateCarPositions();
+                if(updateCarPositions()) {
+                    // TODO: CAR WON
+                }
                 this.gui.updateTimer(getGameDuration().getSeconds());
             });
             gameClock.start();
@@ -121,7 +123,7 @@ public class Game implements ActionListener {
     /**
      * Determines the cars next position along the track and moves the car to that position.
      */
-    private void updateCarPositions() {
+    private boolean updateCarPositions() {
         for (Car car : this.racers) {
             // save current position value
             Point current = car.getPosition();
@@ -140,10 +142,13 @@ public class Game implements ActionListener {
             int checkpoint = this.raceTrack.CheckpointCrossedIndex(current, next);
             if (checkpoint >= 0) {
                 if (checkpoint == car.getCheckpoints()[car.getCheckpointIndex()]) {
-                    car.incrementCheckpointIndex();
+                    if(car.incrementCheckpointIndex()) {
+                        return true; // return to gameLoop for victory condition
+                    }
                 }
             }
         }
+        return false;
     }
 
     /* Helper methods */
