@@ -4,11 +4,9 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
@@ -61,6 +59,8 @@ public class GUI implements ActionListener{
     private JLabel timeLabel;
     private Object[] controls;
     private JLayeredPane centerPanel;
+    private int carsSelected;
+    private int trackSelected;
 
     /* ___ CONSTRUCTORS ___ */
     public GUI(Object[] controls) {
@@ -69,6 +69,8 @@ public class GUI implements ActionListener{
         this.gameWindowPanel = new JPanel();
         this.gameAssets = null;
         this.controls = controls;
+        this.carsSelected = 0;
+        this.trackSelected = 0;
         createGUI();
     }
 
@@ -219,7 +221,7 @@ public class GUI implements ActionListener{
         JPanel topGamePanel = new JPanel();
         topGamePanel.setLayout(new BoxLayout(topGamePanel, BoxLayout.X_AXIS));
         topGamePanel.setBackground(Color.BLACK);
-        JPanel bottomGamePanel = createGameWindowInfoPanel();
+        JPanel bottomGamePanel = createGameWindowInfoPanel(this.gameCars.length);
 
         // checkered flag side panels
         JPanel leftRootPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -286,22 +288,24 @@ public class GUI implements ActionListener{
         // TODO: make dynamic - this needs to display the number of cars not a fixed number, i.e. 2
         JPanel[] carInfoPanels = new JPanel[gameCars.length];
         JLabel[] carInfoPanelLabels = new JLabel[gameCars.length];
-        carPanelSpeedLabels = new JLabel[gameCars.length][2];
+        this.carPanelSpeedLabels = new JLabel[gameCars.length][2]; // [# of cars][ x and y values ]
 
         GridBagConstraints layoutConstraints = new GridBagConstraints();
-        layoutConstraints.insets = new Insets(10,10,10,10);
-        layoutConstraints.weightx = 1;
-        layoutConstraints.weighty = 1;
+        //layoutConstraints.insets = new Insets(0,0,0,0);
+        layoutConstraints.weightx = 1.0;
+        layoutConstraints.weighty = 1.0;
 
         for (int i = 0; i < gameCars.length; i++) {
             carInfoPanels[i] = new JPanel(new GridBagLayout());
-            carInfoPanels[i].setBorder(new LineBorder(Color.RED));
-            carInfoPanels[i].setPreferredSize(new Dimension(250, 100));
+            carInfoPanels[i].setBorder(new LineBorder(Color.green));
+            //carInfoPanels[i].setPreferredSize(new Dimension(250, 100));
 
             carInfoPanelLabels[i] = new JLabel("Car " + (i + 1));
-            carPanelSpeedLabels[i][0] = new JLabel("50");
-            carPanelSpeedLabels[i][0].setPreferredSize(new Dimension(50, 50));
-            carPanelSpeedLabels[i][1] = new JLabel("" + gameCars[i].getPosition().y);
+            this.carPanelSpeedLabels[i][0] = new JLabel("50");
+            this.carPanelSpeedLabels[i][0].setBorder(new LineBorder(Color.red));
+            //this.carPanelSpeedLabels[i][0].setPreferredSize(new Dimension(50, 50));
+            this.carPanelSpeedLabels[i][1] = new JLabel("" + gameCars[i].getPosition().y);
+            this.carPanelSpeedLabels[i][1].setBorder(new LineBorder(Color.MAGENTA));
 
             layoutConstraints.gridy = 0;
             layoutConstraints.gridx = 0;
@@ -310,14 +314,19 @@ public class GUI implements ActionListener{
 
             layoutConstraints.gridwidth = 1;
             layoutConstraints.gridy = 1;
-            carInfoPanels[i].add(new JLabel("X position:"), layoutConstraints);
+
+            JLabel xLabel = new JLabel("X Position");
+            xLabel.setBorder(new LineBorder(Color.BLUE));
+            carInfoPanels[i].add(xLabel, layoutConstraints);
 
             layoutConstraints.gridx = 1;
             carInfoPanels[i].add(carPanelSpeedLabels[i][0], layoutConstraints);
 
             layoutConstraints.gridx = 0;
             layoutConstraints.gridy = 2;
-            carInfoPanels[i].add(new JLabel("Y position:"), layoutConstraints);
+            JLabel yLabel = new JLabel("Y Position:");
+            yLabel.setBorder(new LineBorder(Color.MAGENTA));
+            carInfoPanels[i].add(yLabel, layoutConstraints);
 
             layoutConstraints.gridx = 1;
             carInfoPanels[i].add(carPanelSpeedLabels[i][1], layoutConstraints);
@@ -357,15 +366,31 @@ public class GUI implements ActionListener{
     }
     private void cycleButtonHighlight(JButton button) {
         Color color = new Color(92, 255, 63, 126);
-        if(button.getBackground().equals(color)) {
+        if((this.carsSelected >= 3) && (!(button.getBackground().equals(color)))) {
+            return;
+        }
+        if (button.getBackground().equals(color)) {
             button.setBackground(null);
             button.setSelected(false);
+            this.carsSelected--;
         } else {
             button.setBackground(color);
             button.setSelected(true);
+            this.carsSelected++;
+        }
+
+    }
+
+    private void checkForStartConditions() {
+        if((this.carsSelected >= 1) && (this.carsSelected < 4) && (this.trackSelected == 1)) {
+            ((JButton)this.controls[0]).setEnabled(true);
+        } else {
+            ((JButton)this.controls[0]).setEnabled(false);
         }
     }
+
     private void singleSelectionOfButtons(JButton button) {
+        this.trackSelected = 1;
         for(Component c : button.getParent().getComponents()) {
             c.setBackground(null);
             ((JButton)c).setSelected(false);
@@ -373,17 +398,10 @@ public class GUI implements ActionListener{
         button.setBackground(new Color(92, 255, 63, 126));
         button.setSelected(true);
     }
-    private JPanel createGameWindowInfoPanel() {
+    private JPanel createGameWindowInfoPanel(int length) {
         JPanel bottomGamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-
-        // info panel
-        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 4));
-        infoPanel.setPreferredSize(new Dimension(1000, 200));
-        infoPanel.setBackground(Color.PINK); // REMOVE
-        infoPanel.setBorder(new LineBorder(Color.RED)); // REMOVE
-
+        JPanel infoPanel = new JPanel(new GridLayout(1, (length + 1), 10, 10));
         bottomGamePanel.add(infoPanel);
-
         return bottomGamePanel;
     }
 
@@ -435,10 +453,10 @@ public class GUI implements ActionListener{
         this.rootFrame.setVisible(true);
     }
     public void drawNewCarPositions() {
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < this.gameCars.length; i++) {
             this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, TILE_SIZE, TILE_SIZE);
-            carPanelSpeedLabels[0][i].setText("" + gameCars[i].getPosition().x);
-            carPanelSpeedLabels[1][i].setText("" + gameCars[i].getPosition().y);
+            this.carPanelSpeedLabels[i][0].setText("" + gameCars[i].getPosition().x);
+            this.carPanelSpeedLabels[i][1].setText("" + gameCars[i].getPosition().y);
         }
     }
     public Object[] extractGameArgs(JButton component) {
@@ -554,6 +572,7 @@ public class GUI implements ActionListener{
                 swapWindow(this.menuWindowPanel);
                 break;
         }
+        checkForStartConditions();
     }
 
 }

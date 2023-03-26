@@ -34,6 +34,7 @@ name in a comment on the same line to not interfere with other important documen
 3/23    [chris]     - added control functions array, merged branches and troubleshot, implemented game start method
                     - sequence using actionListener and controlFunction.
 3/25    [chris]     - moved initialization of startTime to when the gameClock control boolean 'play' is set to true.
+                    - made the continue button not enabled until at least 1 car and 1 track are selected
 
  */
 public class Game implements ActionListener {
@@ -91,6 +92,7 @@ public class Game implements ActionListener {
     /* Helper methods */
     private void initControlFunctions() {
         JButton continueButton = new JButton();
+        continueButton.setEnabled(false);
         continueButton.addActionListener(this);
         this.controlFunctions[0] = continueButton;
     }
