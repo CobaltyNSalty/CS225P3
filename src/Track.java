@@ -122,12 +122,11 @@ public class Track {
 
             /* multiply the location of each point on the tile by the tiles column and row index
             * to properly position the point on the racetrack */
-            for (Point point : tilePath) {
-                point.translate(tile.getIndexPosCol() * GUI.TILE_SIZE, tile.getIndexPosRow() * GUI.TILE_SIZE);
+            for (Point point : tilePath) { // [chris] +10 and +20, centers the sprite on the track.
+                point.translate(((tile.getIndexPosCol() * GUI.TILE_SIZE)+10), ((tile.getIndexPosRow() * GUI.TILE_SIZE+20)));
             }
             /* convert tilePath Point array to a List so that it can be easily added
             * to the tracks list of Point's then add it to the tracks List<Point> path */
-            // TODO: CHECK ORIENTATION before adding
             this.path.addAll(Arrays.stream(tilePath).collect(Collectors.toList()));
         }
     }
@@ -140,88 +139,19 @@ public class Track {
             imageType = 2;
         }
         if        ((nextX - lastX ==   0) && (nextY - lastY ==  -1)) { // above
-            /* Tiles that can have a tile below them:vertical=1,  rightBot=6, leftBot=4
-
-            switch (imageType) {
-                case 1:
-                    return true;
-                    break;
-                case 6:
-                    return true;
-                    break;
-                case 4:
-                    return true;
-                    break;
-            }
-             */
+            // Tiles that can have a tile below them:vertical=1,  rightBot=6, leftBot=4
             return true;
         } else if ((nextX - lastX ==  -1) && (nextY - lastY ==   0)) { // left
-            /* tiles that can have a tile to the right of them: horizontal=2, right top=5, right bot=6
-
-            switch (imageType) {
-                case 2:
-                    return true;
-                    break;
-                case 5: // false
-                case 6:
-                    return false;
-                    break;
-            }
-            */
+            // tiles that can have a tile to the right of them: horizontal=2, right top=5, right bot=6
             return (imageType == 2);
-
         } else if ((nextX - lastX ==   0) && (nextY - lastY ==   1)) { // below
-            /* tiles that can have a tile above them: vertical=1, left top=3, right top=5
-
-            switch (imageType) {
-                case 1:
-                    return false;
-                    break;
-                case 3: // true
-                case 5:
-                    return true;
-                    break;
-            }
-             */
+            // tiles that can have a tile above them: vertical=1, left top=3, right top=5
             return (imageType != 1);
-
         } else if ((nextX - lastX ==   1) && (nextY - lastY ==   0)) { // right
-            /* tiles that can have a tile to the left of them: horizontal=2, left top=3, left bot=4
-
-            switch (imageType) {
-                case 2:
-                    return false;
-                    break;
-                case 3:
-                    return false;
-                    break;
-                case 4:
-                    return false;
-                    break;
-            }
-             */
+            // tiles that can have a tile to the left of them: horizontal=2, left top=3, left bot=4
             return false;
         }
         return false; // default
-    }
-
-    private void normalizePath() {
-        // for every point on the path
-        for(int b = 0; b < (this.path.size()-1); b++) {
-            Point start = this.path.get(b);     // new point
-            Point next = this.path.get(b + 1);  // point after
-            // find difference between the two points
-            Point nextPointValidationCheck = new Point((next.x - start.x), (next.y - start.y));
-            // if difference is > 1 in any direction
-            if(!( (nextPointValidationCheck.x == 0  && nextPointValidationCheck.y == 1)  ||
-                  (nextPointValidationCheck.x == 0  && nextPointValidationCheck.y == -1) ||
-                  (nextPointValidationCheck.x == 1  && nextPointValidationCheck.y == 0)  ||
-                  (nextPointValidationCheck.x == -1 && nextPointValidationCheck.y == 0)     )) {
-
-
-            }
-        }
-
     }
 
     /**
@@ -301,9 +231,6 @@ public class Track {
         return null;
     }
 
-    public Point getPointAtIndex(int index) {
-        return this.path.get(index);
-    }
     /* ___ ACCESSORS / MUTATORS ___ */
     public Tile[][] getRaceTrack() {
         return raceTrack;
@@ -315,8 +242,5 @@ public class Track {
 
     public List<Point> getPath() {
         return path;
-    }
-    public List<Point> getCheckpoints() {
-        return this.checkpoints;
     }
 }

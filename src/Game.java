@@ -82,7 +82,8 @@ public class Game implements ActionListener {
      */
     private void updateCarPositions() {
         for(Car car: this.racers) {
-            car.setNextPosition(this.raceTrack.getNextPointOnPath(car.getCurrentIndexOnTrackPointPath()));
+            Point next = this.raceTrack.getNextPointOnPath(car.getCurrentIndexOnTrackPointPath());
+            car.setNextPosition(next);
             car.checkIndexRange(this.raceTrack.getPath().size()); // [chris] added check to have path array be circular
             car.incrementCurrentIndexOnTrackPointPath(car.getSpeed()); // [chris] added a simple speed variance between cars
             this.gui.drawNewCarPositions();

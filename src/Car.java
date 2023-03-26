@@ -17,7 +17,10 @@ name in a comment on the same line to not interfere with other important documen
 
  */
 public class Car extends JLabel {
+
     /* ___ FIELD VARIABLES ___ */
+    enum direction {UP, DOWN, LEFT, RIGHT}
+    private direction currDir;
     /* Name assigned to each Car or players name */
     private String name;
     /* Calculated value to be displayed as user feedback */
@@ -34,6 +37,7 @@ public class Car extends JLabel {
     private int posX;
     /* Cars y position on raceTrack panel */
     private int posY;
+    private boolean wasRotated;
 
 
     /* ___ CONSTRUCTORS ___ */
@@ -56,6 +60,8 @@ public class Car extends JLabel {
         this.posY = startingY;
         this.posX = startingX;
         this.setIcon(new ImageIcon(carImage));
+        this.currDir = direction.UP;
+        this.wasRotated = false;
         determineCarSpeed();
     }
 
@@ -90,14 +96,47 @@ public class Car extends JLabel {
         return new Point(posX, posY);
     }
     public void setNextPosition(Point p) {
+        if(this.posX == 0 && this.posY == 0) {
+            this.posX = p.x;
+            this.posY = p.y;
+            return;
+        }
+        checkForRotation(p);
         this.posX = p.x;
         this.posY = p.y;
-        // TODO: check for rotation
     }
 
-    private void checkForRotation() {
+    public void checkForRotation(Point next) {
         // if orientation = down and x changes =>  turn left or turn right
         // change sprite
+        if( (next.y - this.posY) >= 1)  { // Moving downwards
+            if(!(currDir.equals(direction.DOWN))) {
+                this.currDir = direction.DOWN;
+                this.wasRotated = true;
+            }
+        }
+        if( (next.y - this.posY) < 0)  { // Moving upwards
+            if(!(currDir.equals(direction.UP))) {
+                this.currDir = direction.UP;
+                this.wasRotated = true;
+            }
+
+        }
+        if( (next.x - this.posX) >= 1)  { // Moving right
+            if(!(currDir.equals(direction.RIGHT))) {
+                this.currDir = direction.RIGHT;
+                this.wasRotated = true;
+            }
+
+        }
+        if( (next.x - this.posX) < 0)  { // Moving left
+            if(!(currDir.equals(direction.LEFT))) {
+                this.currDir = direction.LEFT;
+                this.wasRotated = true;
+            }
+
+        }
+
     }
 
     public int getCurrentIndexOnTrackPointPath() {
@@ -119,6 +158,21 @@ public class Car extends JLabel {
 
     public int getSpeed() {
         return this.speed;
+    }
+
+    public int getCurrDir() {
+        return currDir.ordinal();
+    }
+
+    public boolean getWasRotated() {
+        return wasRotated;
+    }
+    public void setWasRotated(boolean b) {
+        this.wasRotated = b;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }
 

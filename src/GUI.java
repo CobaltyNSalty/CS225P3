@@ -142,17 +142,17 @@ public class GUI implements ActionListener{
         rightPanel.add(track4Btn);
 
         // Left panel components and settings
-        JButton car1Btn = makeCarOptionsButton(1);
+        JButton car1Btn = makeCarOptionsButton(2);
         car1Btn.setText("blue");
-        JButton car2Btn = makeCarOptionsButton(2);
+        JButton car2Btn = makeCarOptionsButton(6);
         car2Btn.setText("green");
-        JButton car3Btn = makeCarOptionsButton(3);
+        JButton car3Btn = makeCarOptionsButton(10);
         car3Btn.setText("orange");
-        JButton car4Btn = makeCarOptionsButton(4);
+        JButton car4Btn = makeCarOptionsButton(14);
         car4Btn.setText("purple");
-        JButton car5Btn = makeCarOptionsButton(5);
+        JButton car5Btn = makeCarOptionsButton(18);
         car5Btn.setText("red");
-        JButton car6Btn = makeCarOptionsButton(6);
+        JButton car6Btn = makeCarOptionsButton(22);
         car6Btn.setText("yellow");
         leftPanel.add(car1Btn);
         leftPanel.add(car2Btn);
@@ -412,30 +412,37 @@ public class GUI implements ActionListener{
         try {
             this.images[0] = ImageIO.read(new File("Sprites\\Checkered.png"));
             this.images[1] = ImageIO.read(new File("Sprites\\MenuImage.png"));
+
             this.images[2] = ImageIO.read(new File("Sprites\\carSprites\\blueCarUp.png"));
-            this.images[3] = ImageIO.read(new File("Sprites\\carSprites\\greenCarUp.png"));
-            this.images[4] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarUp.png"));
-            this.images[5] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarUp.png"));
-            this.images[6] = ImageIO.read(new File("Sprites\\carSprites\\redCarUp.png"));
-            this.images[7] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarUp.png"));
-            this.images[8] = ImageIO.read(new File("Sprites\\carSprites\\blueCarLeft.png"));
-            this.images[9] = ImageIO.read(new File("Sprites\\carSprites\\greenCarLeft.png"));
-            this.images[10] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarLeft.png"));
-            this.images[11] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarLeft.png"));
-            this.images[12] = ImageIO.read(new File("Sprites\\carSprites\\redCarLeft.png"));
-            this.images[13] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarLeft.png"));
-            this.images[14] = ImageIO.read(new File("Sprites\\carSprites\\blueCarRight.png"));
-            this.images[15] = ImageIO.read(new File("Sprites\\carSprites\\greenCarRight.png"));
-            this.images[16] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarRight.png"));
+            this.images[3] = ImageIO.read(new File("Sprites\\carSprites\\blueCarDown.png"));
+            this.images[4] = ImageIO.read(new File("Sprites\\carSprites\\blueCarLeft.png"));
+            this.images[5] = ImageIO.read(new File("Sprites\\carSprites\\blueCarRight.png"));
+
+            this.images[6] = ImageIO.read(new File("Sprites\\carSprites\\greenCarUp.png"));
+            this.images[7] = ImageIO.read(new File("Sprites\\carSprites\\greenCarDown.png"));
+            this.images[8] = ImageIO.read(new File("Sprites\\carSprites\\greenCarLeft.png"));
+            this.images[9] = ImageIO.read(new File("Sprites\\carSprites\\greenCarRight.png"));
+
+            this.images[10] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarUp.png"));
+            this.images[11] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarDown.png"));
+            this.images[12] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarLeft.png"));
+            this.images[13] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarRight.png"));
+
+            this.images[14] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarUp.png"));
+            this.images[15] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarDown.png"));
+            this.images[16] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarLeft.png"));
             this.images[17] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarRight.png"));
-            this.images[18] = ImageIO.read(new File("Sprites\\carSprites\\redCarRight.png"));
-            this.images[19] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarRight.png"));
-            this.images[20] = ImageIO.read(new File("Sprites\\carSprites\\blueCarDown.png"));
-            this.images[21] = ImageIO.read(new File("Sprites\\carSprites\\greenCarDown.png"));
-            this.images[22] = ImageIO.read(new File("Sprites\\carSprites\\orangeCarDown.png"));
-            this.images[23] = ImageIO.read(new File("Sprites\\carSprites\\purpleCarDown.png"));
-            this.images[24] = ImageIO.read(new File("Sprites\\carSprites\\redCarDown.png"));
-            this.images[25] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarDown.png"));
+
+            this.images[18] = ImageIO.read(new File("Sprites\\carSprites\\redCarUp.png"));
+            this.images[19] = ImageIO.read(new File("Sprites\\carSprites\\redCarDown.png"));
+            this.images[20] = ImageIO.read(new File("Sprites\\carSprites\\redCarLeft.png"));
+            this.images[21] = ImageIO.read(new File("Sprites\\carSprites\\redCarRight.png"));
+
+            this.images[22] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarUp.png"));
+            this.images[23] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarDown.png"));
+            this.images[24] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarLeft.png"));
+            this.images[25] = ImageIO.read(new File("Sprites\\carSprites\\yellowCarRight.png"));
+
             this.images[26] = ImageIO.read(new File("Sprites\\TrackIcons\\Track1Icon.png"));
             this.images[27] = ImageIO.read(new File("Sprites\\TrackIcons\\Track2Icon.png"));
             this.images[28] = ImageIO.read(new File("Sprites\\TrackIcons\\Track3Icon.png"));
@@ -455,10 +462,40 @@ public class GUI implements ActionListener{
     public void drawNewCarPositions() {
         for(int i = 0; i < this.gameCars.length; i++) {
             this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, TILE_SIZE, TILE_SIZE);
+            if(this.gameCars[i].getWasRotated()) {
+                swapCarSprite(i);
+            }
             this.carPanelSpeedLabels[i][0].setText("" + gameCars[i].getPosition().x);
             this.carPanelSpeedLabels[i][1].setText("" + gameCars[i].getPosition().y);
         }
     }
+
+    private void swapCarSprite(int i) {
+        this.gameCars[i].setWasRotated(false);
+        int dir = this.gameCars[i].getCurrDir();
+        switch(this.gameCars[i].getName()) {
+            case "blue":
+                this.gameCars[i].setIcon(new ImageIcon(this.images[(2 + dir)]));
+                break;
+            case "green":
+                this.gameCars[i].setIcon(new ImageIcon(this.images[(6 + dir)]));
+                break;
+            case "orange":
+                this.gameCars[i].setIcon(new ImageIcon(this.images[(10 + dir)]));
+                break;
+            case "purple":
+                this.gameCars[i].setIcon(new ImageIcon(this.images[(14 + dir)]));
+                break;
+            case "red":
+                this.gameCars[i].setIcon(new ImageIcon(this.images[(18 + dir)]));
+                break;
+            case "yellow":
+                this.gameCars[i].setIcon(new ImageIcon(this.images[(22 + dir)]));
+                break;
+        }
+
+    }
+
     public Object[] extractGameArgs(JButton component) {
         Object[] args = new Object[2];
         // get parent root panel
