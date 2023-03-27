@@ -39,6 +39,8 @@ name in a comment on the same line to not interfere with other important documen
 3/26    [tre]       - implemented variable random speed algorithm
 3/26    [Kat]       - added assignCheckpoints function, edited checkpoint checking functionality to check if the
                       checkpoint crossed was the next one in the car's list
+3/26    [Kat]       - added victoryCar to hold the identity of the car that won so it can be passed to other functions
+
 
  */
 public class Game implements ActionListener {
@@ -50,8 +52,11 @@ public class Game implements ActionListener {
     private Track raceTrack;
     /* The raceCars drawn on the raceTrack */
     private Car[] racers;
+
     /* Graphical User Interface for Application */
     private GUI gui;
+    // Holds the identity of the car that won the race
+    private Car victoryCar;
     /* Functions performed by Game class that are triggered
     * by user interaction with GUI. i.e. buttons */
     private Object[] controlFunctions;
@@ -113,7 +118,7 @@ public class Game implements ActionListener {
 
     private void endGame() {
         this.gameClock.stop();
-        this.gui.endGame();
+        this.gui.endGame(victoryCar);
     }
 
     // Method to give each car in the race a discrete set of checkpoints and pass it to their checkpoints field.
@@ -150,6 +155,7 @@ public class Game implements ActionListener {
             if (checkpoint >= 0) {
                 if (checkpoint == car.getCheckpoints()[car.getCheckpointIndex()]) {
                     if (car.incrementCheckpointIndex()) {
+                        victoryCar = car;
                         return true;
                     }
                 }
