@@ -37,6 +37,8 @@ name in a comment on the same line to not interfere with other important documen
 3/25    [Kat]       - changed carPanel to pull name of car for identification, also changed to displaying speed and
                       last checkpoint Passed
 3/26    [Kat]       - changed carPanel to show speed (still), checkpoint list, and checkpoint Index
+3/26    [Kat]       - changed endGame to take in parameter of victory car, and open JOptionPane to show a message of
+                      which car won.
 
 
  */
@@ -533,7 +535,8 @@ public class GUI implements ActionListener{
         }
 
     }
-    public void endGame() {
+    public void endGame(Car victoryCar) {
+        JOptionPane.showMessageDialog(rootFrame.getContentPane(),victoryCar.getName() + " is the winner of the race!");
 
     }
 
