@@ -23,10 +23,6 @@ public class Car extends JLabel {
 
     private int baseSpeed;
 
-    public int getBaseSpeed() {
-        return baseSpeed;
-    }
-
     /* ___ FIELD VARIABLES ___ */
     enum direction {UP, DOWN, LEFT, RIGHT}
     private direction currDir;
@@ -175,6 +171,9 @@ public class Car extends JLabel {
         if(this.currentIndexOnTrackPointPath >= length) {
             setCurrentIndexOnTrackPointPath((this.currentIndexOnTrackPointPath - length));
         }
+    }
+    public int getBaseSpeed() {
+        return baseSpeed;
     }
 
     public int getSpeed() {
