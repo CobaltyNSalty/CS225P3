@@ -77,9 +77,12 @@ public class Game implements ActionListener {
         /* get a random car */
         Car car = racers[(int) (Math.random() * racers.length)];
         /* these are the values that will be multiplied by the cars speed */
-        int[] multipliers = new int[]{1,2};
-        /* set the cars speed to the (cars base speed * speed modifier) */
-        car.setSpeed(car.getBaseSpeed() * multipliers[(int) (Math.random() * multipliers.length)]);
+        int[] multipliers = new int[]{-2,-1,0,1,2};
+        /* Calculate the cars new speed by multiplying one of the multipliers by the cars base speed. */
+        int newSpeed = car.getBaseSpeed() * multipliers[(int) (Math.random() * multipliers.length)];
+        /* To avoid setting the cars speed to a negative number and having the car go backwards, a check
+        * is made to ensure that the cars speed is never less than it's base speed. */
+        car.setSpeed(newSpeed < 1 ? car.getBaseSpeed() : newSpeed);
     }
 
     /**
