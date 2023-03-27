@@ -97,15 +97,6 @@ public class Game implements ActionListener {
         car.setSpeed(newSpeed < 1 ? car.getBaseSpeed() : newSpeed);
     }
 
-    private void changeRandomCarsSpeed() {
-        /* get a random racer whose speed will be changed */
-        Car racer = racers[(int) (Math.random() * racers.length)];
-        /* these are the values that will be added to the cars speed to increase it or decrease it */
-        int[] speedModifiers = new int[]{1,2};
-        /* apply the modifier to the cars speed */
-        racer.setSpeed(racer.getBaseSpeed() * speedModifiers[(int) (Math.random() * speedModifiers.length)]);
-    }
-
     /* Game control methods */
     /**
      * Launches the application by initializing the User interface
