@@ -519,6 +519,9 @@ public class GUI implements ActionListener{
         }
 
     }
+    public void endGame() {
+
+    }
 
     public Object[] extractGameArgs(JButton component) {
         Object[] args = new Object[2];

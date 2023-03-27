@@ -133,11 +133,11 @@ public class Car extends JLabel {
         }
     }
     public boolean incrementCheckpointIndex() {
-        this.checkpointIndex++;
-        if(this.checkpointIndex >= this.checkpoints.length) {
-            return true;
+        if(this.checkpointIndex < (this.checkpoints.length - 1)) {
+            this.checkpointIndex++;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */

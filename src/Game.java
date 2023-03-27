@@ -59,6 +59,7 @@ public class Game implements ActionListener {
     private Instant startTime;
     /* Control variable to start game */
     private boolean play;
+    private Timer gameClock;
 
 
     public Game() {
@@ -90,22 +91,29 @@ public class Game implements ActionListener {
      * only includes animating car movement.
      */
     private void gameLoop() {
-        if(this.play) {
-            assignCheckpoints();
-            AtomicInteger count = new AtomicInteger();
-            Timer gameClock = new Timer(TIMER_DELAY, e -> {
-                if (count.incrementAndGet() % 100 == 0) {
-                    changeRandomCarsSpeed();
-                    count.set(0);
-                }
-                if(updateCarPositions()) {
+        assignCheckpoints();
+        AtomicInteger count = new AtomicInteger();
+        this.gameClock = new Timer(TIMER_DELAY, e -> {
+            if(!this.play) {endGame(); }
+            if (count.incrementAndGet() % 100 == 0) {
+                changeRandomCarsSpeed();
+                count.set(0);
+            }
+            if(this.play) {
+                if (updateCarPositions()) {
                     this.play = false;
                 } else {
                     this.gui.updateTimer(getGameDuration().getSeconds());
                 }
-            });
-            gameClock.start();
-        }
+            }
+        });
+        this.gameClock.start();
+
+    }
+
+    private void endGame() {
+        this.gameClock.stop();
+        this.gui.endGame();
     }
 
     // Method to give each car in the race a discrete set of checkpoints and pass it to their checkpoints field.
