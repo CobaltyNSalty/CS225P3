@@ -60,6 +60,16 @@ public class Car extends JLabel {
         this.wasRotated = false;
     }
 
+    /**
+     * Create a new car with the color name <code>name</code>, a sprite image of <code>image</code>,
+     * an array of assigned checkpoints for this car, and a starting position of <code>startingX</code> and
+     * <code>startingY</code> on the game canvas.
+     * @param name The name of the color. The name represents a color.
+     * @param carImage The image used for the car's sprite.
+     * @param checkpoints The checkpoints assigned to this car.
+     * @param startingX The coordinate along the x-axis the car should start on.
+     * @param startingY The coordinate along the y-axis the car should start on.
+     */
     public Car(String name, Image carImage, int[] checkpoints, int startingX, int startingY) {
         this();
         this.name = name;
@@ -72,6 +82,10 @@ public class Car extends JLabel {
     }
 
     /* ___ FUNCTIONS ___ */
+
+    /**
+     * Sets the cars base speed depending on the color of the car.
+     */
     private void setBaseSpeedByColor() {
         switch(this.name) {
             case "purple":
@@ -88,6 +102,11 @@ public class Car extends JLabel {
                 break;
         }
     }
+
+    /**
+     * Checks if the car should be rotated.
+     * @param next The next point the car will occupy.
+     */
     public void checkForRotation(Point next) {
         // if orientation = down and x changes =>  turn left or turn right
         // change sprite
@@ -120,14 +139,32 @@ public class Car extends JLabel {
         }
 
     }
+
+    /**
+     * Increments the index of the car on the tracks list of points specifying the
+     * path the car will take around the track.
+     * @param amount The amount to add to the cars index along the tracks point list.
+     */
     public void incrementCurrentIndexOnTrackPointPath(int amount) {
         this.currentIndexOnTrackPointPath += amount;
     }
+
+    /**
+     * Checks if the cars index along the tracks path is greater than <code>length</code>, and
+     * clamps it at the last index.
+     * @param length The length to check against.
+     */
     public void checkIndexRange(int length) {
         if(this.currentIndexOnTrackPointPath >= length) {
             setCurrentIndexOnTrackPointPath((this.currentIndexOnTrackPointPath - length));
         }
     }
+
+    /**
+     * Increments the index of the cars checkpoint array returning <code>true</code> only
+     * if the checkpoint index is equal to or greater than the checkpoints array length.
+     * @return False if the last checkpoint hasn't been reached, otherwise true.
+     */
     public boolean incrementCheckpointIndex() {
         if(this.checkpointIndex < (this.checkpoints.length - 1)) {
             this.checkpointIndex++;
