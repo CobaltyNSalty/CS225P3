@@ -56,7 +56,7 @@ public class Game implements ActionListener {
      * The delay (in multiples of <code>TIMER_DELAY</code> milliseconds) before changing a cars speed.
      * A value of 100 equals <code>100 * TIMER_DELAY = 1500</code> milliseconds.
      */
-    public static final int SPEED_CHANGE_DELAY = 100;
+    public static final int SPEED_CHANGE_DELAY = 25;
     /* 2-D image of racetrack and the path the raceCars move along */
     private Track raceTrack;
     /* The raceCars drawn on the raceTrack */
@@ -94,7 +94,7 @@ public class Game implements ActionListener {
         /* these are the values that will be multiplied by the cars speed */
         int[] multipliers = new int[]{-4,1,2};
         /* Calculate the cars new speed by multiplying one of the multipliers by the cars base speed. */
-        int newSpeed = car.getSpeed() * multipliers[(int) (Math.random() * multipliers.length)];
+        int newSpeed = car.getBaseSpeed() * multipliers[(int) (Math.random() * multipliers.length)];
         /* To avoid setting the cars speed to a negative number and having the car go backwards, a check
         * is made to ensure that the cars speed is never less than it's base speed. */
         car.setSpeed(newSpeed < 1 ? car.getBaseSpeed() : newSpeed);

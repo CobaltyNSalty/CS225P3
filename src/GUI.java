@@ -126,12 +126,35 @@ public class GUI implements ActionListener{
 
         // gameAsset display panels
         JPanel topPanel = new JPanel();     // feedback
+        JLabel topLabel = new JLabel(new ImageIcon(this.images[30]));
         topPanel.setPreferredSize(new Dimension(1000, 100));
+        topPanel.add(topLabel);
+
+        JPanel centerInfoPanel = new JPanel();
+        centerInfoPanel.setBorder(new LineBorder(Color.BLACK));
+        String instructions = "Instructions:\n" +
+                "1) Select between 1 and 3 cars.\n" +
+                "2) Select 1 available track.\n" +
+                "3) Press 'Continue' button below to begin the race!\n\n" +
+                "Notes:\n" +
+                "The cars vary in performance!\n" +
+                "Red & Orange are super cars\nYellow & Green are street-legal\nBlue & Purple are barely mobile\n" +
+                "Now lets go racing!";
+        JTextArea instructionsLabel = new JTextArea();
+        instructionsLabel.setWrapStyleWord(true);
+        instructionsLabel.setLineWrap(true);
+        instructionsLabel.setColumns(24);
+        instructionsLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        instructionsLabel.setText(instructions);
+        centerInfoPanel.add(instructionsLabel);
+
 
         JPanel leftPanel = new JPanel(new GridLayout(3, 2, 10, 10));    // display cars
+        leftPanel.setBorder(new LineBorder(Color.BLACK));
         leftPanel.setPreferredSize(new Dimension(300, 500));
 
         JPanel rightPanel = new JPanel(new GridLayout(2, 2, 10, 10));   // display tracks
+        rightPanel.setBorder(new LineBorder(Color.BLACK));
         rightPanel.setPreferredSize(new Dimension(350, 500));
 
         JPanel bottomPanel = new JPanel();  // buttons
@@ -182,6 +205,7 @@ public class GUI implements ActionListener{
         optionsRootPanel.add(leftPanel, BorderLayout.WEST);
         optionsRootPanel.add(rightPanel, BorderLayout.EAST);
         optionsRootPanel.add(bottomPanel, BorderLayout.SOUTH);
+        optionsRootPanel.add(centerInfoPanel, BorderLayout.CENTER);
         this.startGameOptionsWindowPanel.add(optionsRootPanel);
     }
 
@@ -286,9 +310,8 @@ public class GUI implements ActionListener{
         carPanel.setLayout(null);
 
         for(Car car : this.gameCars) {
-            // TODO: set starting positions for each car to be random
+            /* Assign each car a random starting location */
             Random rng = new Random();
-
             car.incrementCurrentIndexOnTrackPointPath(rng.nextInt(this.gameTrack.getPath().size()));
             carPanel.add(car);
         }
@@ -312,8 +335,7 @@ public class GUI implements ActionListener{
         feedbackPanel.add(this.timeLabel);
         ((JPanel)bottomGamePanel.getComponent(0)).add(feedbackPanel);
 
-        // car specific panels in info panel
-        // TODO: make dynamic - this needs to display the number of cars not a fixed number, i.e. 2
+        // Display panels for information about each car
         JPanel[] carInfoPanels = new JPanel[gameCars.length];
         JLabel[] carNameLabels = new JLabel[gameCars.length];
         this.carPanelLabels = new JLabel[gameCars.length][3]; // [# of cars][ x and y values ]
@@ -439,8 +461,7 @@ public class GUI implements ActionListener{
 
     /* Class Functions */
     private void loadImages() {
-        this.images = new Image[30];
-        // TODO: modify images to be a 2d array and put each direction of car into its own array
+        this.images = new Image[31];
         try {
             this.images[0] = ImageIO.read(new File("Sprites\\Checkered.png"));
             this.images[1] = ImageIO.read(new File("Sprites\\MenuImage.png"));
@@ -479,6 +500,8 @@ public class GUI implements ActionListener{
             this.images[27] = ImageIO.read(new File("Sprites\\TrackIcons\\Track2Icon.png"));
             this.images[28] = ImageIO.read(new File("Sprites\\TrackIcons\\Track3Icon.png"));
             this.images[29] = ImageIO.read(new File("Sprites\\TrackIcons\\Track4Icon.png"));
+
+            this.images[30] = ImageIO.read(new File("Sprites\\horizontalCheckered.png"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
