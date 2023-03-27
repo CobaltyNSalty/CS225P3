@@ -23,10 +23,12 @@ name in a comment on the same line to not interfere with other important documen
  */
 public class Car extends JLabel {
     /* ___ FIELD VARIABLES ___ */
+    /* Used to determine which sprite to draw when a car changes direction */
     enum direction {UP, DOWN, LEFT, RIGHT}
 
     /* The unaltered starting speed of a car */
     private int baseSpeed;
+    /* Used for determining sprite to draw when a car changes direction */
     private direction currDir;
     /* Name assigned to each Car or players name */
     private String name;
@@ -36,12 +38,8 @@ public class Car extends JLabel {
     private int[] checkpoints;
     /* Current point car is heading towards */
     private int checkpointIndex;
-    // last checkpoint Car passed
-    private int lastCheckpoint;
     /* Holds the index value of the Track.path point the car is currently at */
     private int currentIndexOnTrackPointPath;
-    /* Catch-all value for car "alterations"  */
-    private int modifier;
     /* Cars x position on raceTrack panel */
     private int posX;
     /* Cars y position on raceTrack panel */
@@ -49,8 +47,6 @@ public class Car extends JLabel {
     private boolean wasRotated;
 
     /* ___ CONSTRUCTORS ___ */
-    // TODO: 3/22/2023 Constructor setting variables to null and 0 may be redundant unless done for the sake of being explicit.
-    //  Need to look at this more closely first.
     public Car() {
         this.baseSpeed = 0;
         this.currDir = direction.UP;
@@ -58,9 +54,7 @@ public class Car extends JLabel {
         this.speed = 0;
         this.checkpoints = null;
         this.checkpointIndex = 0;
-        this.lastCheckpoint = 0;
         this.currentIndexOnTrackPointPath = 0;
-        this.modifier = 0;
         this.posX = 0;
         this.posY = 0;
         this.wasRotated = false;
@@ -143,12 +137,6 @@ public class Car extends JLabel {
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */
-    public int getLastCheckpoint() {
-        return this.lastCheckpoint;
-    }
-    public void setLastCheckpoint(int lastCheckpoint) {
-        this.lastCheckpoint = lastCheckpoint;
-    }
     public Point getPosition() {
         return new Point(this.posX, this.posY);
     }

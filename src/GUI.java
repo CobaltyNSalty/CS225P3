@@ -109,7 +109,6 @@ public class GUI implements ActionListener{
     }
 
     /* Window Creation Methods */
-
     /**
      * this window presents the user with the available cars and tracks to choose from.
      */

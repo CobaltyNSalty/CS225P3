@@ -19,7 +19,7 @@ public class Tile extends JLabel {
     /* Sequence of points from entry point to exit point that Car objects travel across this Tile */
     private Point[] path;
     /* A value to represent the specific type of Tile, correlates to TrackTile filename of image */
-    private int tileIDNum;
+    private int tileIDNum; // TODO: Maybe some code should have used this?
     /* The row index of this Tile within the array housing it
        used to access neighboring Tiles in array */
     private int indexPosRow;
