@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 

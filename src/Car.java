@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.LinkedList;
-import java.util.Random;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
 The assignment details that code you wrote requires a comment with your name above it. We will implement
@@ -16,8 +14,8 @@ name in a comment on the same line to not interfere with other important documen
 3/21    [chris]     - implemented UML design
 3/22    [tre]       - add method for setting the cars current path index
 3/26    [Kat]       - added getter for checkpointIndex, added lastCheckpoint field to hold the index of the last
-                      checkpoint passed for carpanel info
-3/26    [Kat]       - changed checkpoints to be a int[] for ease in displaying in carPanel, added getters and setters
+                      checkpoint passed for carPanel info
+3/26    [Kat]       - changed checkpoints to be an int[] for ease in displaying in carPanel, added getters and setters
                       for checkpoints and checkpointIndex
 
  */
