@@ -48,9 +48,14 @@ name in a comment on the same line to not interfere with other important documen
  */
 public class Game implements ActionListener {
     /* The delay in milliseconds of the game clock timer */
-    private static final int TIMER_DELAY = 15;
+    public static final int TIMER_DELAY = 15;
     // number of checkpoints the race consists of
     private static final int NUM_CHECKPOINTS = 8;
+    /**
+     * The delay (in multiples of <code>TIMER_DELAY</code> milliseconds) before changing a cars speed.
+     * A value of 100 equals <code>100 * TIMER_DELAY = 1500</code> milliseconds.
+     */
+    public static final int SPEED_CHANGE_DELAY = 100;
     /* 2-D image of racetrack and the path the raceCars move along */
     private Track raceTrack;
     /* The raceCars drawn on the raceTrack */
@@ -77,17 +82,31 @@ public class Game implements ActionListener {
     }
 
     /**
-     * Selects a raceCar at random and alters it speed
+     * Gets a random racers car and multiplies the speed of that care by either 1 or 2
+     * to add speed variation to cars.
      */
+    private void changeSpeedOfRandomCar() {
+        /* get a random car */
+        Car car = racers[(int) (Math.random() * racers.length)];
+        /* these are the values that will be multiplied by the cars speed */
+        int[] multipliers = new int[]{-2,-1,0,1,2};
+        /* Calculate the cars new speed by multiplying one of the multipliers by the cars base speed. */
+        int newSpeed = car.getBaseSpeed() * multipliers[(int) (Math.random() * multipliers.length)];
+        /* To avoid setting the cars speed to a negative number and having the car go backwards, a check
+        * is made to ensure that the cars speed is never less than it's base speed. */
+        car.setSpeed(newSpeed < 1 ? car.getBaseSpeed() : newSpeed);
+    }
+
     private void changeRandomCarsSpeed() {
         /* get a random racer whose speed will be changed */
         Car racer = racers[(int) (Math.random() * racers.length)];
         /* these are the values that will be added to the cars speed to increase it or decrease it */
-        int[] speedModifiers = new int[]{1,2,3,4};
+        int[] speedModifiers = new int[]{1,2};
         /* apply the modifier to the cars speed */
-        racer.setSpeed(racer.getBaseSpeed() + speedModifiers[(int) (Math.random() * speedModifiers.length)]);
+        racer.setSpeed(racer.getBaseSpeed() * speedModifiers[(int) (Math.random() * speedModifiers.length)]);
     }
 
+    /* Game control methods */
     /**
      * Launches the application by initializing the User interface
      */
@@ -101,14 +120,16 @@ public class Game implements ActionListener {
      */
     private void gameLoop() {
         assignCheckpoints();
+        /* The value to check against the speed change rate to determine whether
+         * a cars speed should be changed this tick. Making it atomic is necessary for concurrency. */
         AtomicInteger count = new AtomicInteger();
         this.gameClock = new Timer(TIMER_DELAY, e -> {
             /* If a racer has reached their final checkpoint, end the game */
             if(!this.play) {endGame(); }
-            /* Change a racers speed at regular intervals */
-            if (count.incrementAndGet() % 25 == 0) {
-                changeRandomCarsSpeed();
-                count.set(0);
+            /* See if count is divisible by the change rate and if it is then a cars speed should
+             * get changed this tick. */
+            if (count.getAndIncrement() % SPEED_CHANGE_DELAY == 0) {
+                changeSpeedOfRandomCar();
             }
             /* Until a racer reaches their last checkpoint, update car positions */
             if(this.play) {

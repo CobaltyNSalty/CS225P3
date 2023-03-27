@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
+import java.util.Random;
 
 /* Work Log: add your name in brackets, the date, and a brief summary of what you contributed that day.
 The assignment details that code you wrote requires a comment with your name above it. We will implement
@@ -183,13 +185,15 @@ public class Car extends JLabel {
     public void setCheckpoints(int[] checkpoints) {
         this.checkpoints = checkpoints;
     }
+    public int getBaseSpeed() {
+        return baseSpeed;
+    }
 
     public int getSpeed() {
         return this.speed;
     }
 
     public void setSpeed(int value) {
-        //if(value < 1) { value = 1; }
         this.speed = value;
     }
 
@@ -206,10 +210,6 @@ public class Car extends JLabel {
 
     public String getName() {
         return this.name;
-    }
-
-    public int getBaseSpeed() {
-        return this.baseSpeed;
     }
 }
 
