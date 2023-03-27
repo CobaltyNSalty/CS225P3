@@ -57,14 +57,23 @@ public class GUI implements ActionListener{
     private JPanel startGameOptionsWindowPanel;
     /* Objects used by 'Game' that have a graphical component */
     private Object[] gameAssets;
+    /* Car sprites as well as other images used by the application */
     private Image[] images;
+    /* gameAsset - the Track object to be drawn */
     private Track gameTrack;
+    /* gameAsset - the Car objects to be drawn */
     private Car[] gameCars;
+    /* Bottom panels of gameWindow that display racer information */
     private JLabel[][] carPanelLabels;
+    /* Displays the elapsed time of the race */
     private JLabel timeLabel;
+    /* Buttons used by Game class to alter the state of the game */
     private Object[] controls;
+    /* Displays the combined Track tile sprites and the Car's sprites */
     private JLayeredPane centerPanel;
+    /* Counter for number of cars selected to participate in a race */
     private int carsSelected;
+    /* counter for the number of tracks selected to race on (limit = 1) */
     private int trackSelected;
 
     /* ___ CONSTRUCTORS ___ */
@@ -76,7 +85,7 @@ public class GUI implements ActionListener{
         this.controls = controls;
         this.carsSelected = 0;
         this.trackSelected = 0;
-        createGUI();
+        createGUI(); // initialize menuWindow and application framework
     }
 
     /* ___ FUNCTIONS ___ */
@@ -85,7 +94,6 @@ public class GUI implements ActionListener{
      * launch the start window(menuWindowPanel).
      */
     private void createGUI() {
-        //this.rootFrame.setContentPane(this.contentPanel);
         this.rootFrame.setPreferredSize(new Dimension(1000, 700));
         this.rootFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.rootFrame.setTitle("Track Star Racer! 9001");
@@ -99,41 +107,43 @@ public class GUI implements ActionListener{
         this.rootFrame.pack();
         this.rootFrame.setVisible(true);
     }
-    /* Window Creation Methods */
-    private void createGameOptionsWindow() {
-        // TODO: disable continue until at least 2 cars and 1 track are selected
-        // TODO: Add information to center
 
+    /* Window Creation Methods */
+
+    /**
+     * this window presents the user with the available cars and tracks to choose from.
+     */
+    private void createGameOptionsWindow() {
+        // root panel
         this.startGameOptionsWindowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         this.startGameOptionsWindowPanel.setPreferredSize(new Dimension(1000, 700));
 
+        // root panels "content panel", display panels composed onto this one
         JPanel optionsRootPanel = new JPanel(new BorderLayout());
         optionsRootPanel.setPreferredSize(new Dimension(1000, 700));
         optionsRootPanel.setBackground(Color.BLUE);
 
+        // gameAsset display panels
         JPanel topPanel = new JPanel();     // feedback
         topPanel.setPreferredSize(new Dimension(1000, 100));
 
         JPanel leftPanel = new JPanel(new GridLayout(3, 2, 10, 10));    // display cars
         leftPanel.setPreferredSize(new Dimension(300, 500));
-        leftPanel.setBorder(new LineBorder(Color.green));
 
         JPanel rightPanel = new JPanel(new GridLayout(2, 2, 10, 10));   // display tracks
         rightPanel.setPreferredSize(new Dimension(350, 500));
-        rightPanel.setBorder(new LineBorder(Color.RED));
 
         JPanel bottomPanel = new JPanel();  // buttons
         bottomPanel.setPreferredSize(new Dimension(1000, 100));
 
         // bottom panel components and settings
-        JButton startButton = (JButton) this.controls[0];
+        JButton startButton = (JButton) this.controls[0]; // control function
         startButton.setText("Continue");
         startButton.setPreferredSize(new Dimension(200, 40));
         startButton.setFont(new Font("Arial", Font.BOLD, 20));
         bottomPanel.add(startButton);
 
-        // TODO: track button text must match track file name not including .csv, this is added later.
-        // right panel components and settings
+        // right panel components and settings, disabled due to limited implementation
         JButton track1Btn = makeTrackOptionButton(1);
         JButton track2Btn = makeTrackOptionButton(2);
         track2Btn.setEnabled(false);
@@ -173,16 +183,21 @@ public class GUI implements ActionListener{
         optionsRootPanel.add(bottomPanel, BorderLayout.SOUTH);
         this.startGameOptionsWindowPanel.add(optionsRootPanel);
     }
+
+    /**
+     *
+     */
     private void createMenuWindow() {
+        // root panel
         this.menuWindowPanel.setPreferredSize(new Dimension(1000, 700));
         this.menuWindowPanel.setLayout(new BorderLayout());
 
+        // root panels "content panel", all assets composed onto this one
         JLayeredPane menuRootPane = new JLayeredPane();
 
         // Background image pane
         JLabel backgroundImage = new JLabel(new ImageIcon(this.images[1]));
         JPanel backgroundImagePane = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-
         backgroundImagePane.setBounds(0, 0, 1000, 700);
         backgroundImagePane.setOpaque(false);
         backgroundImagePane.add(backgroundImage);

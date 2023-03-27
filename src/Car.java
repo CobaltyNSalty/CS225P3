@@ -137,7 +137,7 @@ public class Car extends JLabel {
             this.checkpointIndex++;
             return false;
         }
-        return true;
+        return true; // final checkpoint reached by racer
     }
 
     /* ___ ACCESSORS / MUTATORS ___ */
@@ -189,6 +189,7 @@ public class Car extends JLabel {
     }
 
     public void setSpeed(int value) {
+        //if(value < 1) { value = 1; }
         this.speed = value;
     }
 

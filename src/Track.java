@@ -46,18 +46,17 @@ public class Track {
     private Image[] trackTileSprites;
     /* The sequence of (x,y) coordinates that Car objects will follow to "stay on the road" */
     private List<Point> path;
-
     /* A series of (x,y) points along the 'path' of special importance to Car objects */
-
     private List<Point> checkpoints;
-    /* ___ CONSTRUCTORS ___ */
 
+    /* ___ CONSTRUCTORS ___ */
     public Track() {
         this.raceTrack = null;
         this.trackTileSprites = null;
         this.path = new ArrayList<>();
         this.checkpoints = new ArrayList<>();
     }
+
     /**
      * First line of data file: [0] = height, [1] = width, [2] = 0(nothing)
      * All following lines: [0] = Row, [1] = Column, [2] = ImageID value
@@ -191,10 +190,6 @@ public class Track {
         return false;
     }
 
-    public List<Point> getCheckpoints() {
-        return checkpoints;
-    }
-
     /**
      * Returns the point on the path at the given index position
      * @param index - Index of current point on path
@@ -270,10 +265,10 @@ public class Track {
 
     /**
      * Function to return if a checkpoint was crossed between two car positions
-     * @param current
-     * @param next
-     * @param i
-     * @return
+     * @param current - car location
+     * @param next - car location
+     * @param i - checkpoint index
+     * @return - if a checkpoint was crossed between the two positions
      */
     private boolean isCheckpointCrossed(Point current, Point next, int i) {
         int alpha = 50;

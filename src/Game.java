@@ -39,13 +39,18 @@ name in a comment on the same line to not interfere with other important documen
 3/26    [tre]       - implemented variable random speed algorithm
 3/26    [Kat]       - added assignCheckpoints function, edited checkpoint checking functionality to check if the
                       checkpoint crossed was the next one in the car's list
+3/26    [chris]     - added end game functionality and method
 
+ */
+
+/**
+ * Handler class for running the Game. Orchestrates game state changes and interactions between gameAssets
  */
 public class Game implements ActionListener {
     /* The delay in milliseconds of the game clock timer */
-    public static final int TIMER_DELAY = 15;
+    private static final int TIMER_DELAY = 15;
     // number of checkpoints the race consists of
-    private final int NUM_CHECKPOINTS = 8;
+    private static final int NUM_CHECKPOINTS = 8;
     /* 2-D image of racetrack and the path the raceCars move along */
     private Track raceTrack;
     /* The raceCars drawn on the raceTrack */
@@ -59,8 +64,8 @@ public class Game implements ActionListener {
     private Instant startTime;
     /* Control variable to start game */
     private boolean play;
+    /* Frame rate of game to update car positions and game clock */
     private Timer gameClock;
-
 
     public Game() {
         this.raceTrack = null;
@@ -71,14 +76,18 @@ public class Game implements ActionListener {
         initControlFunctions();
     }
 
+    /**
+     * Selects a raceCar at random and alters it speed
+     */
     private void changeRandomCarsSpeed() {
         /* get a random racer whose speed will be changed */
         Car racer = racers[(int) (Math.random() * racers.length)];
         /* these are the values that will be added to the cars speed to increase it or decrease it */
-        int[] speedModifiers = new int[]{1,2};
+        int[] speedModifiers = new int[]{1,2,3,4};
         /* apply the modifier to the cars speed */
-        racer.setSpeed(racer.getBaseSpeed() * speedModifiers[(int) (Math.random() * speedModifiers.length)]);
+        racer.setSpeed(racer.getBaseSpeed() + speedModifiers[(int) (Math.random() * speedModifiers.length)]);
     }
+
     /**
      * Launches the application by initializing the User interface
      */
@@ -87,22 +96,27 @@ public class Game implements ActionListener {
     }
 
     /**
-     * Primary method that calls recurring game functions. Limited implementation
-     * only includes animating car movement.
+     * Start point for game window. Houses the timer method which is called on intervals
+     * of TIMER_DELAY to update game state.
      */
     private void gameLoop() {
         assignCheckpoints();
         AtomicInteger count = new AtomicInteger();
         this.gameClock = new Timer(TIMER_DELAY, e -> {
+            /* If a racer has reached their final checkpoint, end the game */
             if(!this.play) {endGame(); }
-            if (count.incrementAndGet() % 100 == 0) {
+            /* Change a racers speed at regular intervals */
+            if (count.incrementAndGet() % 25 == 0) {
                 changeRandomCarsSpeed();
                 count.set(0);
             }
+            /* Until a racer reaches their last checkpoint, update car positions */
             if(this.play) {
                 if (updateCarPositions()) {
+                    /* racer has reach their last checkpoint, end game */
                     this.play = false;
                 } else {
+                    /* only update gui elements if the game hasn't ended */
                     this.gui.updateTimer(getGameDuration().getSeconds());
                 }
             }
@@ -111,15 +125,20 @@ public class Game implements ActionListener {
 
     }
 
+    /**
+     * Called to end the game when a racer achieves victory(reached all checkpoints)
+     */
     private void endGame() {
         this.gameClock.stop();
         this.gui.endGame();
     }
 
-    // Method to give each car in the race a discrete set of checkpoints and pass it to their checkpoints field.
+    /**
+     * Method to give each car in the race a discrete set of checkpoints and pass it to their checkpoints field.
+     */
     private void assignCheckpoints() {
         int[] checkpointList;
-        for (Car c : racers) {
+        for (Car c : this.racers) {
             checkpointList = new int[NUM_CHECKPOINTS];
             for (int i = 0; i < NUM_CHECKPOINTS; i ++) {
                 int checkpoint = (int)(Math.random() * 3);
@@ -130,7 +149,9 @@ public class Game implements ActionListener {
     }
 
     /**
-     * Determines the cars next position along the track and moves the car to that position.
+     * Updates the cars next position along the track and redraws the car at that position. Checks
+     * if a raceCar has crossed a checkpoint. Checks if a car has reached their final checkpoint and
+     * won the race.
      */
     private boolean updateCarPositions() {
     for (Car car : this.racers) {
@@ -150,7 +171,7 @@ public class Game implements ActionListener {
             if (checkpoint >= 0) {
                 if (checkpoint == car.getCheckpoints()[car.getCheckpointIndex()]) {
                     if (car.incrementCheckpointIndex()) {
-                        return true;
+                        return true; // final checkpoint has been reached by racer
                     }
                 }
             }
@@ -163,7 +184,6 @@ public class Game implements ActionListener {
     }
 
     /* Helper methods */
-
     /**
      * Initialize control buttons for actions that affect the state of the game and must be handled
      * by Game class but require a graphical trigger so must be passed to GUI.
@@ -185,16 +205,28 @@ public class Game implements ActionListener {
         return Duration.between(this.startTime,currentTime);
     }
 
+    /**
+     * Creates Track object from data stored in fileName
+     * @param fileName - Track data file
+     * @return Track object used as the games raceTrack
+     * @throws IOException - if fileName doesn't exist
+     */
     public Track importTrackFromFile(String fileName) throws IOException {
         Track importTrack;
         LinkedList<String> data;
 
-        data = importData(fileName);
-        importTrack = new Track(data);
+        data = importData(fileName); // Get data from file
+        importTrack = new Track(data); // create Track
 
         return importTrack;
     }
 
+    /**
+     * Convert data file into usable data
+     * @param fileName - Track data file
+     * @return - List of lines of data used to initialise Tiles
+     * @throws IOException - if fileName doesn't exist
+     */
     public LinkedList<String> importData(String fileName) throws IOException {
         FileInputStream inFS = null;
         LinkedList<String> data;
@@ -211,6 +243,11 @@ public class Game implements ActionListener {
         return data;
     }
 
+    /**
+     * Read text from data file and store in a List data structure
+     * @param fIS - stream to read from, Track data file
+     * @return - data
+     */
     public LinkedList<String> extractInfoFromFile(FileInputStream fIS) {
         LinkedList<String> entryList = new LinkedList<String>();
         Scanner scnr = new Scanner(fIS);
@@ -219,6 +256,11 @@ public class Game implements ActionListener {
         }
         return entryList;
     }
+
+    /**
+     * After user selects cars and Track, this method initializes gameAssets and passes them to GUI
+     * @param pressed
+     */
     public void initializeGameWindow(JButton pressed) {
         // Get track and racers from selection window chosen by user
         Object[] args = this.gui.extractGameArgs(pressed);
@@ -237,6 +279,10 @@ public class Game implements ActionListener {
         this.gui.gameAssetsSelected(assets);
     }
 
+    /**
+     * control function button pressed
+     * @param e - 'continue' button
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         /* The only control function is the 'continue' button to move
