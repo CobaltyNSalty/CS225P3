@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -42,6 +40,11 @@ name in a comment on the same line to not interfere with other important documen
 public class Game implements ActionListener {
     /* The delay in milliseconds of the game clock timer */
     public static final int TIMER_DELAY = 15;
+    /**
+     * The delay (in multiples of <code>TIMER_DELAY</code> milliseconds) before changing a cars speed.
+     * A value of 100 equals <code>100 * TIMER_DELAY = 1500</code> milliseconds.
+     */
+    public static final int SPEED_CHANGE_DELAY = 100;
     /* 2-D image of racetrack and the path the raceCars move along */
     private Track raceTrack;
     /* The raceCars drawn on the raceTrack */
@@ -66,13 +69,17 @@ public class Game implements ActionListener {
         initControlFunctions();
     }
 
-    private void changeRandomCarsSpeed() {
-        /* get a random racer whose speed will be changed */
-        Car racer = racers[(int) (Math.random() * racers.length)];
-        /* these are the values that will be added to the cars speed to increase it or decrease it */
-        int[] speedModifiers = new int[]{1,2};
-        /* apply the modifier to the cars speed */
-        racer.setSpeed(racer.getBaseSpeed() * speedModifiers[(int) (Math.random() * speedModifiers.length)]);
+    /**
+     * Gets a random racers car and multiplies the speed of that care by either 1 or 2
+     * to add speed variation to cars.
+     */
+    private void changeSpeedOfRandomCar() {
+        /* get a random car */
+        Car car = racers[(int) (Math.random() * racers.length)];
+        /* these are the values that will be multiplied by the cars speed */
+        int[] multipliers = new int[]{1,2};
+        /* set the cars speed to the (cars base speed * speed modifier) */
+        car.setSpeed(car.getBaseSpeed() * multipliers[(int) (Math.random() * multipliers.length)]);
     }
 
     /**
@@ -91,10 +98,13 @@ public class Game implements ActionListener {
         if(play) {
             /* Method triggers every TIMER_DELAY to animate car movement */
             Timer gameClock = new Timer(TIMER_DELAY, e -> {
+            /* The value to check against the speed change rate to determine whether
+            * a cars speed should be changed this tick. Making it atomic is necessary for concurrency. */
             AtomicInteger count = new AtomicInteger();
-                if (count.incrementAndGet() % 100 == 0) {
-                    changeRandomCarsSpeed();
-                    count.set(0);
+                /* See if count is divisible by the change rate and if it is then a cars speed should
+                * get changed this tick. */
+                if (count.getAndIncrement() % SPEED_CHANGE_DELAY == 0) {
+                    changeSpeedOfRandomCar();
                 }
                 updateCarPositions();
                 this.gui.updateTimer(getGameDuration().getSeconds());
