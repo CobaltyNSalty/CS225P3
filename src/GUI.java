@@ -43,6 +43,10 @@ name in a comment on the same line to not interfere with other important documen
 
 
  */
+
+/**
+ * The various windows displayed to the user. This class creates and swaps between them based on user input.
+ */
 public class GUI implements ActionListener{
     // TODO: 3/21/2023 TILE_SIZE may need to be moved to another file.
     /**

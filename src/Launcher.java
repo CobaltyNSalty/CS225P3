@@ -8,6 +8,10 @@ name in a comment on the same line to not interfere with other important documen
 
 
  */
+
+/**
+ * creates and launches an instance of Game
+ */
 public class Launcher {
     public static void main(String[] args) {
         Game game = new Game();

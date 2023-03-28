@@ -14,6 +14,10 @@ name in a comment on the same line to not interfere with other important documen
 3/24    [chris]     - added isCheckPoint boolean and related methods to identify Tiles that contain checkpoints
 
  */
+
+/**
+ * The individual image components that combine to create a raceTrack image that Car objects will drive on.
+ */
 public class Tile extends JLabel {
     /* ___ FIELD VARIABLES ___ */
     /* Sequence of points from entry point to exit point that Car objects travel across this Tile */

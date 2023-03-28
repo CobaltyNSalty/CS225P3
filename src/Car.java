@@ -19,6 +19,10 @@ name in a comment on the same line to not interfere with other important documen
                       for checkpoints and checkpointIndex
 
  */
+
+/**
+ * Car sprites that move along the raceTrack
+ */
 public class Car extends JLabel {
     /* ___ FIELD VARIABLES ___ */
     /* Used to determine which sprite to draw when a car changes direction */
