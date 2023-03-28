@@ -274,7 +274,7 @@ public class Game implements ActionListener {
 
     /**
      * After user selects cars and Track, this method initializes gameAssets and passes them to GUI
-     * @param pressed
+     * @param pressed - continue button
      */
     public void initializeGameWindow(JButton pressed) {
         // Get track and racers from selection window chosen by user
