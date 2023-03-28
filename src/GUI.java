@@ -39,6 +39,7 @@ name in a comment on the same line to not interfere with other important documen
 3/26    [Kat]       - changed carPanel to show speed (still), checkpoint list, and checkpoint Index
 3/26    [Kat]       - changed endGame to take in parameter of victory car, and open JOptionPane to show a message of
                       which car won.
+3/27    [Kat]       - added comments for GUI functions starting at createMenuWindow to actionPerformed
 
 
  */
@@ -210,7 +211,7 @@ public class GUI implements ActionListener{
     }
 
     /**
-     *
+     * This window presents the user the choice to start a new game, make a car, or make a track
      */
     private void createMenuWindow() {
         // root panel
@@ -258,6 +259,10 @@ public class GUI implements ActionListener{
         menuRootPane.add(buttonPane, new Integer(1));
         this.menuWindowPanel.add(menuRootPane, BorderLayout.CENTER);
     }
+
+    /**
+     * This window shows the race being played out, and keeps track of all the car's statuses
+     */
     private void createGameWindow() {
         /* _Game Window_ */
         this.gameWindowPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -399,6 +404,12 @@ public class GUI implements ActionListener{
     }
 
     /* Window creation helper methods */
+
+    /**
+     * Creates the buttons representing which cars can be selected
+     * @param index
+     * @return
+     */
     private JButton makeCarOptionsButton(int index) {
         JButton button = new JButton();
         button.setDoubleBuffered(true);
@@ -409,6 +420,12 @@ public class GUI implements ActionListener{
         button.addActionListener(this);
         return button;
     }
+
+    /**
+     * Creates the buttons for the tracks that can be selected
+     * @param index
+     * @return
+     */
     private JButton makeTrackOptionButton(int index) {
         JButton button = new JButton("Track" + index);
         button.setFont(new Font("Arial", Font.BOLD, 16));
@@ -418,6 +435,11 @@ public class GUI implements ActionListener{
         button.addActionListener(this);
         return button;
     }
+
+    /**
+     * Changes the display of the button from pressed to unpressed
+     * @param button
+     */
     private void cycleButtonHighlight(JButton button) {
         Color color = new Color(92, 255, 63, 126);
         if((this.carsSelected >= 3) && (!(button.getBackground().equals(color)))) {
@@ -435,6 +457,10 @@ public class GUI implements ActionListener{
 
     }
 
+    /**
+     * checks to make sure at least one car and exactly one track has been selected before allowing the continue button
+     * to be pressed
+     */
     private void checkForStartConditions() {
         if((this.carsSelected >= 1) && (this.carsSelected < 4) && (this.trackSelected == 1)) {
             ((JButton)this.controls[0]).setEnabled(true);
@@ -443,6 +469,10 @@ public class GUI implements ActionListener{
         }
     }
 
+    /**
+     * ensures only one button is selected for tracks
+     * @param button
+     */
     private void singleSelectionOfButtons(JButton button) {
         this.trackSelected = 1;
         for(Component c : button.getParent().getComponents()) {
@@ -452,6 +482,12 @@ public class GUI implements ActionListener{
         button.setBackground(new Color(92, 255, 63, 126));
         button.setSelected(true);
     }
+
+    /**
+     * This window acts as the overall container for the speed panel and the car info panel
+     * @param length
+     * @return
+     */
     private JPanel createGameWindowInfoPanel(int length) {
         JPanel bottomGamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
         JPanel infoPanel = new JPanel(new GridLayout(1, (length + 1), 10, 10));
@@ -460,6 +496,10 @@ public class GUI implements ActionListener{
     }
 
     /* Class Functions */
+
+    /**
+     * Loads images from disk for the car sprites
+     */
     private void loadImages() {
         this.images = new Image[31];
         try {
@@ -507,6 +547,11 @@ public class GUI implements ActionListener{
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Switches active window
+     * @param newWindow
+     */
     private void swapWindow(JPanel newWindow) {
         this.rootFrame.setContentPane(newWindow);
         this.rootFrame.pack();
@@ -514,6 +559,11 @@ public class GUI implements ActionListener{
         this.rootFrame.repaint();
         this.rootFrame.setVisible(true);
     }
+
+    /**
+     * redraws the car sprites in their new positions according to their movement parameters and runs checks to see if
+     * cars have passed through any checkpoints in the process
+     */
     public void drawNewCarPositions() {
         for(int i = 0; i < this.gameCars.length; i++) {
             this.gameCars[i].setBounds(this.gameCars[i].getPosition().x, this.gameCars[i].getPosition().y, TILE_SIZE, TILE_SIZE);
@@ -533,6 +583,10 @@ public class GUI implements ActionListener{
         }
     }
 
+    /**
+     * changes spirte for car when it turns
+     * @param i
+     */
     private void swapCarSprite(int i) {
         this.gameCars[i].setWasRotated(false);
         int dir = this.gameCars[i].getCurrDir();
@@ -558,11 +612,21 @@ public class GUI implements ActionListener{
         }
 
     }
+
+    /**
+     * Opens message window listing the victor of the race
+     * @param victoryCar
+     */
     public void endGame(Car victoryCar) {
         JOptionPane.showMessageDialog(rootFrame.getContentPane(),victoryCar.getName() + " is the winner of the race!");
 
     }
 
+    /**
+     * extracts car and track objects from existing panels containing such
+     * @param component
+     * @return
+     */
     public Object[] extractGameArgs(JButton component) {
         Object[] args = new Object[2];
         // get parent root panel
@@ -594,6 +658,12 @@ public class GUI implements ActionListener{
 
         return args;
     }
+
+    /**
+     * Determines which car image to use from car name
+     * @param name
+     * @return
+     */
     private Image getCarSpriteFromText(String name) {
         switch(name) {
             // default sprite is 'Up'
@@ -613,6 +683,11 @@ public class GUI implements ActionListener{
         }
         return null;
     }
+
+    /**
+     * Passes car and track objects to the main game window
+     * @param gameAssets
+     */
     public void gameAssetsSelected(Object[] gameAssets) {
         this.gameAssets = gameAssets;
         this.gameCars = ((Car[])this.gameAssets[0]);
@@ -620,6 +695,11 @@ public class GUI implements ActionListener{
         createGameWindow();
         swapWindow(this.gameWindowPanel);
     }
+
+    /**
+     * Updates the game clock output to display hours, minuts, and seconds elapsing
+     * @param elapsedSeconds
+     */
     public void updateTimer(double elapsedSeconds){
         int hours = (int) (elapsedSeconds / 3600);
         int minutes = (int) (elapsedSeconds / 60);
@@ -629,6 +709,11 @@ public class GUI implements ActionListener{
 
     }
 
+    /**
+     * Converts array of checkpoint indexes into a string listing all of the checkpoints
+     * @param checkpointList
+     * @return
+     */
     private String makeCheckpointsReadable(int[] checkpointList) {
         StringBuilder output = new StringBuilder();
         for (int checkpointIndex : checkpointList) {
@@ -639,6 +724,10 @@ public class GUI implements ActionListener{
         return output.toString();
     }
 
+    /**
+     * linked functions for when game buttons are pressed
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton pressed = ((JButton)e.getSource());
