@@ -140,6 +140,7 @@ public class Car extends JLabel {
     }
     public void setNextPosition(Point p) {
         if(this.posX == 0 && this.posY == 0) {
+            // initialize first position
             this.posX = p.x;
             this.posY = p.y;
             return;
@@ -148,52 +149,42 @@ public class Car extends JLabel {
         this.posX = p.x;
         this.posY = p.y;
     }
-
     public int getCurrentIndexOnTrackPointPath() {
         return this.currentIndexOnTrackPointPath;
     }
-
     public void setCurrentIndexOnTrackPointPath(int index) {
         this.currentIndexOnTrackPointPath = index;
     }
-
     public int getCheckpointIndex() {
         return this.checkpointIndex;
     }
-
     public int[] getCheckpoints() {
         return this.checkpoints;
     }
     public int getCheckpointAtIndex(int index) {
         return this.checkpoints[index];
     }
-
     public void setCheckpoints(int[] checkpoints) {
         this.checkpoints = checkpoints;
     }
     public int getBaseSpeed() {
         return baseSpeed;
     }
-
     public int getSpeed() {
         return this.speed;
     }
-
     public void setSpeed(int value) {
         this.speed = value;
     }
-
     public int getCurrDir() {
         return this.currDir.ordinal();
     }
-
     public boolean getWasRotated() {
         return this.wasRotated;
     }
     public void setWasRotated(boolean b) {
         this.wasRotated = b;
     }
-
     public String getName() {
         return this.name;
     }
